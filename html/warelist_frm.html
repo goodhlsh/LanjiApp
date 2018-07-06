@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        body {
+            height: 100%;
+        }
+
+        section {
+            position: relative;
+            width: 100%;
+            height: auto;
+            box-sizing: border-box;
+            padding: 0 8px;
+        }
+
+
+
+        .content {
+            width: 100%;
+            height: 100%;
+        }
+
+
+        .ware-1 {
+            position: relative;
+            width: 100%;
+            height: 145px;
+            box-sizing: border-box;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #d1d1d1;
+        }
+
+        .ware-1 .thumbnail {
+            position: absolute;
+            top: 20px;
+            left: 0px;
+            height: 100px;
+            width: 100px;
+        }
+
+        .ware-1 .info {
+            width: 100%;
+            height: 114px;
+            box-sizing: border-box;
+            padding-left: 112px;
+            padding-right: 28px;
+        }
+
+        .ware-1 .info .name {
+            width: 100%;
+            height: 15px;
+            color: #555555;
+            margin-top: 14px;
+            font-size: 15px;
+        }
+
+        .ware-1 .info .description {
+            margin-top: 10px;
+            width: 100%;
+            height: 13px;
+            font-size: 13px;
+            color: #9d9d9d;
+        }
+
+        .ware-1 .info .price-tag {
+            margin-top: 10px;
+            width: 100%;
+            height: 12px;
+            font-size: 12px;
+            vertical-align: top;
+        }
+
+        .ware-1 .info .price-tag .price {
+            color: #e3007f;
+        }
+
+
+
+        .push-status {
+            width: 100%;
+            height: 40px;
+            font-size: 16px;
+            color: #888;
+            line-height: 40px;
+            text-align: center;
+            background-color: #fff;
+        }
+
+        .active {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!--    <section id="list">
+              <div class="ware ware-1">
+                  <div class="content" tapmode onclick="fnOpenWareWin('12');">
+                      <img class="thumbnail" src="../image/default_square.png">
+                      <div class="info">
+                          <div class="name">清新滋润营养洁面乳</div>
+                          <div class="description">*********************************</div>
+                          <div class="price-tag">
+                              <span class="price">￥36</span>
+                              <span class="unit">/1个</span>
+                          </div>
+                          <div class="origin-price">原价:
+                              <del>36元</del>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+-->
+    <section id="list">
+    </section>
+
+    <div class="push-status" id="pushStatus">上拉显示更多</div>
+</body>
+
+<script type="text/template" id="template">
+    {{~it:value:index}}
+    <div class="ware ware-1">
+        <div class="content" tapmode onclick="fnOpenWareWin('{{=value.Id}}');">
+            <img onload="fnLoadImage(this)" data-url="{{=value.Thumbnail}}" class="thumbnail" src="../image/default_square.png">
+            <div class="info">
+                <div class="name">{{=value.Name}}</div>
+                <div class="description">{{=value.Description}}</div>
+                <div class="price-tag">
+                    <span class="price">￥{{=value.Price}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{~}}
+</script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        // 初始化一下默认数据
+        init();
+        // 初始化事件监听
+        initEventListenter();
+        // 初始化下拉刷新
+        initRefresh();
+        // 获取商品列表
+        fnGetWareList(false);
+    };
+    var wareTypeList, skip = 0,
+        LIMIT = 5;
+
+    function init() {
+        // 从缓存中获得商品分类列表
+        wareTypeList = $api.getStorage('wareTypeList');
+    }
+
+    function initEventListenter() {
+        // 监听滚动到Frame底部的事件
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra: {
+                threshold: 300 // 距离底部还有多少触发scrolltobottom事件
+            }
+        }, function(ret, err) {
+            // 获取更多的商品
+            fnGetWareList(true);
+        });
+    }
+
+    // 实现下拉刷新功能
+    function initRefresh() {
+        api.setRefreshHeaderInfo({
+            visible: true,
+            loadingImg: 'widget://image/refresh.png',
+            bgColor: '#fff',
+            textColor: '#e1017e',
+            showTime: true
+        }, function(ret, err) {
+            // 刷新商品列表
+            fnGetWareList(false);
+        });
+    }
+    // 打开商品详情Window，指定商品Id
+    function fnOpenWareWin(wareId_) {
+        api.openWin({
+            name: 'ware',
+            url: './ware.html',
+            pageParam: {
+                'wareId': wareId_
+            },
+            animation: {
+                type: "fade"
+            }
+        });
+    }
+
+    // 获取商品列表，通过loadMore_参数区分是首次加载还是加载更多
+    function fnGetWareList(loadMore_) {
+        if (!loadMore_) {
+            // 显示加载状态对话框
+            api.hideProgress({
+                style: 'default',
+                animationType: 'fade',
+                title: '努力加载中...',
+                text: '请稍后...',
+                modal: false
+            });
+        }
+        // 如果是加载更多，需要实现分页
+        if (loadMore_) {
+            skip += LIMIT;
+        } else {
+            skip = 0;
+        }
+        // 根据商品分类获得相应的商品列表
+        var params = {
+            where: {
+                'ID': wareTypeList[api.pageParam.wareTypeIndex].Id
+            },
+            skip: skip,
+            limit: LIMIT
+        }
+
+        //console.log(api.pageParam.wareTypeIndex);
+        //console.log(wareTypeList[api.pageParam.wareTypeIndex].Name);
+        //params = $api.jsonToStr(params);
+        fnGet('Spl_Ware/GetListByCategoryID', params, function(ret, err) {
+            if (ret) {
+                // 恢复下拉刷新的状态
+                api.refreshHeaderLoadDone();
+
+                // 在界面中更新商品列表显示
+                fnUpdateWareList(ret, loadMore_);
+            } else {
+                api.toast({
+                    msg: '加载数据失败',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+            // 隐藏加载状态对话框
+            api.hideProgress();
+        });
+    }
+
+    // 实现商品列表的图片缓存
+    function fnLoadImage(ele_) {
+        var dataUrl = $api.attr(ele_, 'data-url');
+        // 缓存data-url所指定的图片
+        if (dataUrl) {
+            api.imageCache({
+                url: dataUrl
+            }, function(ret, err) {
+                if (ret) {
+                    ele_.src = ret.url;
+                    $api.attr(ele_, 'data-url', '');
+                }
+            });
+        }
+    }
+
+    // 更新商品列表显示
+    function fnUpdateWareList(data_, loadMore_) {
+        var list = $api.byId('list');
+        // 编译模板函数
+        var tempFn = doT.template($api.byId('template').innerHTML);
+        // 使用模板函数生成HTML文本
+        var resultHTML = tempFn(data_);
+        // 判断是否是加载更多，如果是加载更多，则追加到list中
+        if (loadMore_) {
+
+            $api.append(list, resultHTML);
+            // 如果服务器端已经没有更多数据返回，更新提示信息
+            if (data_.length < LIMIT) {
+                var pushStatus = $api.byId('pushStatus');
+                pushStatus.innerHTML = "没有啦！";
+            }
+        } else {
+            // 否则，直接替换list中的内容
+            $api.html(list, resultHTML);
+        }
+        // 由于是动态的将元素添加到Dom树上，所以需要手动触发tapmode检查，列表中的元素才能实现点击加速的效果
+        api.parseTapmode();
+    }
+</script>
+
+</html>

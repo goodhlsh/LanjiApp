@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        body {
+            height: 100%;
+        }
+
+        header {
+            height: 50px;
+            position: relative;
+        }
+
+        .skip {
+            position: absolute;
+            bottom: 0px;
+            right: 15px;
+            width: 86px;
+            height: 30px;
+            line-height: 30px;
+            border: solid rgb(211, 211, 211) 1px;
+            border-radius: 30px;
+            color: #000;
+            font-size: 16px;
+        }
+
+        .highlight {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+
+<body>
+    <header id="header">
+        <div class="skip" tapmode="highlight" onclick="fnStart()">
+            <span class="aui-padded-l-15">跳过</span>
+            <i class="aui-iconfont aui-icon-right aui-padded-l-5"></i>
+        </div>
+    </header>
+    <div>
+      First
+    </div>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        fnReady();
+        api.removeLaunchView({
+            animation: {
+                type: 'fade',
+                duration: 500
+            }
+        });
+    };
+
+    function fnStart() {
+        api.closeFrameGroup({
+            name: 'welcome_group'
+        });
+    };
+</script>
+
+</html>

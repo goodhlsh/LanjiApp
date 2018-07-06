@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>支付Frame</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            background-color: #f0f0f0;
+        }
+
+        .color {
+            color: #e3007f;
+        }
+
+        .pay {
+            position: relative;
+            width: 100%;
+            height: auto;
+        }
+
+        .pay .title {
+            position: relative;
+            box-sizing: border-box;
+            padding-left: 16px;
+            width: 100%;
+            height: 44px;
+            line-height: 44px;
+            font-size: 16px;
+            text-align: left;
+            color: #444;
+            background-color: #fff;
+        }
+
+        .pay .row {
+            position: relative;
+            box-sizing: border-box;
+            width: 100%;
+            height: 50px;
+            margin-bottom: 1px;
+            padding-left: 96px;
+            text-align: left;
+            font-size: 16px;
+            color: #444;
+            line-height: 50px;
+            background-color: #fff;
+            background-repeat: no-repeat;
+            background-size: auto 36px;
+            background-position: 12px center;
+        }
+
+        .pay .row-balance-pay {
+            background-image: url(../image/icon_balance_pay.png);
+        }
+
+        .pay .row-wxpay {
+            background-image: url(../image/icon_wxpay.png);
+        }
+
+        .pay .row-alipay {
+            background-image: url(../image/icon_alipay.png);
+        }
+
+        .pay .row-disable {
+            opacity: 0.5;
+        }
+
+        .pay .row .text {
+            display: inline-block;
+            width: auto;
+            height: 50px;
+        }
+
+        .pay .row .text-recommend {
+            box-sizing: border-box;
+            padding-right: 28px;
+            display: inline-block;
+            width: auto;
+            height: 50px;
+            background-image: url(../image/recommend.png);
+            background-repeat: no-repeat;
+            background-size: 20px 20px;
+            background-position: right center;
+            border-radius: 10px;
+        }
+
+        .highlight {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="pay">
+        <div class="title"><i class="aui-iconfont aui-icon-pay"></i>选择付款方式完成付款</div>
+        <div class="row row-balance-pay " onclick="yuePay()">
+            <div class="text text-recommend">余额支付</div>
+            <div class="text">（余额：¥<span id="YuE">0.0</span>）</div>
+        </div>
+        <div class="row row-wxpay" onclick="wxPay()">
+            <div class="text">微信支付</div>
+        </div>
+        <div class="row row-alipay" onclick="aliPay()">
+            <div class="text">支付宝</div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/localdb.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        fnSaveOrder('待付款');
+
+        fnReady();
+        fnInitWallet();
+    };
+
+    var order_one;
+
+    function fnInitWallet() {
+        var userYuE = $api.byId('YuE');
+        /*if ($api.getStorage('currentwallet')) {
+            userYuE.innerHTML = $api.getStorage('currentwallet').JieYu==null?'0.0':$api.getStorage('currentwallet').JieYu;
+        } else {
+        */
+        var filter = {
+            where: {
+                userid: $api.getStorage('userInfo').Id
+            },
+            //order: "createAt DESC",
+            limit: 1,
+            skip: 0
+        };
+        fnGet('Syswallet/GetWallet', filter, function(ret, err) {
+            if (ret) {
+                userYuE.innerHTML = ret.JieYu;
+                $api.setStorage('currentwallet', ret);
+            } else {
+                api.alert({
+                    title: '消息',
+                    msg: '查不到余额',
+                });
+            }
+        });
+        //}
+        //console.log(JSON.stringify($api.getStorage('currentwallet')));
+    }
+
+    function yuePay() {
+        api.confirm({
+            title: '支付提醒',
+            msg: '是否选择余额支付？如继续点击确认',
+            buttons: ['确定', '取消']
+        }, function(ret, err) {
+            if (ret.buttonIndex == 1) {
+                if ($api.getStorage('dingdankuan') && $api.getStorage('dingdankuan') > 0) {
+                    if ($api.getStorage('currentwallet') && $api.getStorage('currentwallet').JieYu >= $api.getStorage('dingdankuan')) {
+                        fnPost('Syswallet/PostWallet', {
+                            body: JSON.stringify({
+                                //Id: $api.getStorage('currentwallet').Id,
+                                UserId: $api.getStorage('userInfo').Id,
+                                Balance: parseFloat($api.getStorage('dingdankuan')),
+                                JieYu: $api.getStorage('currentwallet').JieYu,
+                                Froms: '消费',
+                                ShunXu: $api.getStorage('currentwallet').ShunXu,
+                                Note: $api.getStorage('currentwallet').TrueName + '消费 ' + parseFloat($api.getStorage('dingdankuan')) + ' 元'
+                            })
+                        }, 'application/json', false, false, function(ret, err) {
+                            if (ret) {
+                                fnInitWallet();
+                                fnShowSuccess();
+                            } else {
+                                api.alert({
+                                    title: '支付有误',
+                                    msg: JSON.stringify(ret),
+                                    buttons: ['确定']
+                                });
+                            }
+                        });
+                    } else {
+                        api.alert({
+                            title: '消息',
+                            msg: '余额不足，请充值或选择其他方式支付',
+                        });
+                        api.closeWin({
+                            name: 'mypay'
+                        });
+
+                    }
+                } else {
+                    api.alert({
+                        title: '消息',
+                        msg: '订单金额有问题，请购物车核实',
+                    });
+                    api.closeWin({
+                        name: 'mypay'
+                    });
+                }
+            } else {
+                api.closeWin({
+                    name: 'mypay'
+                });
+            }
+        });
+    }
+    //微信支付
+    function wxPay() {
+        var wxPay = api.require('wxPay');
+        /* 方法一 上线要用此法
+         wxPay.payOrder({
+              apiKey: '',
+              orderId: '',
+              mchId: '',
+              nonceStr: '',
+              timeStamp: '',
+              package: '',
+              sign: ''
+          }, function(ret, err) {
+              if (ret.status) {
+                  //支付成功
+              } else {
+                  alert(err.code);
+              }
+          });
+        */
+        //方法二适合测试
+        wxPay.config({
+            apiKey: '',
+            mchId: '',
+            partnerKey: '',
+            notifyUrl: ''
+        }, function(ret, err) {
+            if (ret.status) {
+                alert('配置商户支付参数成功');
+            } else {
+                alert(err.code);
+            }
+        });
+        if ($api.getStorage('dingdankuan') && $api.getStorage('dingdankuan') > 0) {
+            wxPay.pay({
+                description: 'iPad mini 16G 白色',
+                totalFee: parseFloat($api.getStorage('dingdankuan')),
+                tradeNo: '1217752501201407033233368018',
+                spbillCreateIP: '196.168.1.1',
+                deviceInfo: '013467007045764',
+                detail: 'iPad mini 16G 白色',
+                attach: '说明',
+                feeType: 'CNY',
+                timeStart: '20091225091010',
+                timeExpire: '20091227091010',
+                goodsTag: 'WXG',
+                productId: '12235413214070356458058',
+                openId: 'oUpF8uMuAJO_M2pxb1Q9zNjWeS6o'
+            }, function(ret, err) {
+                if (ret.status) {
+                    fnShowSuccess();
+                } else {
+                    alert(err.code);
+                }
+            });
+        }
+    }
+    //支付宝支付
+    function aliPay() {
+        var aliPayPlus = api.require('aliPayPlus');
+        /* 方法一 上线要用此法
+        aliPayPlus.payOrder({    orderInfo: 'app_id=2015052600090779&biz_content=%7B%22timeout_express%22%3A%2230m%22%2C%22seller_id%22%3A%22%22%2C%22product_code%22%3A%22QUICK_MSECURITY_PAY%22%2C%22total_amount%22%3A%220.01%22%2C%22subject%22%3A%221%22%2C%22body%22%3A%22%E6%88%91%E6%98%AF%E6%B5%8B%E8%AF%95%E6%95%B0%E6%8D%AE%22%2C%22out_trade_no%22%3A%22IQJZSRC1YMQB5HU%22%7D&charset=utf-8&format=json&method=alipay.trade.app.pay&notify_url=http%3A%2F%2Fdomain.merchant.com%2Fpayment_notify&sign_type=RSA2&timestamp=2016-08-25%2020%3A26%3A31&version=1.0&sign=cYmuUnKi5QdBsoZEAbMXVMmRWjsuUj%2By48A2DvWAVVBuYkiBj13CFDHu2vZQvmOfkjE0YqCUQE04kqm9Xg3tIX8tPeIGIFtsIyp%2FM45w1ZsDOiduBbduGfRo1XRsvAyVAv2hCrBLLrDI5Vi7uZZ77Lo5J0PpUUWwyQGt0M4cj8g%3D'
+        }, function(ret, err) {
+        api.alert({
+        title: '支付结果',
+        msg: ret.code,
+        buttons: ['确定']
+          });
+      });
+        */
+        //方法二 测试用
+        aliPayPlus.config({
+            appId: '12345678901234',
+            rsaPriKey: 'testKEY',
+        }, function(ret, err) {
+            api.alert({
+                title: '支付结果',
+                msg: JSON.stringify(ret),
+                buttons: ['确定']
+            });
+        });
+        if ($api.getStorage('dingdankuan') && $api.getStorage('dingdankuan') > 0) {
+            aliPayPlus.pay({
+                subject: '订单名',
+                body: '订单描述',
+                amount: parseFloat($api.getStorage('dingdankuan')),
+                tradeNO: '4563548735674',
+                rsa2: true
+            }, function(ret, err) {
+                if (ret) {
+                    fnShowSuccess();
+                } else {
+                    alert(err.code);
+                }
+
+            });
+        }
+    }
+    //支付成功后的处理
+    //清理本地库中购物车中信息及localStorage信息
+    function fnShowSuccess() {
+        api.alert({
+            title: '支付结果',
+            msg: '恭喜您支付成功，我们会尽快安排发货，谢谢惠顾！',
+        }, function(ret, err) {
+            if (ret) {
+                //存入订单表
+                fnEditOrder('待发货');
+                $api.rmStorage('dingdankuan');                
+
+                api.closeWin({
+                    name: 'mypay'
+                });
+
+                api.closeWin({
+                    name: 'order'
+                });
+                api.closeWin({
+                    name: 'shoppingcart'
+                });
+                api.openWin({
+                    name: 'index',
+                    url: '../index.html'
+                });
+
+            }
+        });
+    }
+
+    function fnSaveOrder(status) {
+        if ($api.getStorage('shoppingcart')) {
+            fnPost('Spl_Orders/PostOrder', {
+                body: JSON.stringify({
+                    AddressId: $api.getStorage('AddressId'),
+                    UserId: $api.getStorage('userInfo').Id,
+                    Status: status,
+                    DingDanKuan: parseFloat($api.getStorage('dingdankuan')),
+                    spl_Wares: $api.getStorage('shoppingcart')
+                })
+            }, 'application/json', false, false, function(ret, err) {
+                if (ret) {
+                    api.toast({
+                        msg: '订单信息已添加，请付款',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    order_one = ret;
+                    $api.rmStorage('shoppingcart');
+                    $db.delete_true('shoppingCart', 'select');
+                } else {
+                    api.alert({
+                        title: '故障报警',
+                        msg: '订单生成有误',
+                        buttons: ['确定']
+                    });
+                }
+            });
+        }
+    }
+
+    function fnEditOrder(status) {
+        fnPost('Spl_Orders/PostEditOrder', {
+            body: JSON.stringify({
+                Id: order_one.Id,
+                Status: status
+            })
+        }, 'application/json', false, false, function(ret, err) {
+            if (ret) {
+                api.toast({
+                    msg: '订单已生成，准备发货',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                order_one=null;
+            } else {
+                api.alert({
+                    title: '故障报警',
+                    msg: '订单存入系统有误，请联系客服！',
+                    buttons: ['确定']
+                });
+            }
+        });
+    }
+</script>
+
+</html>

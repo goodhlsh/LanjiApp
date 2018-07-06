@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>注册Frame</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
+    <style>
+        .input {
+            width: 70%;
+        }
+
+        .input::-webkit-input-placeholder {
+            color: #ccc;
+        }
+
+        .divider {
+            height: 15px;
+        }
+
+        .highlight {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="divider"></section>
+    <div class="aui-content">
+        <div class="aui-list aui-form-list">
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-my"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input id="username" class="input" type="text" onblur="checkPhoneConflict()" placeholder="请输入手机号码" />
+                    </div>
+                </div>
+            </div>
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-lock"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input id="password1" class="input" type="password" placeholder="请输入密码">
+                    </div>
+                </div>
+            </div>
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-lock"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input id="password2" class="input" type="password" placeholder="请再次输入密码">
+                    </div>
+                </div>
+            </div>
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-command"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input id="code" class="input" type="text" placeholder="请输入短信验证码">
+                    </div>
+                    <div class="aui-list-item-right">
+                        <div id="sendSms" class="aui-btn  aui-btn-sm" tapmode="highlight" onclick="sendSms(this)">获取验证码</div>
+                    </div>
+                </div>
+            </div>
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
+                    <div class="aui-btn aui-btn-block  aui-btn-sm aui-btn-danger" tapmode="highlight" onclick="verify();">立即注册</div>
+                </div>
+            </div>
+        </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript">
+    var smsVerify = null;
+    var isExist = null;
+    apiready = function() {
+        fnInitUIInput();
+        smsVerify = api.require('smsVerify');
+        // 短信模块初始化
+        registerSms();
+    };
+
+    var UIInput;
+    var usernameUIInputId;
+    var passwordUIInputId;
+    var passwordUIInputId2;
+    var codeUIInputId;
+    var usernameValue;
+    var passwordValue;
+    var passwordValue2;
+    var codeValue;
+
+    function fnInitUIInput() {
+        // 用户名输入框模块
+        var username = $api.byId('username');
+        var usernameRect = $api.offset(username);
+        UIInput = api.require('UIInput');
+        UIInput.open({
+            rect: {
+                x: usernameRect.l,
+                y: usernameRect.t,
+                w: usernameRect.w,
+                h: usernameRect.h
+            },
+            styles: {
+                bgColor: '#fff',
+                size: 16,
+                color: '#000',
+                placeholder: {
+                    color: '#ccc'
+                }
+            },
+            autoFocus: false,
+            maxRows: 1,
+            placeholder: '请输入您的手机号',
+            keyboardType: 'default',
+            fixedOn: api.frameName
+        }, function(ret, err) {
+            if (ret) {
+                usernameUIInputId = ret.id;
+                if (ret && ret.eventType == "show") {
+                    setTimeout(function() {
+                        UIInput.popupKeyboard({
+                            id: usernameUIInputId
+                        });
+                    }, 200);
+                } else if (ret.eventType == "change") {
+                    UIInput.value({
+                        id: usernameUIInputId
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.status) {
+                                usernameValue = ret.msg;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        // 密码输入框模块
+        var password = $api.byId('password1');
+        var passwordRect = $api.offset(password);
+        UIInput.open({
+            rect: {
+                x: passwordRect.l,
+                y: passwordRect.t,
+                w: passwordRect.w,
+                h: passwordRect.h
+            },
+            styles: {
+                bgColor: '#fff',
+                size: 16,
+                color: '#000',
+                placeholder: {
+                    color: '#ccc'
+                }
+            },
+            autoFocus: false,
+            maxRows: 1,
+            placeholder: '请输入密码',
+            keyboardType: 'default',
+            inputType: 'password',
+            fixedOn: api.frameName
+        }, function(ret, err) {
+            if (ret) {
+                passwordUIInputId = ret.id;
+                if (ret.eventType == "change") {
+                    UIInput.value({
+                        id: passwordUIInputId
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.status) {
+                                passwordValue = ret.msg;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+        // 确认密码输入框模块
+        var password2 = $api.byId('password2');
+        var passwordRect2 = $api.offset(password2);
+        UIInput.open({
+            rect: {
+                x: passwordRect2.l,
+                y: passwordRect2.t,
+                w: passwordRect2.w,
+                h: passwordRect2.h
+            },
+            styles: {
+                bgColor: '#fff',
+                size: 16,
+                color: '#000',
+                placeholder: {
+                    color: '#ccc'
+                }
+            },
+            autoFocus: false,
+            maxRows: 1,
+            placeholder: '请再输入一遍密码',
+            keyboardType: 'default',
+            inputType: 'password',
+            fixedOn: api.frameName
+        }, function(ret, err) {
+            if (ret) {
+                passwordUIInputId2 = ret.id;
+                if (ret.eventType == "change") {
+                    UIInput.value({
+                        id: passwordUIInputId2
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.status) {
+                                passwordValue2 = ret.msg;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        // 验证码输入框模块
+        var code = $api.byId('code');
+        var codeRect = $api.offset(code);
+        UIInput = api.require('UIInput');
+        UIInput.open({
+            rect: {
+                x: codeRect.l,
+                y: codeRect.t,
+                w: codeRect.w * 0.6,
+                h: codeRect.h
+            },
+            styles: {
+                bgColor: '#fff',
+                size: 16,
+                color: '#000',
+                placeholder: {
+                    color: '#ccc'
+                }
+            },
+            autoFocus: false,
+            maxRows: 1,
+            placeholder: '请输入验证码',
+            keyboardType: 'default',
+            fixedOn: api.frameName
+        }, function(ret, err) {
+            if (ret) {
+                codeUIInputId = ret.id;
+                if (ret && ret.eventType == "show") {
+                    setTimeout(function() {
+                        UIInput.popupKeyboard({
+                            id: codeUIInputId
+                        });
+                    }, 200);
+                } else if (ret.eventType == "change") {
+                    UIInput.value({
+                        id: codeUIInputId
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.status) {
+                                codeValue = ret.msg;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+    // 短信模块注册，初始化
+    function registerSms() {
+        smsVerify.register(function(ret, err) {
+            if (ret.status) {
+                //console.log('注册成功');
+            } else {
+                api.alert({
+                    msg: ' 注册失败'//err.code +
+                });
+            }
+        });
+    }
+
+    //方法一  如果使用APICloud数据云，可以使用APICloud数据云前端框架来简化网络通信  完成注册
+    function fnRegisterByAPICloudMCM() {
+        //判断用户名是否为空
+        if (!usernameValue) {
+            if (api.systemType == 'android') {
+                setTimeout(function() {
+                    UIInput.popupKeyboard({
+                        id: usernameUIInputId
+                    });
+                }, 200);
+            } else {
+                UIInput.popupKeyboard({
+                    id: usernameUIInputId
+                });
+            }
+            return;
+        }
+        if (!passwordValue) {
+            if (api.systemType == 'android') {
+                setTimeout(function() {
+                    UIInput.popupKeyboard({
+                        id: passwordUIInputId
+                    });
+                }, 200);
+            } else {
+                UIInput.popupKeyboard({
+                    id: passwordUIInputId
+                });
+            }
+            return;
+        }
+
+        // 使用APICloud MCM JS Framework来与数据云通信
+        var client = new Resource("A6069365614406", "6C8E9531-80FA-E382-C5A2-B3E80CBE27A0");
+        var User = client.Factory("user");
+        User.save({
+            "username": usernameValue,
+            "password": passwordValue
+        }, function(ret, err) {
+            api.alert({
+                title: '提示',
+                msg: '注册成功',
+            }, function(ret, err) {
+                if (ret) {
+                    // 跨窗口执行Script, 将用户名传给登录页面
+                    api.execScript({
+                        name: 'login',
+                        frameName: 'login_frame',
+                        script: 'fnSetUsername(\"' + usernameValue + '\");'
+                    });
+                    api.closeWin();
+                } else {
+                    alert("注册失败，用户名已被占用");
+                }
+            });
+        })
+    }
+
+    //方法二 完成注册
+    function fnRegister() {
+        if (!usernameValue) {
+            if (api.systemType == 'android') {
+                setTimeout(function() {
+                    UIInput.popupKeyboard({
+                        id: usernameUIInputId
+                    });
+                }, 200);
+            } else {
+                UIInput.popupKeyboard({
+                    id: usernameUIInputId
+                });
+            }
+            return;
+        }
+        if (!passwordValue) {
+            if (api.systemType == 'android') {
+                setTimeout(function() {
+                    UIInput.popupKeyboard({
+                        id: passwordUIInputId
+                    });
+                }, 200);
+            } else {
+                UIInput.popupKeyboard({
+                    id: passwordUIInputId
+                });
+            }
+            return;
+        }
+
+        fnPost('user', {
+            body: JSON.stringify({
+                username: usernameValue,
+                password: passwordValue
+            })
+        }, 'application/json', false, false, function(ret, err) {
+            if (ret && ret.id) {
+                // 跨窗口执行Script, 将用户名传给登录页面
+                api.execScript({
+                    name: 'login',
+                    frameName: 'login_frame',
+                    script: 'fnSetUsername(\"' + usernameValue + '\");'
+                });
+
+                api.alert({
+                    title: '注册',
+                    msg: '注册成功，请登录'
+                });
+
+                api.closeWin();
+            } else {
+                api.toast({
+                    msg: '注册失败，用户名已存在',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+        });
+    }
+
+
+    //mcm ========离开用户名输入框的时候检查是否用户账号被注册======>>>>>
+    function checkPhoneConflict() {
+        //  var username = $api.byId("username").value;
+        /*var query = api.require('query');
+        query.createQuery({}, function(ret, err) {
+            var queryId = ret.qid;
+            query.whereEqual({
+                qid: queryId,
+                column: 'username',
+                value: usernameValue
+            });
+            var model = api.require('model');
+            model.config({
+                appKey: '6C8E9531-80FA-E382-C5A2-B3E80CBE27A0'
+            });
+            model.findAll({
+                class: 'user',
+                qid: queryId
+            }, function(ret, err) {
+                if (ret) {
+                    if (ret.length > 0) {
+                        api.toast({
+                            msg: '用户名已注册！',
+                            location: 'middle',
+                            duration: 3000,
+                        });
+                        isExist = true;
+                        return;
+                    }
+                }
+                if (err) {}
+                isExist = false;
+            });
+        });*/
+    }
+
+    // 发短信验证码
+    function sendSms(o) {
+        setTimeout(function() {
+            if (!isExist) {
+                //  var username = $api.byId("username").value;
+                if (usernameValue != null && usernameValue.length == 11) {
+                    //var password = $api.byId('password1').value;
+                    //var password2 = $api.byId('password2').value;
+                    if (passwordValue == null || passwordValue.length < 6 || passwordValue !== passwordValue2) {
+                        api.alert({
+                            msg: '密码为空或长度小于6或两次密码不一致'
+                        }, function(ret, err) {
+                            return;
+                        });
+                        return;
+                    }
+                    time(o);
+                    smsVerify.sms({
+                        phone: usernameValue,
+                    }, function(ret, err) {
+                        if (ret.status) {
+                            api.toast({
+                                msg: '短信发送成功'
+                            });
+                        } else {
+                            api.toast({
+                                msg:'网络故障'// JSON.stringify(err)
+                            });
+                        }
+                    });
+                } else {
+                    api.toast({
+                        msg: '手机号输入有误！'
+                    });
+                }
+            }
+        }, 1000)
+    };
+    var wait = 60;
+
+    function time(o) {
+        if (wait == 0) {
+            o.onclick = function() {
+                sendSms(o);
+            }
+            o.innerHTML = "获取验证码";
+            wait = 60;
+        } else {
+            o.onclick = function() {
+                return false;
+            };
+            o.innerHTML = "重新发送(" + wait + ")";
+            wait--;
+            setTimeout(function() {
+                time(o)
+            }, 1000)
+        }
+    }
+
+    // 校验验证码
+    function verify() {
+        api.hideProgress({
+            title: '注册中...',
+            modal: false
+        });
+        //  var username = $api.byId("username").value;
+        //  var password = $api.byId('password1').value;
+        //  var password2 = $api.byId('password2').value;
+        if (passwordValue !== passwordValue2) {
+            api.alert({
+                msg: '两次密码不一致'
+
+            }, function(ret, err) {
+                api.hideProgress();
+            });
+            return;
+        }
+        //var code = document.getElementById("code").value;
+        //$api.setStorage("photo", "http://7xsqm5.com1.z0.glb.clouddn.com/apicloud/459282aa35e47fbb1c676a6e5577cee8.jpg");
+        //var photo = $api.getStorage("photo");
+        if (usernameValue == null || passwordValue == null) {
+            api.alert({
+                title: '消息',
+                msg: '用户名或密码不能为空',
+            }, function(ret, err) {
+                return;
+            });
+            return;
+        }
+
+        if (usernameValue.length == 11 && passwordValue.length >= 6) {
+
+            smsVerify.verify({
+                phone: usernameValue,
+                code: codeValue,
+            }, function(ret, err) {
+                if (!ret.status) {
+                    api.showProgress({
+                        title: '注册中...',
+                        modal: false
+                    });
+                    fnPost('SysUser/PostCreateOne', {
+                        body: JSON.stringify({
+                            username: usernameValue,
+                            password: passwordValue
+                        })
+                    }, 'application/json', false, false, function(ret, err) {
+                        if (ret && ret.type) {
+
+                            // 跨窗口执行Script, 将用户名传给登录页面
+                            api.execScript({
+                                name: 'login',
+                                frameName: 'login_frm',
+                                script: 'fnSetUsername(\"' + usernameValue + '\");'
+                            });
+
+                            api.alert({
+                                title: '注册',
+                                msg: '注册成功，请登录'
+                            });
+
+                            api.closeWin();
+                        } else {
+                            api.toast({
+                                msg: '注册失败，用户名已存在',
+                                duration: 2000,
+                                location: 'bottom'
+                            });
+                        }
+                    });
+                } else {
+                    api.alert({
+                        msg: ' 验证失败，请查看验证码是否正确！'
+                    });
+                }
+            });
+        } else {
+            api.alert({
+                msg: '手机号或密码格式不正确'
+            });
+        }
+        api.hideProgress();
+    }
+</script>
+
+</html>

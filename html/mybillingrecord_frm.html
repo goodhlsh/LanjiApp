@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>我的账单</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        html {
+            height: 100%;
+        }
+
+        body {
+            min-height: 100%;
+            background-color: #f0f0f0;
+        }
+
+        .list {
+            display: block;
+            position: relative;
+            box-sizing: border-box;
+            width: 100%;
+            height: auto;
+        }
+
+        .empty {
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            background-image: url(../image/mywallet_empty.png);
+            background-repeat: no-repeat;
+            background-size: auto 93px;
+            background-position: center 50px;
+        }
+
+        .content {
+            width: 100%;
+            height: 100%;
+        }
+
+        .ware-1 {
+            position: relative;
+            width: 100%;
+            height: 145px;
+            box-sizing: border-box;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #d1d1d1;
+        }
+
+        .ware-1 .info {
+            width: 100%;
+            height: 114px;
+            box-sizing: border-box;
+            padding-left: 32px;
+            padding-right: 28px;
+        }
+
+        .ware-1 .info .name {
+            width: 100%;
+            height: 15px;
+            color: #555555;
+            margin-top: 14px;
+            font-size: 15px;
+        }
+
+        .ware-1 .info .orderNo {
+            margin-top: 10px;
+            width: 100%;
+            height: 13px;
+            font-size: 13px;
+            color: #9d9d9d;
+        }
+
+        .ware-1 .info .createDate {
+            margin-top: 10px;
+            width: 100%;
+            height: 12px;
+            font-size: 12px;
+            vertical-align: top;
+        }
+
+        .push-status {
+            width: 100%;
+            height: 40px;
+            font-size: 16px;
+            color: #888;
+            line-height: 40px;
+            text-align: center;
+            background-color: #fff;
+        }
+
+        .active {
+            opacity: 0.7;
+        }
+
+        .highlight {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+
+<body>
+    <section id="list" class="list"></section>
+    <section id="empty" class="empty"></section>
+    <div class="push-status" id="pushStatus">上拉显示更多</div>
+</body>
+<script type="text/template" id="template">
+    {{~it:value:index}}
+    <div class="ware ware-1">
+        <div class="content">
+            <div class="info">
+                <div class="name">账户金额:{{=value.JieYu}}</div>
+                <div class="orderNo">单笔金额：{{=value.Balance}}</div>
+                <div class="orderNo">收支原因：{{=value.Froms}}</div>
+                <div class="createDate">登记日期：{{=value.CreateTime}}</div>
+            </div>
+        </div>
+    </div>
+    {{~}}
+</script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        // 初始化事件监听
+        initEventListenter();
+        // 初始化下拉刷新
+        initRefresh();
+        // 获取订单列表
+        fnGetWalletList(false);
+    };
+    var wareTypeList, skip = 0,
+        LIMIT = 8;
+
+    function initEventListenter() {
+        // 监听滚动到Frame底部的事件
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra: {
+                threshold: 300 // 距离底部还有多少触发scrolltobottom事件
+            }
+        }, function(ret, err) {
+            // 获取更多的商品
+            fnGetWalletList(true);
+        });
+    }
+    // 实现下拉刷新功能
+    function initRefresh() {
+        api.setRefreshHeaderInfo({
+            visible: true,
+            loadingImg: 'widget://image/refresh.png',
+            bgColor: '#fff',
+            textColor: '#e1017e',
+            showTime: true
+        }, function(ret, err) {
+            // 刷新商品列表
+            fnGetWalletList(false);
+        });
+    }
+
+    var aSearch = [];
+
+    function fnGetWalletList(loadMore_) {
+        if (!loadMore_) {
+            // 显示加载状态对话框
+            api.hideProgress({
+                style: 'default',
+                animationType: 'fade',
+                title: '努力加载中...',
+                text: '请稍后...',
+                modal: false
+            });
+        }
+        // 如果是加载更多，需要实现分页
+        if (loadMore_) {
+            skip += LIMIT;
+        } else {
+            skip = 0;
+        }
+        // 根据状态分类获得相应的订单列表
+        var params = {
+                where: {
+                    'userId': $api.getStorage('userInfo').Id
+                },
+                skip: skip,
+                limit: LIMIT
+            }
+            //console.log(wareTypeList[api.pageParam.wareTypeIndex].Name);
+            //params = $api.jsonToStr(params);
+        fnGet('Syswallet/GetList', params, function(ret, err) {
+            if (ret) {
+
+                // 恢复下拉刷新的状态
+                api.refreshHeaderLoadDone();
+
+                // 在界面中更新订单列表显示
+                fnUpdateWalletList(aSearch, loadMore_);
+            } else {
+                fnShowWareList(false);
+            }
+            // 隐藏加载状态对话框
+            api.hideProgress();
+        });
+    }
+    // 更新订单列表显示
+    function fnUpdateWalletList(data_, loadMore_) {
+        var list = $api.byId('list');
+        // 编译模板函数
+        var tempFn = doT.template($api.byId('template').innerHTML);
+        // 使用模板函数生成HTML文本
+        var resultHTML = tempFn(data_);
+        // 判断是否是加载更多，如果是加载更多，则追加到list中
+        if (loadMore_) {
+            $api.append(list, resultHTML);
+            // 如果服务器端已经没有更多数据返回，更新提示信息
+            if (data_.length < LIMIT) {
+                var pushStatus = $api.byId('pushStatus');
+                pushStatus.innerHTML = "没有啦！";
+            }
+        } else {
+            // 否则，直接替换list中的内容
+            $api.html(list, resultHTML);
+        }
+        // 由于是动态的将元素添加到Dom树上，所以需要手动触发tapmode检查，列表中的元素才能实现点击加速的效果
+        api.parseTapmode();
+    }
+
+    function fnShowWareList(show_) {
+        var empty = $api.byId('empty');
+        var list = $api.byId('list');
+        if (show_) {
+            empty.style.display = 'none';
+            list.style.display = 'block';
+        } else {
+            empty.style.display = 'block';
+            list.style.display = 'none';
+        }
+    }
+</script>
+
+</html>

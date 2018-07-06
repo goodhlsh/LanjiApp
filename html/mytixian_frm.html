@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
+    <style>
+        .input {
+            height: 40px;
+            width: 80%;
+            font-size: 18px;
+            line-height: 20px;
+            color: #8E8C8C;
+            padding-top: 10px;
+        }
+
+        .input::-webkit-input-placeholder {
+            color: #ccc;
+        }
+
+        .divider {
+            height: 15px
+        }
+
+        .highlight {
+            opacity: 0.7;
+        }
+
+        .dis {
+            disabled: disabled
+        }
+    </style>
+</head>
+
+<body>
+    <!--仿注册页面-->
+    <section class="divider"></section>
+    <div class="aui-content">
+        <div class="aui-list aui-form-list">
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-wallet"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input id="moneycout" class="input" type="text" placeholder="请输入可提现的金额" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-alipay"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <div class="aui-title"><input id="zfbbtn" class="aui-btn-danger" type="button" value=" 提现至支付宝 " onclick="fnTixian()" /></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-wxpay"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <div class="aui-title"><input id="wxbtn" class="aui-btn-danger" type="button" value="   提现至微信   " onclick="fnTixian()" /></div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript">
+    //判断是否已验证
+    //若已验证，弹出toast
+    //若未验证，继续打开本页面
+    apiready = function() {
+        //console.log($api.getStorage('userInfo').Id.length);
+        wallet = $api.getStorage('currentwallet');
+        //  console.log(isAuth);
+        if (!wallet) {
+            fnInitUIInput();
+        } else {
+            var moneycout = $api.byId('moneycout');
+            moneycout.placeholder = $api.getStorage('currentwallet') == null ? '没有余额可提' : $api.getStorage('currentwallet');
+            moneycoutValue = moneycout.placeholder;
+
+            api.toast({
+                msg: '您已通过验证',
+                duration: 2000,
+                location: 'bottom'
+            });
+        }
+    };
+    var UIInput;
+    var moneycoutUIInputId;
+    var moneycoutValue;
+    var wallet;
+
+    function fnInitUIInput() {
+        // 用户名输入框模块
+        var moneycout = $api.byId('moneycout');
+        var moneycoutRect = $api.offset(moneycout);
+        UIInput = api.require('UIInput');
+        UIInput.open({
+            rect: {
+                x: moneycoutRect.l,
+                y: moneycoutRect.t,
+                w: moneycoutRect.w,
+                h: moneycoutRect.h
+            },
+            styles: {
+                bgColor: '#fff',
+                size: 16,
+                color: '#000',
+                placeholder: {
+                    color: '#ccc'
+                }
+            },
+            autoFocus: false,
+            maxRows: 1,
+            placeholder: '请输入提现金额',
+            keyboardType: 'default',
+            fixedOn: api.frameName
+        }, function(ret, err) {
+            if (ret) {
+                moneycoutUIInputId = ret.id;
+                if (ret && ret.eventType == "show") {
+                    setTimeout(function() {
+                        UIInput.popupKeyboard({
+                            id: moneycoutUIInputId
+                        });
+                    }, 200);
+                } else if (ret.eventType == "change") {
+                    UIInput.value({
+                        id: moneycoutUIInputId
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.status) {
+                                moneycoutValue = ret.msg;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    function fnCloseWin() {
+        api.closeWin({
+            animation: {
+                type: 'fade' // 指定窗口关闭的动画为淡入淡出
+            }
+        });
+    }
+</script>
+
+</html>

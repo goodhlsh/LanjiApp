@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-slide.css" />
+    <!--拓展AUI字体图标-->
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
+    <style>
+        body {}
+
+        .h15 {
+            height: 15px;
+        }
+
+        .hightitem {
+            background-color: #fff;
+        }
+        /*滚动图片*/
+
+        .aui-slide-node img {
+            width: auto;
+            height:auto;
+            /*宽度 自适应*/
+            max-width: 100%;
+            /*高度 百分百*/
+            max-height: 100%;
+        }
+
+        .bg-dark {
+            /*设置背景颜色
+            !important  只是针对css样式的引入
+            link 可以引入 html ， 也可以引入css*/
+            background: #333333 !important;
+        }
+        /* 2X2样式 */
+
+        .matrix {
+            display: table;
+            height: inherit;
+        }
+
+        .matrix .matrixcell {
+            padding-left: 8px;
+        }
+
+        .matrix .matrixcell .info {
+            font-size: 14px;
+            line-height: 14px;
+            padding-top: 8px;
+            padding-left: 8px;
+        }
+
+        .fl {
+            margin: 0 auto;
+        }
+        /* 猜你喜欢 */
+
+        .guesstitle {
+            height: 40px;
+            line-height: 40px;
+            padding-left: 10px;
+            vertical-align: top;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .home-like-list .item {
+            position: relative;
+            display: block;
+            padding-left: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .home-like-list .cnt {
+            padding: 7px 10px 10px 0;
+            display: box;
+            display: -webkit-box;
+            min-height: 78px;
+            background-size: auto 1px;
+        }
+
+        .home-like-list .pic {
+            margin-right: 10px;
+            background: center;
+        }
+
+        .home-like-list img {
+            width: 90px;
+            height: 66px;
+            margin-top: 7px;
+            margin-bottom: 5px;
+            border-radius: 3px;
+        }
+
+        .home-like-list .wrap {
+            -webkit-box-flex: 1;
+        }
+
+        .home-like-list .wrap2 {
+            display: table;
+            height: 88px;
+            width: 100%;
+        }
+
+        .home-like-list .content {
+            -webkit-box-flex: 1;
+            box-flex: 1;
+            display: table-cell;
+            vertical-align: middle;
+        }
+
+        .home-like-list .warename {
+            color: #333;
+            /*line-height: 16px;*/
+            font-size: 17px;
+            max-width: 11em;
+            white-space: nowrap;
+            word-wrap: normal;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            min-height: 10px;
+            padding-bottom: 2px;
+            padding-top: 3px;
+            display: inline-block;
+        }
+
+        .home-like-list .title {
+            color: #666;
+            line-height: 16px;
+            font-size: 13px;
+            max-height: 30px;
+            overflow: hidden;
+            padding-top: 3px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .home-like-list .hot-title {
+            margin-bottom: 8px;
+        }
+
+        .home-like-list .hot-subtitle {
+            margin-bottom: 9px;
+        }
+
+        .home-like-list .info {
+            margin-top: 9px;
+            /*margin-bottom: 11px;*/
+            color: #666;
+            font-size: 12px;
+            position: relative;
+            line-height: 15px;
+            display: box;
+            display: -webkit-box;
+            height: 15px;
+        }
+
+        .home-like-list .symbol {
+            font-size: 14px;
+            color: #f60;
+            display: block;
+            margin-top: 1px;
+        }
+
+        .home-like-list .price {
+            color: #f60;
+            font-size: 20px;
+            line-height: 15px;
+            margin-right: 5px;
+            margin-top: 1px;
+        }
+
+        .home-like-list .o-price {
+            color: #999;
+            margin-top: 5px;
+            line-height: 10px;
+        }
+
+        .home-like-list .sale {
+            color: #f63;
+            border: solid 1px #ff916e;
+            padding: 3px 2px 2px;
+            font-size: 10px;
+            border-radius: 2px;
+            -webkit-border-radius: 2px;
+            margin-left: 5px;
+            line-height: 10px;
+            height: 10px;
+        }
+
+        .home-like-list .distance {
+            -webkit-box-flex: 1;
+            box-flex: 1;
+            -ms-box-flex: 1;
+            -ms-flex: 1;
+            text-align: right;
+            line-height: 10px;
+            margin-top: 5px;
+            color: #999;
+            float: right;
+            font-size: 12px;
+        }
+
+        .home-like-list .price,
+        .index-rec .home-like-list .o-price,
+        .index-rec .home-like-list .distance,
+        .index-rec .home-like-list .sale {
+            display: block;
+            line-height: 15px;
+            font-size: 12px;
+        }
+
+        .Fix:after {
+            display: block;
+            content: '';
+            height: 0;
+            clear: both;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="aui-slide">
+        <div id="swiplist" class="aui-slide-wrap">
+        </div>
+        <div class="aui-slide-page-wrap">
+            <!--分页容器-->
+        </div>
+    </div>
+
+    <div class="h15"></div>
+    <section class="aui-grid">
+        <div class="aui-row">
+            <div id="activelist">
+            </div>
+        </div>
+    </section>
+    <div class="guesstitle">猜你喜欢<img src="../image/competitive_icon.png" alt=""></div>
+    <div id="list" class="home-like-list">
+
+    </div>
+</body>
+<script type="text/template" id="swiptemplate">
+    {{~it:swipdata }}
+    <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center  open-win" win="ware" param='{"wareId":"{{= swipdata.Id }}"}'>
+        <img id="thumbnail_{{= swipdata.Id }}" src="{{= swipdata.Thumbnail}}" /></div>
+    {{~}}
+</script>
+<script type="text/template" id="activetemplate">
+    {{~ it:activedata }}
+    <div class="aui-col-xs-6  aui-padded-5">
+        <div class="open-win" win="active" param='{"Id":"{{= activedata.Id }}"}'>
+            <div class="matrix">
+                <div class="matrixcell">
+                    <div class="aui-grid-label">{{= activedata.Title }}</div>
+                </div>
+            </div>
+
+            <img id="thumbnail_{{= activedata.Id }}" src="../image/activedefault.png" class="fl" />
+        </div>
+    </div>
+    {{~}}
+</script>
+<script type="text/template" id="template">
+    {{~ it:data }}
+    <div class="item Fix hightitem open-win" win="ware" param='{"wareId":"{{= data.Id }}"}'>
+        <div class="cnt">
+            <img id="thumbnail_{{= data.Id }}" class="pic" src="{{= data.Thumbnail}}" />
+            <div class="wrap">
+                <div class="wrap2">
+                    <div class="content">
+                        <div class="warename">{{= data.Name}}</div>
+                        <span id="distance_{{= data.Id }}" class="distance"></span>
+                        <div class="title">{{= data.Description }}</div>
+                        <div class="info">
+                            <span class="symbol">¥</span>
+                            <span class="price">{{= data.Price }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{~}}
+</script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/aui-slide.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript" src="../script/list.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+
+        fnInitSwipList(0, 6); //首页滚动图片
+
+        fnInitActiveList(0, 4); //首页活动内容
+
+        keyword = $api.getStorage('keyword');
+        //按最近一次搜索的商品给出喜欢的商品
+        fnInitLikeList(keyword, 0, 20);
+        // 初始化事件监听
+        initEventListenter();
+        // 初始化下拉刷新
+        initRefresh();
+        //api.refreshHeaderLoading();
+    };
+
+    function fnInitSwipList(skip, swipLIMIT) {
+        fnGet('Spl_Ware/GetAllTop', {
+            'where': {
+                'toTop': 'true'
+            },
+            'skip': skip,
+            'limit': swipLIMIT
+        }, function(ret, err) {
+          //console.log(JSON.stringify(ret));
+            if (ret) {
+                api.hideProgress();
+                api.refreshHeaderLoadDone();
+                fnShowSwipList(ret);
+                fnCacheImage(ret, 0);
+            } else {
+                console.log(JSON.stringify(err));
+            }
+        });
+
+    }
+    var swiplist;
+
+    function fnShowSwipList(datas) {
+        swiplist = $api.byId('swiplist');
+        var swiptemplate = $api.byId('swiptemplate');
+        if (swiptemplate) {
+            dotswip = doT.template(swiptemplate.innerHTML);
+        }
+        swiplist.innerHTML = dotswip(datas);
+        fnReadyOpenWin();
+        fnAuiSlide();
+    };
+
+
+    function fnInitActiveList(skip, activeLIMIT) {
+        fnGet('Spl_Ware/GetAllActive', {
+            'where': {
+                'isShow': 'true'
+            },
+            'skip': skip,
+            'limit': activeLIMIT
+        }, function(ret, err) {
+            api.hideProgress();
+            api.refreshHeaderLoadDone();
+            fnShowActiveList(ret);
+            fnCacheImage(ret, 0);
+        });
+    };
+    var activelist;
+
+    function fnShowActiveList(datas) {
+        activelist = $api.byId('activelist');
+        var activetemplate = $api.byId('activetemplate');
+        if (activetemplate) {
+            dotactive = doT.template(activetemplate.innerHTML);
+        }
+        activelist.innerHTML = dotactive(datas);
+        fnReadyOpenWin();
+    };
+    var keyword;
+
+    function fnInitLikeList(keyword, skip, likeLIMIT) {
+        fnGet('Spl_Ware/GetAllLike', {
+            'where': {
+                'like': keyword != '' ? keyword : ''
+            },
+            'skip': skip,
+            'limit': likeLIMIT
+        }, function(ret, err) {
+          //console.log("//////////////////////////////");
+        //  console.log(JSON.stringify(ret));
+            if (ret) {
+                api.hideProgress();
+                api.refreshHeaderLoadDone();
+                fnShowLikeList(ret);
+            } else {
+                console.log(JSON.stringify(err));
+            }
+        });
+    }
+
+    function fnShowLikeList(datas) {
+        list = $api.byId('list');
+        var template = $api.byId('template');
+        if (template) {
+            dotlike = doT.template(template.innerHTML);
+        }
+        list.innerHTML = dotlike(datas);
+        fnReadyOpenWin();
+    };
+
+
+    function fnCacheImage(datas, index) {
+        if (datas.length <= index) {
+            return;
+        }
+        api.imageCache({
+            url: datas[index].Thumbnail
+        }, function(ret, err) {
+            var thumbnail = $api.byId("thumbnail_" + datas[index].Id);
+            if (thumbnail) {
+                thumbnail.src = datas[index].Thumbnail;
+            }
+
+            fnCacheImage(datas, index + 1);
+        });
+    };
+
+    function initEventListenter() {
+        // 监听滚动到Frame底部的事件
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra: {
+                threshold: 300 // 距离底部还有多少触发scrolltobottom事件
+            }
+        }, function(ret, err) {
+            // 获取更多的商品
+            if (skip < 10) {
+                skip = skip + limit;
+                limit += 10;
+            }
+
+            //  fnInitLikeList(keyword, skip, limit);
+        });
+    }
+
+    var skip = 0,
+        limit = 10;
+    // 实现下拉刷新功能
+    function initRefresh() {
+        api.setRefreshHeaderInfo({
+            visible: true,
+            loadingImg: 'widget://image/refresh.png',
+            bgColor: '#fff',
+            textColor: '#e1017e',
+            showTime: true
+        }, function(ret, err) {
+            // 刷新商品列表
+            // 获取更多的商品
+            if (skip < 0) {
+                skip = skip + limit;
+                limit += 10;
+            }
+
+            fnInitLikeList(keyword, skip, limit);
+        });
+    }
+
+    function fnAuiSlide() {
+        var slide = new auiSlide({
+            //      指定 获取当前页的函数  必须实现
+            //  currentPage:currentFun,
+            //      获取最外层div元素
+            "container": document.getElementById("aui-slide"),
+            //      高度
+            "height": 260,
+            //      速度
+            "speed": 300,
+            //自动播放
+            "autoPlay": 3000,
+            //      是否显示
+            "pageShow": true,
+            //      点风格显示
+            "pageStyle": 'line',
+            //      是否循环 滚动
+            "loop": true,
+            //      点的位置
+            "dotPosition": 'center',
+        });
+    }
+</script>
+
+</html>

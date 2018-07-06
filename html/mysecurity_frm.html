@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            background: #f0f0f0;
+        }
+
+        section {
+            position: relative;
+            height: auto;
+            margin-top: 8px;
+            overflow: hidden;
+            background-color: #fff;
+        }
+
+        .input {
+            height: 40px;
+            width: 80%;
+            font-size: 18px;
+            line-height: 20px;
+            color: #8E8C8C;
+            padding-top: 10px;
+        }
+
+        .input::-webkit-input-placeholder {
+            color: #ccc;
+        }
+
+        .divider {
+            height: 15px
+        }
+
+        .highlight {
+            opacity: 0.7;
+        }
+
+        .dis {
+            disabled: disabled
+        }
+    </style>
+</head>
+
+<body>
+    <!--仿注册页面-->
+    <section class="divider"></section>
+    <div class="aui-content">
+        <div class="aui-list aui-form-list">
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-my"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input id="oldpasswd" class="input" type="text" placeholder="" />
+                    </div>
+                </div>
+            </div>
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-profile"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input id="newpasswd" class="input" type="text" placeholder="" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-mobile"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input id="newpasswd2" class="input" type="text" placeholder="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
+                    <div id="okbtn" class="aui-btn aui-btn-block  aui-btn-sm aui-btn-danger" tapmode="highlight" onclick="fnGotoChangePasswd();">确认更改</div>
+                </div>
+            </div>
+        </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        fnInitUIInput();
+    };
+    var UIInput;
+    var oldpasswdUIInputId;
+    var newpasswdUIInputId;
+    var newpasswd2UIInputId;
+    var oldpasswdValue;
+    var newpasswdValue;
+    var newpasswd2Value;
+
+    function fnInitUIInput() {
+        // 原密码输入框模块
+        var oldpasswd = $api.byId('oldpasswd');
+        var oldpasswdRect = $api.offset(oldpasswd);
+        UIInput = api.require('UIInput');
+        UIInput.open({
+            rect: {
+                x: oldpasswdRect.l,
+                y: oldpasswdRect.t,
+                w: oldpasswdRect.w,
+                h: oldpasswdRect.h
+            },
+            styles: {
+                bgColor: '#fff',
+                size: 16,
+                color: '#000',
+                placeholder: {
+                    color: '#ccc'
+                }
+            },
+            autoFocus: false,
+            maxRows: 1,
+            placeholder: '请输入原密码',
+            keyboardType: 'default',
+            fixedOn: api.frameName
+        }, function(ret, err) {
+            if (ret) {
+                oldpasswdUIInputId = ret.id;
+                if (ret && ret.eventType == "show") {
+                    setTimeout(function() {
+                        UIInput.popupKeyboard({
+                            id: oldpasswdUIInputId
+                        });
+                    }, 200);
+                } else if (ret.eventType == "change") {
+                    UIInput.value({
+                        id: oldpasswdUIInputId
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.status) {
+                                oldpasswdValue = ret.msg;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+        // 密码输入框模块
+        var newpasswd = $api.byId('newpasswd');
+        var newpasswdRect = $api.offset(newpasswd);
+        UIInput = api.require('UIInput');
+        UIInput.open({
+            rect: {
+                x: newpasswdRect.l,
+                y: newpasswdRect.t,
+                w: newpasswdRect.w,
+                h: newpasswdRect.h
+            },
+            styles: {
+                bgColor: '#fff',
+                size: 16,
+                color: '#000',
+                placeholder: {
+                    color: '#ccc'
+                }
+            },
+            autoFocus: false,
+            maxRows: 1,
+            placeholder: '请输入新密码',
+            keyboardType: 'default',
+            fixedOn: api.frameName
+        }, function(ret, err) {
+            if (ret) {
+                newpasswdUIInputId = ret.id;
+                if (ret && ret.eventType == "show") {
+                    setTimeout(function() {
+                        UIInput.popupKeyboard({
+                            id: newpasswdUIInputId
+                        });
+                    }, 200);
+                } else if (ret.eventType == "change") {
+                    UIInput.value({
+                        id: newpasswdUIInputId
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.status) {
+                                newpasswdValue = ret.msg;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+        // 确认密码输入框模块
+        var newpasswd2 = $api.byId('newpasswd2');
+        var newpasswd2Rect = $api.offset(newpasswd2);
+        UIInput.open({
+            rect: {
+                x: newpasswd2Rect.l,
+                y: newpasswd2Rect.t,
+                w: newpasswd2Rect.w,
+                h: newpasswd2Rect.h
+            },
+            styles: {
+                bgColor: '#fff',
+                size: 16,
+                color: '#000',
+                placeholder: {
+                    color: '#ccc'
+                }
+            },
+            autoFocus: false,
+            maxRows: 1,
+            placeholder: '请输入确认密码',
+            keyboardType: 'default',
+            inputType: 'text',
+            fixedOn: api.frameName
+        }, function(ret, err) {
+            if (ret) {
+                newpasswd2UIInputId = ret.id;
+                if (ret.eventType == "change") {
+                    UIInput.value({
+                        id: newpasswd2UIInputId
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.status) {
+                                newpasswd2Value = ret.msg;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    function fnGotoChangePasswd() {
+        var userid = $api.getStorage('userInfo')==null?null:$api.getStorage('userInfo').Id;
+
+        if (oldpasswdValue == null || newpasswdValue == null || newpasswd2Value == null) {
+            api.alert({
+                title: '警告',
+                msg: '提供的信息不全！',
+            }, function(ret, err) {});
+            return;
+        }
+        //加密比对
+        var Md5;
+        var signature = api.require('signature');
+        signature.md5Sync({
+            data: oldpasswdValue
+        }, function(ret, err) {
+            if (ret.status) {
+                alert(JSON.stringify(ret));
+                Md5 = ret.value;
+                console.log('密码是'+Md5);
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+        if (Md5 != $api.getStorage('userInfo').password) {
+            api.alert({
+                title: '警告',
+                msg: '原密码不对！',
+            }, function(ret, err) {});
+            return;
+        }
+
+        if (newpasswdValue.length <= 6 || newpasswd2Value.length <= 6) {
+            api.alert({
+                title: '警告',
+                msg: '密码长度不能小于6！',
+            }, function(ret, err) {});
+            return;
+        }
+        fnPost('SysUser/PostPasswd',
+            JSON.stringify({
+                UserId: userid,
+                OldPasswd: oldpasswdValue,
+                NewPasswd: newpasswdValue
+            }),
+            'application/json', false, false,
+            function(ret, err) {
+                if (ret) {
+                  api.toast({
+                      msg: '密码修改成功',
+                      duration: 2000,
+                      location: 'bottom'
+                  });
+
+                }
+            });
+    }
+</script>
+
+</html>

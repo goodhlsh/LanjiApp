@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>我的业绩</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            -webkit-appearance: none;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+            -webkit-touch-callout: none;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0 auto;
+            width: 100%;
+            min-height: 100%;
+            overflow-x: hidden;
+            -webkit-user-select: none;
+        }
+
+        body {
+            font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+            -webkit-text-size-adjust: 100%;
+            -webkit-overflow-scrolling: touch;
+            overflow-scrolling: touch;
+        }
+
+        span {
+            padding: 10px 5px;
+            margin: 0px;
+            display: inline-block;
+        }
+
+        .hover {
+            opacity: .4;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .selectdate {
+            text-align: center;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .list {
+            display: block;
+            position: relative;
+            box-sizing: border-box;
+            width: 100%;
+            height: auto;
+        }
+
+        .empty {
+            display: none;
+            position: absolute;
+            width: 100%;
+            height: 50px;
+        }
+
+        .content {
+            width: 100%;
+            height: 100%;
+        }
+
+        .ware-1 {
+            position: relative;
+            width: 100%;
+            height: 145px;
+            box-sizing: border-box;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #d1d1d1;
+        }
+
+        .ware-1 .info {
+            width: 100%;
+            height: 114px;
+            box-sizing: border-box;
+            padding-left: 32px;
+            padding-right: 28px;
+        }
+
+        .ware-1 .info .name {
+            width: 100%;
+            height: 15px;
+            color: #555555;
+            margin-top: 14px;
+            font-size: 15px;
+        }
+
+        .ware-1 .info .orderNo {
+            margin-top: 10px;
+            width: 100%;
+            height: 13px;
+            font-size: 13px;
+            color: #9d9d9d;
+        }
+
+        .ware-1 .info .createDate {
+            margin-top: 10px;
+            width: 100%;
+            height: 12px;
+            font-size: 12px;
+            vertical-align: top;
+        }
+
+        .push-status {
+            width: 100%;
+            height: 40px;
+            font-size: 16px;
+            color: #888;
+            line-height: 40px;
+            text-align: center;
+            background-color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-header" id="ach">
+                当月业绩
+            </li>
+        </ul>
+        <div id='showach'>
+        <section id="list" class="list"></section>
+        <section id="empty" class="empty"></section>
+        <div class="push-status" id="pushStatus">上拉显示更多</div>
+      </div>
+    </div>
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-header">
+                自定义时间查询
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        开始日期：
+                    </div>
+                    <div class="aui-list-item-title" id="startDate">
+
+                    </div>
+                    <span tapmode="hover" id="se1" onclick="fnShow(1)">选择日期</span>
+                    <span tapmode="hover" id="hi1" onclick="fnHide(1)" class="hidden">隐藏日历</span>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        结束日期：
+                    </div>
+                    <div class="aui-list-item-title" id="endDate">
+                    </div>
+                    <span tapmode="hover" id="se2" onclick="fnShow(2)">选择日期</span>
+                    <span tapmode="hover" id="hi2" onclick="fnHide(2)" class="hidden">隐藏日历</span>
+
+                </div>
+
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-btn aui-btn-info aui-margin-r-5" onclick="fnGetAchieve()">提交</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div id="selectdate" class="selectdate">
+        <span tapmode="hover" onclick="fnPrevYear()"><<</span>
+        <span tapmode="hover" onclick="fnPrevMonth()"><</span>
+        <span id="yearvalue"></span><span>年</span>
+        <span id="monthvalue"></span><span>月</span>
+        <span id="dayvalue"></span><span>日</span>
+        <span tapmode="hover" onclick="fnNextMonth()">></span>
+        <span tapmode="hover" onclick="fnNextYear()">>></span>
+        <span tapmode="hover" onclick="fnOkDate()">OK</span>
+    </div>
+
+</body>
+<script type="text/template" id="template">
+    {{~it:value:index}}
+    <div class="ware ware-1">
+        <div class="content">
+            <div class="info">
+                <div class="name">金额: {{=value.ShouRu}}</div>
+                <div class="orderNo">来源说明：{{=value.Froms}}</div>
+                <div class="createDate">日期：{{=value.CreateTime}}</div>
+                <div class="createDate">备注：{{=value.Note}}</div>
+            </div>
+        </div>
+    </div>
+    {{~}}
+</script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript">
+    var UICalendar;
+    var yearvalue, dayvalue, monthvalue;
+    var selectdate;
+    var offset;
+    var flag = 0;
+    var now_ = true;
+    var nowdate, startTime, endTime;
+    var showach;
+    apiready = function() {
+        selectdate = $api.byId('selectdate');
+        yearvalue = $api.byId('yearvalue');
+        monthvalue = $api.byId('monthvalue');
+        dayvalue = $api.byId('dayvalue');
+        showach   = $api.byId('showach');
+        offset = $api.offset(selectdate);
+        UICalendar = api.require('UICalendar');
+        fnOpen();
+        fnHide(1);
+        fnHide(2);
+        // 初始化事件监听
+        initEventListenter();
+        // 初始化下拉刷新
+        initRefresh();
+        nowdate = new Date($api.date());
+        // 获取订单列表
+        fnGetAchList(false);
+        //console.log(nowdate.toLocaleDateString());
+
+    };
+
+    function fnOpen() {
+        UICalendar.open({
+            rect: {
+                x: 30,
+                y: offset.t, //document.querySelector('.selectdate').offsetHeight,
+                w: api.frameWidth - 60,
+                h: 340
+            },
+            styles: {
+                bg: '#fff',
+                week: {
+                    weekdayColor: '#3b3b3b',
+                    weekendColor: '#a8d400',
+                    size: 12
+                },
+                date: {
+                    color: '#3b3b3b',
+                    selectedColor: '#fff',
+                    selectedBg: '#a8d500',
+                    size: 12
+                },
+                today: {
+                    color: 'rgb(230,46,37)',
+                    bg: ''
+                },
+                specialDate: {
+                    color: '#fff'
+                }
+            },
+            specialDate: [{
+                date: ''
+            }],
+            switchMode: 'vertical',
+            fixedOn: api.frameName,
+            fixed: false
+        }, function(ret, err) {
+            if (ret) {
+                yearvalue.innerHTML = ret.year;
+                monthvalue.innerHTML = ret.month;
+                dayvalue.innerHTML = ret.day;
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+
+    function fnSetSpecialDates() {
+        UICalendar.setSpecialDates({
+            specialDates: [{
+                date: '2016-05-29',
+                color: '#fff',
+                bg: '#0f0'
+            }, {
+                date: '2016-05-31',
+                color: '#fff',
+                bg: '#0f0'
+            }]
+        });
+    }
+
+    function fnClose() {
+        UICalendar.close();
+    }
+
+    function fnShow(n_) {
+        UICalendar.show();
+        $api.removeCls(selectdate, 'hidden');
+        $api.addCls(showach, 'hidden');
+
+        if (n_ == 1) {
+            $api.addCls(se1, 'hidden');
+            $api.removeCls(hi1, 'hidden');
+        }
+        if (n_ == 2) {
+            $api.addCls(se2, 'hidden');
+            $api.removeCls(hi2, 'hidden');
+        }
+        flag = n_;
+    }
+
+    function fnHide(n_) {
+        UICalendar.hide();
+        $api.addCls(selectdate, 'hidden');
+        if (n_ == 1) {
+            $api.removeCls(se1, 'hidden');
+            $api.addCls(hi1, 'hidden');
+        }
+        if (n_ == 2) {
+            $api.removeCls(se2, 'hidden');
+            $api.addCls(hi2, 'hidden');
+        }
+    }
+
+    function fnNextMonth() {
+        UICalendar.nextMonth(function(ret, err) {
+            if (ret) {
+                monthvalue.innerHTML = ret.month;
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+
+    function fnPrevMonth() {
+        UICalendar.prevMonth(function(ret, err) {
+            if (ret) {
+                monthvalue.innerHTML = ret.month;
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+
+    function fnNextYear() {
+        UICalendar.nextYear(function(ret, err) {
+            if (ret) {
+                yearvalue.innerHTML = ret.year;
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+
+    function fnPrevYear() {
+        UICalendar.prevYear(function(ret, err) {
+            if (ret) {
+                yearvalue.innerHTML = ret.year;
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+
+    function fnOkDate() {
+        if (flag == 1) {
+            startDate.innerHTML = yearvalue.innerHTML + "/" + monthvalue.innerHTML + "/" + dayvalue.innerHTML;
+        }
+        if (flag == 2) {
+            endDate.innerHTML = yearvalue.innerHTML + "/" + monthvalue.innerHTML + "/" + dayvalue.innerHTML;
+        }
+    }
+    var skip = 0,
+        LIMIT = 8;
+
+    function initEventListenter() {
+        // 监听滚动到Frame底部的事件
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra: {
+                threshold: 300 // 距离底部还有多少触发scrolltobottom事件
+            }
+        }, function(ret, err) {
+            // 获取更多的商品
+            fnGetAchList(true);
+        });
+    }
+    // 实现下拉刷新功能
+    function initRefresh() {
+        api.setRefreshHeaderInfo({
+            visible: true,
+            loadingImg: 'widget://image/refresh.png',
+            bgColor: '#fff',
+            textColor: '#e1017e',
+            showTime: true
+        }, function(ret, err) {
+            // 刷新商品列表
+            fnGetAchList(false);
+        });
+    }
+    var params;
+
+    function fnGetAchList(loadMore_) {
+        if (!loadMore_) {
+            // 显示加载状态对话框
+            api.hideProgress({
+                style: 'default',
+                animationType: 'fade',
+                title: '努力加载中...',
+                text: '请稍后...',
+                modal: false
+            });
+        }
+        // 如果是加载更多，需要实现分页
+        if (loadMore_) {
+            skip += LIMIT;
+        } else {
+            skip = 0;
+        }
+        // 根据时间是否当月决定参数
+        if (now_) {
+            params = {
+                where: {
+                  'uid': $api.getStorage('userInfo').Id,
+                    'startdate': nowdate.getFullYear() + '/' + (nowdate.getMonth()+1) + '/1',
+                    'enddate': nowdate.toLocaleDateString()
+                },
+                skip: skip,
+                limit: LIMIT
+            }
+        } else {
+            params = {
+                where: {
+                    'uid': $api.getStorage('userInfo').Id,
+                    'startdate': startTime,
+                    'enddate': endTime
+                },
+                skip: skip,
+                limit: LIMIT
+            }
+        }
+
+        //console.log(wareTypeList[api.pageParam.wareTypeIndex].Name);
+        //params = $api.jsonToStr(params);
+        fnGet('SysAchievement/GetAchListByUser', params, function(ret, err) {
+            if (ret) {
+                // 恢复下拉刷新的状态
+                api.refreshHeaderLoadDone();
+
+                // 在界面中更新订单列表显示
+                fnUpdateList(ret, loadMore_);
+            } else {
+                fnShowWareList(false);
+            }
+            // 隐藏加载状态对话框
+            api.hideProgress();
+        });
+    }
+
+    function fnGetAchieve() {
+        now_ = false;
+        if (startDate.innerHTML != null) {
+            startTime = startDate.innerHTML;
+        } else {
+            startTime = nowdate.getFullYear() + '/' + nowdate.getMonth() + '/1';
+        }
+        if (endDate.innerHTML != null) {
+            endTime = endDate.innerHTML;
+        } else {
+            endTime = nowdate.toLocaleDateString();
+        }
+        ach.innerHTML='查询结果';
+        fnHide(1);
+        fnHide(2);
+        $api.removeCls(showach, 'hidden');
+
+        fnGetAchList(false);
+    }
+
+    function fnUpdateList(data_, loadMore_) {
+
+        var achtemplate = doT.template($api.byId('template').innerHTML);
+        var resultHTML = achtemplate(data_);
+        if (loadMore_) {
+            $api.append(list, resultHTML);
+            // 如果服务器端已经没有更多数据返回，更新提示信息
+            if (data_.length < LIMIT) {
+                var pushStatus = $api.byId('pushStatus');
+                pushStatus.innerHTML = "没有啦！";
+            }
+        } else {
+            // 否则，直接替换list中的内容
+            $api.html(list, resultHTML);
+        }
+        // 由于是动态的将元素添加到Dom树上，所以需要手动触发tapmode检查，列表中的元素才能实现点击加速的效果
+        api.parseTapmode();
+    }
+
+    function fnShowWareList(show_) {
+        var empty = $api.byId('empty');
+        var list = $api.byId('list');
+        if (show_) {
+            empty.style.display = 'none';
+            list.style.display = 'block';
+        } else {
+            empty.style.display = 'block';
+            list.style.display = 'none';
+        }
+    }
+</script>
+
+</html>

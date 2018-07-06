@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+        }
+
+        section {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            overflow: auto;
+        }
+
+        .card-extend {
+            text-align: center;
+        }
+
+        .picCenter {
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav  aui-btn-danger" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="fnCloseWin()">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">我的二维码</div>
+
+    </header>
+
+    <div id="extenCode" class="card-extend aui-margin-15">
+        <img id="qrCore" src="" class="picCenter"></img>
+    </div>
+    <section></section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+      fnReady();
+        api.parseTapmode();
+        var tid;
+        if ($api.getStorage('userInfo')) {
+            tid = $api.getStorage('userInfo').Id;
+        } else {
+            api.alert({
+                title: '消息',
+                msg: '未登录，二维码生成失败',
+            }, function(ret, err) {
+                if (ret) {
+                    fnCloseWin();
+                } else {
+                    // alert( JSON.stringify( err ) );
+                }
+            });
+
+        }
+        var FNScanner = api.require('FNScanner');
+        FNScanner.encodeImg({
+            type: 'qr_image',
+            content: tid,
+            saveToAlbum: false,
+            saveImg: {
+                path: 'fs://album.png',
+                w: 200,
+                h: 200
+            }
+        }, function(ret, err) {
+            if (ret.status) {
+                var qr_image = $api.byId('qrCore');
+                qr_image.src = ret.imgPath;
+                //$api.attr(qr_image, 'src', ret.imgPath);
+            }
+        });
+        // inter =   window.setInterval(getDone(tid), 3000);
+    };
+</script>
+
+</html>

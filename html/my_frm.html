@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>个人中心</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
+    <style>
+        header {
+            height: 150px;
+        }
+
+        header .icon-panel {
+            width: 100%;
+            height: 86px;
+            text-align: center;
+        }
+
+        header .icon-panel .icon {
+            display: inline-block;
+            box-sizing: border-box;
+            width: 86px;
+            height: 86px;
+            border: 3px solid #b10063;
+            border-radius: 86px;
+            background-image: url(../image/my/default_square.png);
+            background-size: 100% 100%;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        .highlight {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav  aui-btn-danger" id="aui-header">
+        <div class="login open-win" win="person_info" login="true">
+            <div class="icon-panel">
+                <div id="userAvatar" class="icon"></div>
+            </div>
+            <div id="username" class="username">lanyou</div>
+            <div class="account-info">余额:￥<span id="currentamout">0.0</span></div>
+        </div>
+    </header>
+    <section class="aui-content">
+        <div class="aui-list aui-list-noborder">
+            <div class="aui-list-item open-win" win="myorder" login="true">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-ticket">我的订单</i></div>
+                    <div class="aui-list-item-right">查看我的订单</div>
+                </div>
+            </div>
+            <div class="aui-list-item open-win" win="myaccount" login="true">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-cascades">我的账户</i></div>
+                    <div class="aui-list-item-right">管理我的账户</div>
+                </div>
+            </div>
+            <div class="aui-list-item open-win" win="mybillingrecord" login="true">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-footprint">账单记录</i></div>
+                    <div class="aui-list-item-right">查看账单记录</div>
+                </div>
+            </div>
+            <div class="aui-list-item open-win" win="myaddress" login="true">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-cart">收货地址</i></div>
+                    <div class="aui-list-item-right">管理收货地址</div>
+                </div>
+            </div>
+            <div class="aui-list-item open-win" win="message" login="true">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-info">查看消息</i></div>
+                    <div class="aui-list-item-right">查看系统、公告等消息</div>
+                </div>
+            </div>
+            <div class="aui-list-item open-win" win="setting" login="true">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-settings">设置</i></div>
+                    <div class="aui-list-item-right"></div>
+                </div>
+            </div>
+            <div class="aui-list-item open-win" win="customerservice">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-vip">帮助</i></div>
+                    <div class="aui-list-item-right"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+      userAvatar = $api.byId('userAvatar');
+      userName = $api.byId('username');
+      userYuE = $api.byId('currentamout');
+        fnReadyOpenWin();
+        fnInitYuE();
+        fnInit();
+        fnInitEvent();
+
+        //  fnUpdateUserInfo();
+    };
+    var userAvatar, userName, userYuE;
+
+    function fnInit() {
+        userName.innerHTML = $api.getStorage('userInfo').TrueName == null ? '没有填写' : $api.getStorage('userInfo').TrueName || '点击登录';
+        userAvatar.src = $api.getStorage('userInfo').Photo || '../image/my/default_square.png';
+        userYuE.innerHTML = $api.getStorage('currentwallet') == null ? '0.0' : ($api.getStorage('currentwallet').JieYu==null?'0.0':$api.getStorage('currentwallet').JieYu);
+    };
+
+    function fnInitEvent() {
+        api.addEventListener({
+            name: 'setuserinfo'
+        }, function(ret, err) {
+            fnUpdateUserInfo();
+        });
+
+        api.addEventListener({
+            name: 'logout'
+        }, function(ret, err) {
+            fnResetUserInfo();
+        });
+    };
+
+    function fnUpdateUserInfo() {
+        userName.innerHTML = $api.getStorage('userInfo').TrueName == null ? '没有填写' : $api.getStorage('userInfo').TrueName || '点击登录';
+        var src = $api.getStorage('userInfo').Photo || '../image/my/default_square.png';
+
+        api.imageCache({
+            url: src
+        }, function(ret, err) {
+            userAvatar.src = ret.url;
+        });
+        fnInitYuE();
+
+    };
+
+    function fnResetUserInfo() {
+        userName.innerHTML = '点击登录';
+        userAvatar.src = '../image/my/profile_default.png';
+        userYuE.innerHTML = '0.0';
+    };
+
+    function fnInitYuE() {
+
+        if ($api.getStorage('currentwallet')!=null) {
+            userYuE.innerHTML = $api.getStorage('currentwallet').JieYu == null ? '0.0' : $api.getStorage('currentwallet').JieYu;
+        } else {
+            var filter = {
+                where: {
+                    userid: $api.getStorage('userInfo').Id
+                },
+                //order: "createAt DESC",
+                limit: 1,
+                skip: 0
+            };
+            fnGet('Syswallet/GetWallet', filter, function(ret, err) {
+                if (ret) {
+                //  console.log(JSON.stringify(ret));
+                    userYuE.innerHTML = ret.JieYu;
+                    $api.setStorage('currentwallet', ret);
+
+                } else {
+                    api.alert({
+                        title: '消息',
+                        msg: '查不到余额',
+                    });
+                }
+            });
+        }
+    }
+    /*
+        var userInfo;
+
+        function islogin() {
+            // 从缓存中获取用户信息
+            userInfo = $api.getStorage('userInfo');
+
+            // 判断当前用户是否登录了
+            if (userInfo && userInfo.id) {
+                // 若已登录成功，获取个人信息
+                getUserInfo();
+            } else {
+                // 没有登录，打开登录Window
+                api.openWin({
+                    name: 'login',
+                    url: './login.html',
+                    pageParam: {
+                        name: 'test'
+                    }
+                });
+            }
+        }
+
+        function getUserInfo() {
+            api.ajax({
+                url: 'https://d.apiclound.com/mcm/api/user/' + userInfo.userId,
+                method: 'get',
+                headers: {
+                    "X-APICloud-AppId": "A6921544633372",
+                    "X-APICloud-AppKey": "2672b5911d8551540c1ea598e01c87fee217a1e5.1482500122476",
+                    "Authorization": userInfo.id
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    fnUpdateLocalAvatar(ret);
+
+                    fnChangeAccount(ret);
+                } else {
+                    alert(JSON.stringify(err));
+                }
+            });
+
+        }
+
+        function fnChangeAccount() {
+            api.ajax({
+                url: 'https://d.apiclound.com/mcm/api/user/' + userInfo.userId,
+                method: 'get',
+                headers: {
+                    "X-APICloud-AppId": "A6921544633372",
+                    "X-APICloud-AppKey": "2672b5911d8551540c1ea598e01c87fee217a1e5.1482500122476",
+                    "Authorization": userInfo.id
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    $api.html($api.byID('accountrecord'), '余额:￥' + ret.count + '&nbsp;|&nbsp;&nbsp;业绩:￥' + ret.yeji);
+                    $api.html($api.byID('username'), ret.username);
+                    alert(JSON.stringify(ret));
+                } else {
+                    alert(JSON.stringify(err));
+                }
+            });
+
+
+        }
+
+        function fnUpdateLocalAvatar(data_) {
+            if (!data_.avatar) {
+                return;
+            }
+            var icon = $api.byId('icon');
+            api.imageCache({
+                url: data_.avatar.url
+            }, function(ret, err) {
+                if (ret) {
+                    icon.style.backgroundimage = 'url(' + ret.url + ')';;
+                } else {
+                    api.toast({
+                        msg: '获取头像失败！',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            });
+        }
+
+        function fnSetAvatar() {
+            api.actionSheet({
+                title: '选择',
+                cancelTitle: '取消',
+                buttons: ['拍照', '相册']
+            }, function(ret, err) {
+                if (ret) {
+                    var sourceTypes = [
+                        'camera',
+                        'album'
+                    ];
+                    if (ret.buttonIndex == (sourceTypes.length + 1)) {
+                        return;
+                    } else {
+                        api.getPicture({
+                            sourceType: sourceTypes[ret.buttonIndex - 1],
+                            encodingType: 'jpg',
+                            mediaValue: 'pic',
+                            destinationType: 'url',
+                            allowEdit: true,
+                            quality: 50,
+                            targetWidth: 100,
+                            targetHeight: 100,
+                            saveToPhotoAlbum: false
+                        }, function(ret, err) {
+                            if (ret) {
+                                fnUploadAtavar(ret.data);
+                            } else {
+                                alert(JSON.stringify(err));
+                            }
+                        });
+                    }
+                }
+            });
+
+        }
+
+        // 上传头像文件
+        function fnUploadAtavar(avatarUrl_) {
+            api.ajax({
+                url: 'https://d.apicloud.com/mcm/api/file',
+                method: 'post',
+                headers: {
+                    "X-APICloud-AppId": "A6921544633372",
+                    "X-APICloud-AppKey": "2672b5911d8551540c1ea598e01c87fee217a1e5.1482500122476"
+                },
+                data: {
+                    values: {
+                        filename: 'icon'
+                    },
+                    files: {
+                        file: avatarUrl_
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    fnUpdateUserAtavar(ret);
+                } else {
+                    alert(JSON.stringify(err));
+                }
+            });
+        }
+
+        // 更新用户头像
+        function fnUpdateUserAtavar(avatar_) {
+            var userInfo = $api.getStorage('userInfo');
+            api.ajax({
+                url: 'https://d.apicloud.com/mcm/api/user/' + userInfo.userId,
+                method: 'put',
+                headers: {
+                    "X-APICloud-AppId": "A6921544633372",
+                    "X-APICloud-AppKey": "2672b5911d8551540c1ea598e01c87fee217a1e5.1482500122476",
+                    "Authorization": userInfo.id
+                },
+                data: {
+                    values: {
+                        avatar: avatar_
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    fnUpdateLocalAvatar(ret);
+                } else {
+                    alert(JSON.stringify(err));
+                }
+            });
+        }
+    */
+</script>
+
+</html>

@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>APICloud APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            background: #f0f0f0;
+        }
+
+        .highlight {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-media-list">
+            <li class="aui-list-item" onclick="fnSetAvatar();">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-title">我的头像</div>
+                        <div class="aui-list-item-text">
+                            单击图片可以更换
+                        </div>
+                    </div>
+                    <div class="aui-list-item-media">
+                        <img id="avatar" src="../image/demo4.png">
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn" onclick="fnLogout();">
+                    <div class="aui-btn aui-btn-danger aui-margin-l-5">退出登录</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/common.js"></script>
+    <script type="text/javascript" src="../script/SHA1.js"></script>
+    <script type="text/javascript" src="../script/remotedb.js"></script>
+    <script type="text/javascript">
+        apiready = function() {
+            fnReadyOpenWin();
+            fnInit();
+
+            fnSetInfo();
+        };
+
+        var avatar;
+
+        function fnInit() {
+            avatar = $api.byId('avatar');
+        };
+
+
+
+        var flag = false;
+
+        function fnSetInfo() {
+            if (!flag) {
+                avatar.src = $api.getStorage('userInfo').Photo || '../image/my/default_square.png';
+                flag = true;
+            }
+            api.sendEvent({
+                name: 'setuserinfo'
+            });
+        };
+
+        function fnSetAvatar() {
+            api.actionSheet({
+                cancelTitle: '取消',
+                buttons: ['拍照', '打开相册']
+            }, function(ret, err) {
+                if (ret.buttonIndex == 3) {
+                    return;
+                }
+
+                var sourceType = (ret.buttonIndex == 1) ? 'camera' : 'album';
+
+                api.getPicture({
+                    sourceType: sourceType,
+                    encodingType: 'jpg',
+                    mediaValue: 'pic',
+                    destinationType: 'url',
+                    allowEdit: true,
+                    quality: 50,
+                    targetWidth: 100,
+                    targetHeight: 100,
+                    saveToPhotoAlbum: false
+                }, function(ret, err) {
+                    console.log(JSON.stringify(ret));
+                    if (ret && ret.data) {
+                        //$api.setStorage('avatar', ret.data);
+                        //写入用户库
+                        avatar.src = ret.data;
+                        console.log("pic-----------------");
+                        fnUploadAtavar(ret.data);
+                    }
+                });
+            });
+        };
+
+        //上传图片并更新用户头像
+        function fnUploadAtavar(avatarUrl_) {
+            fnPost('SysUser/ChangePhoto', {
+                body: JSON.stringify({
+                    data: {
+                        values: {
+                            filename: $api.getStorage('userInfo').UserName + '_tx'
+                        },
+                        files: {
+                            file: avatarUrl_
+                        }
+                    }
+                })
+            }, 'application/json', false, false, function(ret, err) {
+              if (ret) {
+                    $api.setStorage('userInfo', ret);                    
+                    fnSetInfo();
+                } else {
+                    alert(JSON.stringify(err));
+                }
+            });
+        }
+
+
+        function fnLogout() {
+            $api.rmStorage('userInfo');
+            $api.rmStorage('currentwallet');
+            $api.rmStorage('shoppingcart');
+            $api.rmStorage('dingdankuan');
+
+            api.sendEvent({
+                name: 'logout'
+            });
+
+            api.alert({
+                title: '注销',
+                msg: '已退出当前账号'
+            });
+
+            api.closeWin();
+        };
+    </script>
+
+</html>

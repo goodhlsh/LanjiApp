@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>下单</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
+    <style>
+        html,
+        body {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+            height: 100%;
+        }
+
+        section {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
+
+
+
+
+        .highlight {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav  aui-btn-danger" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="fnCloseWin()">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">确认订单</div>
+    </header>
+    <section></section>
+   <footer id="footer">
+        <div class="aui-bar aui-bar-btn aui-bar-btn-full" type="count " id="demo">
+        <!--  <div class="aui-bar-btn-item aui-border aui-font-size-14">
+                总金额:<i id="recharge" class="aui-iconfont aui-icon-recharge  aui-font-size-20">24.9</i>
+            </div>
+          -->
+            <div class="aui-bar-btn-item aui-border aui-btn-danger aui-font-size-14  open-win" win="mypay">
+                确认订单<i class="aui-iconfont aui-icon-sponsor aui-padded-l-5 aui-font-size-20"></i>
+            </div>
+        </div>
+    </footer>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        fnReady();
+        fnReadyFrame();
+    };
+</script>
+
+</html>

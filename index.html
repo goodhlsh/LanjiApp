@@ -1,0 +1,453 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>欢迎进入兰基优品</title>
+    <link rel="stylesheet" type="text/css" href="./css/aui.css" />
+    <!--拓展AUI字体图标-->
+    <link rel="stylesheet" type="text/css" href="./css/aui-iconfont.css" />
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
+
+        .aui-searchbar {
+            background: transparent;
+        }
+
+        .aui-bar-nav .aui-searchbar-input {
+            background-color: #ffffff;
+        }
+
+        .aui-bar-light .aui-searchbar-input {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav aui-btn-danger" id="aui-header">
+        <div class="aui-pull-left aui-btn" onclick="fnOpenScanner()">
+            <i class="aui-iconfont aui-icon-scan"></i>
+        </div>
+        <div class="aui-title" style="left:1.5rem; right: 1.5rem;">
+            <div class="aui-searchbar" id="search">
+                <div class="aui-searchbar-input aui-border-radius">
+                    <i class="aui-iconfont aui-icon-search"></i>
+                    <input type="search" placeholder="请输入搜索内容" id="search-input">
+                    <div class="aui-searchbar-clear-btn">
+                        <i class="aui-iconfont aui-icon-close"></i>
+                    </div>
+                </div>
+                <div class="aui-searchbar-btn aui-text-warning" tapmode>取消</div>
+            </div>
+        </div>
+        <div class="aui-btn aui-pull-right open-win" tapmode="highlight" win="html/extension">
+            <span class="aui-iconfont aui-icon-qrcode"></span>
+        </div>
+    </header>
+    <div id="main">
+
+    </div>
+    <footer class="aui-bar aui-bar-tab aui-border-t" id="aui-footer">
+        <div id="tabbar0" class="aui-bar-tab-item aui-active" tapmode onclick="fnChange(this,0)">
+            <i class="aui-iconfont aui-icon-home"></i>
+            <div class="aui-bar-tab-label">首页</div>
+        </div>
+        <div id="tabbar1" class="aui-bar-tab-item open-win" tapmode="highlight" win="html/warelist">
+            <i class="aui-iconfont aui-icon-apps"></i>
+            <div class="aui-bar-tab-label">分类</div>
+        </div>
+        <div id="tabbar2" class="aui-bar-tab-item open-win" tapmode="highlight" win="html/shoppingcart">
+            <div id="cartbadge" class=""></div>
+            <i class="aui-iconfont aui-icon-cart"></i>
+            <div class="aui-bar-tab-label">购物车</div>
+        </div>
+        <div id="tabbar3" class="aui-bar-tab-item open-win" tapmode="highlight" win="html/my" login="true">
+            <div id="mydot" class=""></div>
+            <i class="aui-iconfont aui-icon-my"></i>
+            <div class="aui-bar-tab-label">我的</div>
+        </div>
+    </footer>
+
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/aui-alert.js"></script>
+<script type="text/javascript" src="./script/localdb.js"></script>
+<script type="text/javascript" src="./script/common.js"></script>
+<script type="text/javascript" src="./script/SHA1.js"></script>
+<script type="text/javascript" src="./script/remotedb.js"></script>
+<script type="text/javascript" src="./script/rmst.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        /*setTimeout(function() {
+              fnOpenWelcome();
+            }, 500);
+            */
+        fnReadyOpenWin();
+        fnInitListener();
+        fnInit();
+        initDatabase();
+        var homeid = $api.byId('tabbar0');
+        fnChange(homeid, 0);
+    };
+    /*搜索框--begin*/
+    var searchBar = document.querySelector(".aui-searchbar");
+    var searchBarInput = document.querySelector(".aui-searchbar input");
+    var searchBarBtn = document.querySelector(".aui-searchbar .aui-searchbar-btn");
+    var searchBarClearBtn = document.querySelector(".aui-searchbar .aui-searchbar-clear-btn");
+    if (searchBar) {
+        searchBarInput.onclick = function() {
+            searchBarBtn.style.marginRight = 0;
+        }
+        searchBarInput.oninput = function() {
+            if (this.value.length) {
+                searchBarClearBtn.style.display = 'block';
+                searchBarBtn.classList.add("aui-text-warning");
+                searchBarBtn.textContent = "搜索";
+            } else {
+                searchBarClearBtn.style.display = 'none';
+                searchBarBtn.classList.remove("aui-text-info");
+                searchBarBtn.textContent = "取消";
+            }
+        }
+    }
+    searchBarClearBtn.onclick = function() {
+        this.style.display = 'none';
+        searchBarInput.value = '';
+        searchBarBtn.classList.remove("aui-text-info");
+        searchBarBtn.textContent = "取消";
+    }
+    searchBarBtn.onclick = function() {
+            var keywords = searchBarInput.value;
+            if (keywords.length) {
+                searchBarInput.blur();
+                //将搜索的关键词存入本地
+                //?????改进保存多个关键词
+                $api.setStorage('keyword', keywords);
+
+                //添加搜索结果代码
+                //打开搜索窗口
+                api.openWin({
+                    name: 'search_result',
+                    url: './html/search_result.html',
+                    pageParam: {
+                        keyword: keywords
+                    }
+                });
+
+
+            } else {
+                this.style.marginRight = "-" + this.offsetWidth + "px";
+                searchBarInput.value = '';
+                searchBarInput.blur();
+            }
+        }
+        /*搜索框--end*/
+        //返回及退出程序
+    function fnInitListener() {
+        var flag = false;
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {
+            if (false == flag) {
+                api.toast({
+                    msg: '再按一次退出',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                flag = true;
+                setTimeout(function() {
+                    flag = false;
+                }, 2000);
+            } else {
+                api.closeWidget({
+                    id: 'A6069365614406',
+                    retData: {
+                        name: 'closeWidget'
+                    },
+                    animation: {
+                        type: 'flip',
+                        subType: 'from_bottom',
+                        duration: 500
+                    }
+                });
+                //退出系统时要清除的本地存储
+                fnRmStorage();
+            }
+        });
+    }
+
+    var header, footer, headerHeight, footerHeight;
+
+    //求首部和底部高
+    function fnInit() {
+        header = $api.byId('aui-header');
+        footer = $api.byId('aui-footer');
+        $api.fixStatusBar(header);
+        headerHeight = $api.offset(header).h;
+        footerHeight = $api.offset(footer).h;
+    }
+
+    var isAuth;
+    //打开默认的二维码扫描
+    function fnOpenScanner() {
+
+        if (!$api.getStorage('userInfo')) {
+            api.openWin({
+                name: 'login',
+                url: 'login.html',
+                pageParam: {
+                    name: ''
+                }
+            });
+        } else {
+            var fnscanner = api.require('FNScanner');
+            fnscanner.openScanner({
+                    autorotation: true
+                }, function(ret, err) {
+                    if (ret && 'success' == ret.eventType) {
+                        //ret.content为pid，存入jiapu表中
+                        //先判断ret.content的用户是否存在jiapu表
+                        //如果存在再将推荐用户存入jiapu表
+                        if (ret.content.substr(0, 5) == 'lanji') {
+                            isAuth = $api.getStorage('userInfo').IsAuth; //先验证后扫描
+
+                            if (!isAuth) {
+                                api.alert({
+                                    title: '帮助',
+                                    msg: '请先实名验证，验证后再扫描推荐人二维码',
+                                }, function(ret, err) {
+                                    if (ret) {
+                                        //alert( JSON.stringify( ret ) );
+                                        //打开验证窗口
+                                        api.openWin({
+                                            name: 'myauth',
+                                            url: './html/myauth.html',
+                                            pageParam: {
+                                                userid: $api.getStorage('userInfo').Id
+                                            }
+                                        });
+                                    }
+                                });
+                            } else {
+                                if ($api.getStorage('currentwallet') && $api.getStorage('currentwallet').JieYu >= 398) {
+                                    var tid_ = ret.content.substr(5);
+                                    var userid_ = $api.getStorage('userInfo').Id;
+                                    var fJE_;
+                                    if ($api.getStorage('userInfo').Jibie == '398会员') {
+                                        fJE_ = 398;
+                                    }
+                                    if ($api.getStorage('userInfo').Jibie == '1314会员') {
+                                        fJE_ = 1314;
+                                    }
+                                    if ($api.getStorage('userInfo').Jibie == '8800会员') {
+                                        fJE_ = 8800;
+                                    }
+                                    //写入家谱前表等待推荐人确认
+                                    inClub(userid_, tid_, fJE_);
+                                } else {
+                                    //  console.log($api.getStorage('wallet'));
+                                    //支付入会金额充值
+                                    api.alert({
+                                        title: '消息',
+                                        msg: '请按级别预存相应金额',
+                                    }, function(ret, err) {
+                                        if (ret) {
+                                            //alert( JSON.stringify( ret ) );
+                                            //打开充值窗口
+                                            api.openWin({
+                                                name: 'mywallet',
+                                                url: './html/mywallet.html',
+                                                pageParam: {
+                                                    userid: $api.getStorage('userInfo').Id
+                                                }
+                                            });
+                                        } else {
+                                            alert("期盼您下次加入");
+                                            return;
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                        else {
+
+                        }
+
+                }
+            });
+
+        }
+}
+
+        var frames = ['m_home_frm'];
+        var currindex = 0;
+
+        function fnChange(obj, index) {
+            var footerAct = $api.dom(footer, 'div.aui-active');
+            $api.removeCls(footerAct, 'aui-active');
+            api.closeFrame({
+                name: frames[currindex]
+            });
+            $api.addCls(obj, 'aui-active');
+            currindex = index;
+            api.openFrame({
+                name: frames[currindex],
+                url: './html/' + frames[currindex] + '.html',
+                rect: {
+                    x: 0,
+                    y: headerHeight,
+                    w: 'auto',
+                    h: api.frameHeight - headerHeight - footerHeight
+                },
+                pageParam: {
+                    name: ''
+                },
+                bounces: false,
+                bgColor: '#f0f0f0',
+                vScrollBarEnabled: false,
+                hScrollBarEnabled: false
+            });
+        }
+
+        function inClub(userid_, tid_, fJE_) {
+            if (tid_.length == 31) { //判定扫描内容是合法的推荐人
+                var data = {
+                    body: JSON.stringify({
+                        uid: userid_,
+                        tid: tid_,
+                        fje: fJE_
+                    })
+                };
+                fnPost('SysUser/PutJiaPuBefore', data, 'application/json', false, false, function(ret, err) {
+                    if (ret) {
+                        api.alert({
+                            title: '消息',
+                            msg: '推荐成功，等待推荐人批准，批准后才能成为正式会员'
+                        });
+                    }
+                });
+            }
+        }
+        //欢迎界面
+        function fnOpenWelcome() {
+            var welframes = [];
+            for (var i = 1; i <= 4; i++) {
+                welframes.push({
+                    name: 'welcome_frm_' + i,
+                    url: './html/welcome_frm_' + i + '.html',
+                    bounces: false,
+                    bgColor: './image/welcome/' + i + '.png'
+                });
+            }
+            api.openFrameGroup({
+                name: 'welcome_group',
+                scrollEnabled: true,
+                rect: {
+                    x: 0,
+                    y: 0,
+                    w: 'auto',
+                    h: 'auto'
+                },
+                index: 0,
+                frames: welframes
+            });
+        }
+
+        // 初始化本地数据库及应用需要的相关表结构
+        function initDatabase() {
+            $db.open();
+        }
+        // 初始化第三方推送模块，个推
+        function initPushGeTui() {
+
+            var pushGeTui = api.require('pushGeTui');
+
+            // 注册设备和应用信息到个推
+            pushGeTui.initialize(function(ret) {
+                var value = "";
+
+                // 区分通知和消息
+                switch (ret.type) {
+                    // 返回个推平台上的ID
+                    case 'cid':
+                        value = 'cid:' + ret.cid;
+                        break;
+                        // 返回消息内容
+                    case 'payload':
+                        value = 'payload:' + ret.payload;
+                        // 解析消息体
+                        fnParsePayLoad(ret.payload);
+                        //设置我的小红点
+                        var mydot = $api.byId('mydot');
+                        $api.addCls(mydot, 'aui-dot');
+                        break;
+                    case 'occurError':
+                        value = 'occurError';
+                        break;
+                    default:
+                        break;
+                }
+            });
+        }
+
+        // 解析消息体，并根据约定好的消息类型，完成相关操作
+        function fnParsePayLoad(payload_) {
+
+            // 消息内容为JSON格式字符串  type:ware/message/system/order/account
+            var payload = $api.strToJson(payload_);
+            switch (payload.type) {
+                // 1. 推送的是商品打折消息，点击消息可以打开商品详情Window，并通过参数传递商品ID
+                // 2. Window名称根据UI架构设计（ui-architecture.xmind）来指定
+                case 'ware':
+                    api.openWin({
+                        name: 'ware',
+                        url: './html/ware.html',
+                        pageParam: {
+                            wareId: payload.wareId
+                        }
+                    });
+                    break;
+                case 'system':
+                case 'message':
+                case 'account':
+                    var data = {
+                        body: JSON.stringify({
+                          'Category':payload.type,
+                          'content':payload.content
+                        })
+                    };
+                    fnPost('SysMessage/PutMessage', data, 'application/json', false, false, function(ret, err) {
+                            if (ret) {
+                              api.toast({
+                                  msg: payload.content,
+                                  duration: 2000,
+                                  location: 'bottom'
+                              });
+                            }
+                          });
+
+                    break;
+                case 'order':
+                    api.openWin({
+                        name: 'shoppingcart',
+                        url: './html/shoppingcart.html',
+                        pageParam: {
+                            name: ''
+                        }
+                    });
+
+                    break;
+
+                default:
+                    break;
+            }
+        }
+</script>
+
+</html>

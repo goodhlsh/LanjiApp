@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>软件下载</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
+    <style>
+
+
+        .card-extend {
+            text-align: center;
+        }
+        .picCenter{
+          margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav  aui-btn-danger" id="aui-header">
+        <a class="aui-btn aui-pull-left" tapmode onclick="fnCloseWin()">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </a>
+        <div class="aui-title">扫码下载app</div>
+
+    </header>
+
+    <div id="extenCode" class="card-extend aui-margin-15">
+        <img id="qrCore" src="../image/demo1.png" class="picCenter"></img>
+    </div>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+fnReady();
+
+}
+</script>
+
+</html>

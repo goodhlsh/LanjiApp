@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>mini购物车</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            background-color: transparent;
+        }
+
+        section {
+            display: inline-block;
+            box-sizing: border-box;
+            padding: 4px;
+            width: auto;
+            height: 33px;
+            min-width: 35px;
+            line-height: 25px;
+            color: #fff;
+            font-size: 12px;
+            background-image: url(../image/minicart.png);
+            background-repeat: no-repeat;
+            background-size: auto 33px;
+            background-position: right center;
+        }
+
+        .count {
+            display: none;
+            box-sizing: border-box;
+            padding-left: 4px;
+            padding-right: 4px;
+            width: auto;
+            min-width: 25px;
+            height: 25px;
+            border-radius: 13px;
+            background-color: #fff;
+            text-align: center;
+            color: #e3007f;
+        }
+    </style>
+</head>
+
+<body>
+    <section>
+        <span class="prefix">￥</span>
+        <span id="amount" class="amount">0</span>
+        <span id="count" class="count"></span>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/localdb.js"></script>
+
+<script type="text/javascript">
+    apiready = function() {
+        initEventListenner();
+    };
+    var userId = $api.getStorage('userInfo')==null?null:$api.getStorage('userInfo').Id;
+    // 初始化事件监听
+    function initEventListenner() {
+        // 监听tap事件，打开购物车Window
+        api.addEventListener({
+            name: 'tap'
+        }, function(ret, err) {
+            fnOpenShoppingCartWin();
+        });
+
+        // 监听updateShoppingCart事件（自定义），更新商品数量和总金额
+        api.addEventListener({
+            name: 'updateShoppingCart'
+        }, function(ret, err) {
+            if (ret) {
+                if (ret.value.wareCount > 0) {
+                    var result = $db.select('shoppingCart',userId, ret.value.wareId);
+                    if (result&&result.data.length>0) {
+                        $db.update_count('shoppingCart',ret.value.wareId, ret.value.wareCount);
+                    } else {
+                        $db.insert('shoppingCart',userId, ret.value.wareId, ret.value.wareCount,"select");
+                    }
+                } else {
+                    var result = $db.select('shoppingCart',userId, ret.value.wareId);
+                    if (result) {
+                        $db.delete('shoppingCart',ret.value.wareId);
+                    }
+                }
+            } else {
+                alert(JSON.stringify(err));
+            }
+        });
+    }
+
+    // 打开购物车Window
+    function fnOpenShoppingCartWin() {
+        api.openWin({
+            name: 'shoppingcart',
+            url: './shoppingcart.html',
+            delay: 150
+        });
+    }
+</script>
+
+</html>

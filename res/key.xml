@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<security>
+  <item name="wxPay_appId" value="wxd0d84bbf23b4a0e4"/>
+  <item name="wxPay_mchId" value="1234567890"/>
+  <item name="wxPay_partnerKey" value="***"/>
+  <item name="wxPay_notifyUrl" value="***"/>
+   
+  <item name="aliPayPlus_appId" value="*********"/>
+<item name="aliPayPlus_rsaPriKey" value="***"/>
+<item name="其它服务需加密的参数配置 " value="***"/>
+</security>
+<!--字段描述:
+
+wxPay_appId：在微信开发者平台创建应用生成的 appId
+
+wxPay_mchId：商户号，填写商户对应参数
+
+wxPay_partnerKey：商户API密钥，务必同在商户平台->账户设置->API安全里填写的密钥保持一致，此密钥是根据微信对商户密钥的规范自己生成的
+
+wxPay_notifyUrl：接收微信支付异步通知回调地址，通知url必须为直接可访问的url，不能携带参数
+-->

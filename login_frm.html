@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>登录Frame</title>
+    <link rel="stylesheet" type="text/css" href="./css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="./css/aui-iconfont.css" />
+    <style>
+    html,
+    body {
+        height: 100%;
+    }
+        .input {
+            height: 40px;
+            width: 80%;
+            font-size: 18px;
+            line-height: 20px;
+            color: #8E8C8C;
+            padding-top: 10px;
+        }
+
+        .input::-webkit-input-placeholder {
+            color: #ccc;
+        }
+
+        .divider {
+            height: 15px;
+        }
+
+        .highlight {
+            opacity: 0.7;
+        }
+
+        .btnthird {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <section class="divider"></section>
+    <div class="aui-content">
+        <div class="aui-list aui-form-list">
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-my"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input id="username" class="input" type="text" placeholder="请输入手机号码" />
+                    </div>
+                </div>
+            </div>
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-lock"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input id="password" class="input" type="password" placeholder="请输入密码">
+                    </div>
+                </div>
+            </div>
+
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
+                    <div class="aui-btn  aui-btn-block  aui-btn-sm aui-btn-danger" tapmode="highlight" onclick="fnLogin();">登录</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="btnthird">
+        <div class="aui-btn" tapmode="highlight" onclick="fnThirdLogin();"><span class="aui-iconfont aui-icon-wechat"></span></div>
+    </div>
+
+
+
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/common.js"></script>
+<script type="text/javascript" src="./script/SHA1.js"></script>
+<script type="text/javascript" src="./script/remotedb.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        fnInitUIInput();
+    };
+
+
+    var UIInput;
+    var usernameUIInputId;
+    var passwordUIInputId;
+    var usernameValue;
+    var passwordValue;
+
+
+    function fnInitUIInput() {
+        // 用户名输入框模块
+        var username = $api.byId('username');
+        var usernameRect = $api.offset(username);
+        UIInput = api.require('UIInput');
+        UIInput.open({
+            rect: {
+                x: usernameRect.l,
+                y: usernameRect.t,
+                w: usernameRect.w,
+                h: usernameRect.h
+            },
+            styles: {
+                bgColor: '#fff',
+                size: 16,
+                color: '#000',
+                placeholder: {
+                    color: '#ccc'
+                }
+            },
+            autoFocus: false,
+            maxRows: 1,
+            placeholder: '用户名',
+            keyboardType: 'default',
+            fixedOn: api.frameName
+        }, function(ret, err) {
+            if (ret) {
+                usernameUIInputId = ret.id;
+                if (ret && ret.eventType == "show") {
+                    setTimeout(function() {
+                        UIInput.popupKeyboard({
+                            id: usernameUIInputId
+                        });
+                    }, 200);
+                } else if (ret.eventType == "change") {
+                    UIInput.value({
+                        id: usernameUIInputId
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.status) {
+                                usernameValue = ret.msg;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        // 密码输入框模块
+        var password = $api.byId('password');
+        var passwordRect = $api.offset(password);
+        UIInput.open({
+            rect: {
+                x: passwordRect.l,
+                y: passwordRect.t,
+                w: passwordRect.w,
+                h: passwordRect.h
+            },
+            styles: {
+                bgColor: '#fff',
+                size: 16,
+                color: '#000',
+                placeholder: {
+                    color: '#ccc'
+                }
+            },
+            autoFocus: false,
+            maxRows: 1,
+            placeholder: '密码',
+            keyboardType: 'default',
+            inputType: 'password',
+            fixedOn: api.frameName
+        }, function(ret, err) {
+            if (ret) {
+                passwordUIInputId = ret.id;
+                if (ret.eventType == "change") {
+                    UIInput.value({
+                        id: passwordUIInputId
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.status) {
+                                passwordValue = ret.msg;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    // 登录
+    function fnLogin() {
+        if (!usernameValue) {
+            if (api.systemType == 'android') {
+                setTimeout(function() {
+                    UIInput.popupKeyboard({
+                        id: usernameUIInputId
+                    });
+                }, 200);
+            } else {
+                UIInput.popupKeyboard({
+                    id: usernameUIInputId
+                });
+            }
+            return;
+        }
+        if (!passwordValue) {
+            if (api.systemType == 'android') {
+                setTimeout(function() {
+                    UIInput.popupKeyboard({
+                        id: passwordUIInputId
+                    });
+                }, 200);
+            } else {
+                UIInput.popupKeyboard({
+                    id: passwordUIInputId
+                });
+            }
+            return;
+        }
+        /*
+        fnPost('account/login', {
+            body: JSON.stringify({
+                username: usernameValue,
+                password: passwordValue
+            })
+        }, 'application/json', false, false, function(ret, err) {
+
+            if (ret&&ret.Id) {
+
+                //  $api.setStorage('account', usernameValue);
+                //  $api.setStorage('accessToken', ret.id);
+                //  $api.setStorage('userId', ret.userId);
+                $api.setStorage('userInfo', ret);
+                api.toast({
+                    msg: '登录成功！',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+
+                api.sendEvent({
+                    name: 'setuserinfo'
+                });
+
+                api.closeWin();
+            } else {
+                api.toast({
+                    msg: '用户名或密码错误',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+        });
+*/
+
+        fnGet('account/login', {
+                userName: usernameValue,
+                password: passwordValue
+            },function(ret, err) {
+              if(ret){
+                $api.setStorage('userInfo', ret);
+                api.toast({
+                    msg: ret.UserName+'登录成功！',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                api.closeWin();
+              }
+              else {
+                api.alert({
+                    title: '消息',
+                    msg: '登录失败',
+                });
+              }
+            }
+          );
+    }
+
+
+    // 被注册页面调用，用于从注册页面传递用户名
+    function fnSetUsername(username_) {
+        usernameValue = username_;
+        UIInput.value({
+            id: usernameUIInputId,
+            msg: username_
+        }, function(ret, err) {});
+    }
+</script>
+
+</html>

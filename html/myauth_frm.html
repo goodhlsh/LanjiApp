@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>认证</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
+    <style>
+        .input {
+            height: 40px;
+            width: 80%;
+            font-size: 18px;
+            line-height: 20px;
+            color: #8E8C8C;
+            padding-top: 10px;
+        }
+
+        .input::-webkit-input-placeholder {
+            color: #ccc;
+        }
+
+        .divider {
+            height: 15px
+        }
+
+        .highlight {
+            opacity: 0.7;
+        }
+
+        .dis {
+            disabled: disabled
+        }
+    </style>
+</head>
+
+<body>
+    <!--仿注册页面-->
+    <section class="divider"></section>
+    <div class="aui-content">
+        <div class="aui-list aui-form-list">
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-my"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input id="realname" class="input" type="text" placeholder="请输入真实姓名" />
+                    </div>
+                </div>
+            </div>
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-profile"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input id="cardId" class="input" type="text" placeholder="请输入身份证号" />
+                    </div>
+                </div>
+            </div>
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-profile"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <div class="aui-title">请上传身份证照片<input id="sfzbtn" class="aui-btn-warning" type="button" value="上传正面照" onclick="fnSetshfzh('shfzh')" />/<input class="aui-btn-warning" type="button" value="上传背面照" onclick="fnSetshfzh('shfzhbei')" /></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-mobile"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input id="mobile" class="input" type="text" placeholder="请输入手机号">
+                    </div>
+                </div>
+            </div>
+            <div class="aui-list-item" id="shfzh">
+            </div>
+            <div class="aui-list-item" id="shfzhbei">
+            </div>
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
+                    <div id="okbtn" class="aui-btn aui-btn-danger" tapmode="highlight" onclick="fnGotoAuth();">提交</div>
+                    <div id="cancelbtn" class="aui-btn aui-btn-danger aui-margin-l-10" tapmode="highlight" onclick="fnCloseWin();">取消</div>
+                </div>
+            </div>
+        </div>
+
+
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript">
+    //判断是否已验证
+    //若已验证，弹出toast
+    //若未验证，继续打开本页面
+    apiready = function() {
+        //console.log($api.getStorage('userInfo').Id.length);
+        isAuth = $api.getStorage('userInfo').IsAuth;
+        //  console.log(isAuth);
+        if (!isAuth) {
+            fnInitUIInput();
+        } else {
+            var realname = $api.byId('realname');
+            realname.placeholder = $api.getStorage('userInfo').TrueName == null ? '请输入您的真实姓名' : $api.getStorage('userInfo').TrueName;
+            realnameValue = realname.placeholder;
+            var cardId = $api.byId('cardId');
+            cardId.placeholder = $api.getStorage('userInfo').Card == null ? '请输入您的身份证号码' : $api.getStorage('userInfo').Card;
+            var mobile = $api.byId('mobile');
+            mobile.placeholder = $api.getStorage('userInfo').UserName == null ? '请输入您的手机号' : $api.getStorage('userInfo').UserName;
+            telValue = mobile.placeholder;
+
+            /*  var okbtn = $api.byId('sfzbtn');
+            $api.rmEvt(okbtn, 'click', function() {
+              console.log("ddddddddddddddddddddddddddd");
+                alert('qingchuonclick');
+            }, false);
+            //alert($api.html(okbtn));
+            $api.css(okbtn, 'disabled:disabled;');
+
+            //$api.attr(okbtn, 'disabled', 'disabled');
+*/
+            api.toast({
+                msg: '您已通过验证',
+                duration: 2000,
+                location: 'bottom'
+            });
+        }
+    };
+    var UIInput;
+    var usernameUIInputId;
+    var telUIInputId;
+    var cardUIInputId;
+    var realnameValue;
+    var telValue;
+    var cardIdValue;
+var isAuth;
+
+    function fnInitUIInput() {
+        // 用户名输入框模块
+        var username = $api.byId('realname');
+        var usernameRect = $api.offset(username);
+        UIInput = api.require('UIInput');
+        UIInput.open({
+            rect: {
+                x: usernameRect.l,
+                y: usernameRect.t,
+                w: usernameRect.w,
+                h: usernameRect.h
+            },
+            styles: {
+                bgColor: '#fff',
+                size: 16,
+                color: '#000',
+                placeholder: {
+                    color: '#ccc'
+                }
+            },
+            autoFocus: false,
+            maxRows: 1,
+            placeholder: '请输入真实姓名',
+            keyboardType: 'default',
+            fixedOn: api.frameName
+        }, function(ret, err) {
+            if (ret) {
+                usernameUIInputId = ret.id;
+                if (ret && ret.eventType == "show") {
+                    setTimeout(function() {
+                        UIInput.popupKeyboard({
+                            id: usernameUIInputId
+                        });
+                    }, 200);
+                } else if (ret.eventType == "change") {
+                    UIInput.value({
+                        id: usernameUIInputId
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.status) {
+                                realnameValue = ret.msg;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+        // 用户名输入框模块
+        var cardId = $api.byId('cardId');
+        var cardIdRect = $api.offset(cardId);
+        UIInput = api.require('UIInput');
+        UIInput.open({
+            rect: {
+                x: cardIdRect.l,
+                y: cardIdRect.t,
+                w: cardIdRect.w,
+                h: cardIdRect.h
+            },
+            styles: {
+                bgColor: '#fff',
+                size: 16,
+                color: '#000',
+                placeholder: {
+                    color: '#ccc'
+                }
+            },
+            autoFocus: false,
+            maxRows: 1,
+            placeholder: '请输入身份证号码',
+            keyboardType: 'default',
+            fixedOn: api.frameName
+        }, function(ret, err) {
+            if (ret) {
+                cardIdUIInputId = ret.id;
+                if (ret && ret.eventType == "show") {
+                    setTimeout(function() {
+                        UIInput.popupKeyboard({
+                            id: cardIdUIInputId
+                        });
+                    }, 200);
+                } else if (ret.eventType == "change") {
+                    UIInput.value({
+                        id: cardIdUIInputId
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.status) {
+                                cardIdValue = ret.msg;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+        // 手机输入框模块
+        var tel = $api.byId('mobile');
+        var telRect = $api.offset(tel);
+        //console.log(JSON.stringify($api.getStorage('userInfo')));
+        UIInput.open({
+            rect: {
+                x: telRect.l,
+                y: telRect.t,
+                w: telRect.w,
+                h: telRect.h
+            },
+            styles: {
+                bgColor: '#fff',
+                size: 16,
+                color: '#000',
+                placeholder: {
+                    color: '#ccc'
+                }
+            },
+            autoFocus: false,
+            maxRows: 1,
+            placeholder: $api.getStorage('userInfo').UserName == null ? '请输入您的手机号' : $api.getStorage('userInfo').UserName,
+            keyboardType: 'default',
+            inputType: 'text',
+            fixedOn: api.frameName
+        }, function(ret, err) {
+            if (ret) {
+                telUIInputId = ret.id;
+                if (ret.eventType == "change") {
+                    UIInput.value({
+                        id: telUIInputId
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.status) {
+                                telValue = ret.msg;
+                            }
+                        }
+                    });
+                }
+                else {
+                  telValue=$api.getStorage('userInfo').UserName == null ? '' : $api.getStorage('userInfo').UserName;
+                }
+            }
+        });
+        //身份证清空本地存储
+        $api.rmStorage('shfzh');
+        $api.rmStorage('shfzhbei');
+    }
+
+    function fnSetshfzh(str) {
+        api.actionSheet({
+            cancelTitle: '取消',
+            buttons: ['拍照', '打开相册选择']
+        }, function(ret, err) {
+            if (ret.buttonIndex == 3) {
+                return;
+            }
+
+            var sourceType = (ret.buttonIndex == 1) ? 'camera' : 'album';
+
+            api.getPicture({
+                sourceType: sourceType,
+                mediaValue: 'pic',
+                allowEdit: true,
+                quality: 50,
+                targetWidth: 200,
+                targetHeight: 200,
+                destinationType: 'url',
+                saveToPhotoAlbum: false
+            }, function(ret2, err2) {
+                if (ret2 && ret2.data) {
+                    var html = "<img  src=\"" + ret2.data + "\" >";
+                    $api.append($api.byId(str), html);
+
+                    //上传图片
+                    api.showProgress({
+                        title: '正在上传...',
+                        text: '请稍等'
+                    });
+                    /*        var data = {
+                    body: JSON.stringify({
+                                files: {
+                                    file: ret2.data
+                                }
+                              }
+                            };
+                            fnPost('UploadServerApi/UploadImg',
+                                data,
+                                'application/x-www-form-urlencoded; charset=utf-8',
+                                false,
+                                false,
+                                function(ret3, err3) {
+                                    if (ret3&ret3.value!="") {
+                                        api.alert({
+                                            msg: '上传成功\n'
+                                        });
+                                        if (str=='shfzh') {
+                                          $api.setStorage('shfzh', ret3.value);
+                                        }
+                                        if (str='shfzhbei') {
+                                          $api.setStorage('shfzhbei', ret3.value);
+                                        }
+                                        console.log(ret3.value);
+                                        console.log($api.getStorage('shfzh'));
+                                    } else {
+                                        api.alert({
+                                            msg: JSON.stringify(err3.value)
+                                        });
+                                    }
+                                    api.hideProgress();
+                                });
+
+                          */
+                    api.ajax({
+                        url: "http://154.8.159.50:1693/api/UploadServerApi/UploadImg",
+                        method: "post",
+                        dataType: 'json',
+                        contentType: "application/x-www-form-urlencoded; charset=utf-8",
+                        returnAll: false,
+                        cache: false,
+                        timeout: 30,
+                        data: {
+                            files: {
+                                file: ret2.data
+                            }
+                        }
+                    }, function(ret3, err3) {
+
+                        if (ret3 && ret3.value != "") {
+                            api.alert({
+                                msg: '上传成功\n'
+                            });
+                            if (str == 'shfzh') {
+                                $api.setStorage('shfzh', ret3.value);
+                            }
+                            if (str == 'shfzhbei') {
+                                $api.setStorage('shfzhbei', ret3.value);
+                            }
+                        } else {
+                            api.alert({
+                                msg: JSON.stringify(err3.value)
+                            });
+                        }
+                        api.hideProgress();
+
+                        //  console.log($api.getStorage(str));
+                    });
+
+                } else {
+                    api.toast({
+                        msg: '上传的图片不能为空!'
+                    });
+                }
+            });
+        });
+    }
+    //存入用户表以待审核
+    function fnGotoAuth() {
+      if (isAuth) {
+        return;
+      }
+        var userid = $api.getStorage('userInfo')==null?null:$api.getStorage('userInfo').Id;
+        if (realnameValue == null || $api.getStorage('shfzh')==null || $api.getStorage('shfzhbei')==null || telValue == null) {
+            api.alert({
+                title: '警告',
+                msg: '提供的信息不全！',
+            }, function(ret, err) {});
+            return;
+        }
+        if (telValue.length != 11) {
+            api.alert({
+                title: '警告',
+                msg: '手机号码不对！',
+            }, function(ret, err) {});
+            return;
+        }
+
+        fnPost('SysUser/PostUserAuth', {
+                body: JSON.stringify({
+                    Id: userid,
+                    Truename: realnameValue,
+                    Card: cardIdValue,
+                    IdentityCardFile: $api.getStorage('shfzh'),
+                    IdentityCardBackFile: $api.getStorage('shfzhbei'),
+                    MobileNumber: telValue
+                })
+            },
+            'application/json', false, false,
+            function(ret, err) {
+                if (ret && ret.UserName) {
+                    //  console.log(JSON.stringify(ret));
+                    api.alert({
+                        title: '消息',
+                        msg: '实名认证已通过',
+                    }, function(ret, err) {
+
+                    });
+                    $api.setStorage('userInfo', ret);
+                    api.closeWin();
+                }
+            });
+    }
+
+    function fnCloseWin() {
+        api.closeWin({
+            animation: {
+                type: 'fade' // 指定窗口关闭的动画为淡入淡出
+            }
+        });
+    }
+</script>
+
+</html>

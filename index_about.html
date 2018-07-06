@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,initial-scale=1.0,width=device-width" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="./css/aui.css" />
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
+
+
+
+        .con {
+            font-size: 28px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <header id="aui-header" class="aui-bar aui-bar-nav aui-bar-danger">
+        <div class="aui-title">短信验证</div>
+        <a class="aui-iconfont aui-icon-info aui-pull-right" tapmode onclick="about()"></a>
+    </header>
+
+
+    <div id="main">
+
+    </div>
+    <div id="footer">
+        <h5>Copyright &copy;<span id="year"></span> </h5>
+    </div>
+
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript" src="./script/aui-alert.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        //输出Log，Log将显示在APICloud Studio控制台
+        //console.log("Hello APICloud");
+        api.removeLaunchView({
+            animation: {
+                type: 'fade',
+                duration: 500
+            }
+        });
+
+
+        var header = $api.byId('aui-header');
+        //适配iOS7+，Android4.4+状态栏沉浸式效果，详见config文档statusBarAppearance字段
+        $api.fixStatusBar(header);
+        //动态计算header的高度，因iOS7+和Android4.4+上支持沉浸式效果，
+        //因此header的实际高度可能为css样式中声明的44px加上设备状态栏高度
+        //其中，IOS状态栏高度为20px，Android为25px
+        var headerH = $api.offset(header).h;
+        //footer高度为css样式中声明的30px
+        var footerH = 30;
+        //frame的高度为当前window高度减去header和footer的高度
+        var frameH = api.winHeight - headerH - footerH;
+        api.openWin({
+            name: 'home_main',
+            url: 'html/home_main_win.html',
+            pageParam: {
+                name: 'test'
+            }
+        });
+
+
+       //copyright year
+        var year = $api.byId('year');
+        year.innerHTML = new Date().getFullYear();
+    };
+    //alert 方法
+    function about() {
+        var html = '<p>smsVerify模块封装了mob.com平台的免费短信验证码SDK，' +
+            '  使用此模块可以实现短信验证功能。</p>' +
+            '    <p>演示程序作者：<span class="aui-text-info">OSChina</span></p>' +
+            '    <p>QQ：33546586</p>';
+        $aui.alert({
+            title: '关于',
+            content: html,
+            buttons: ['确定'],
+            radius: 6,
+            titleColor: '#ff3300',
+            contColor: '#333',
+            btnColor: ''
+        }, function(ret) {
+            //处理回调函数
+            if (ret) {}
+        })
+    }
+
+    function selectImage() {
+
+        var jsfun = 'selectImage();';
+        api.execScript({
+            frameName: 'main',
+            script: jsfun
+        });
+    }
+</script>
+
+</html>

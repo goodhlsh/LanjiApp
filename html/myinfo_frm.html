@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            background: #f0f0f0;
+        }
+
+        section {
+            position: relative;
+            height: auto;
+            margin-top: 8px;
+            overflow: hidden;
+            background-color: #fff;
+        }
+
+        .row {
+            position: relative;
+            top: -1px;
+            box-sizing: borderbox;
+            height: 49px;
+            border-top: 1px solid #eee;
+        }
+
+        .title {
+            position: relative;
+            width: 100%;
+            height: 48px;
+            box-sizing: border-box;
+            padding-left: 16px;
+            padding-right: 48px;
+            font-size: 16px;
+            text-align: left;
+            line-height: 48px;
+        }
+
+        .value {
+            position: absolute;
+            top: 0;
+            right: 10px;
+            height: 48px;
+            font-size: 14px;
+            text-align: right;
+            line-height: 48px;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="realinfo">
+        <div class="row">
+            <div class="title">真实姓名</div>
+            <div id="realname" class="value">没有登记</div>
+        </div>
+        <div class="row">
+            <div class="title">身份证</div>
+            <div id="sfz" class="value">没有登记</div>
+        </div>
+        <div class="row">
+            <div class="title">手机</div>
+            <div id="mobile" class="value">没有登记</div>
+        </div>
+        <div class="row">
+            <div class="title">级别</div>
+            <div id="jibie" class="value">普通会员</div>
+        </div>
+    </section>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+
+<script type="text/javascript">
+    apiready = function() {
+        fnInit();
+    };
+    var realname,sfz,mobile,jibie;
+
+    function fnInit(){
+      realname=$api.byId('realname');
+      sfz=$api.byId('sfz');
+      mobile=$api.byId('mobile');
+      jibie=$api.byId('jibie');
+      //console.log(JSON.stringify($api.getStorage('userInfo')));
+      //读取本地存储赋值
+      realname.innerHTML=$api.getStorage('userInfo').TrueName || '没有登记';
+      sfz.innerHTML=$api.getStorage('userInfo').Card || '没有登记';
+      mobile.innerHTML=$api.getStorage('userInfo').MobileNumber || '没有登记';
+      jibie.innerHTML=$api.getStorage('userInfo').Jibie || '普通会员';
+    }
+    //看图photoBrowser
+    function viewshfzh() {
+      var photoBrowser = api.require('photoBrowser');
+      photoBrowser.open({
+          images: [
+              $api.getStorage('userInfo').shfzh
+          ],
+          placeholderImg: 'widget://res/img/apicloud-bg.png',
+          bgColor: '#000'
+      }, function(ret, err) {
+          if (ret) {
+              photoBrowser.show();
+          } else {
+              alert(JSON.stringify(err));
+          }
+      });
+    }
+</script>
+
+</html>

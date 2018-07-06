@@ -1,0 +1,88 @@
+<widget id="A6069365614406" version="0.0.1">
+
+    <name>LanJiAPP</name>
+
+    <description>
+
+        Example For APICloud.
+
+    </description>
+
+    <author email="developer@apicloud.com" href="http://www.apicloud.com">
+
+        Developer
+
+    </author>
+
+    <content src="index.html"/>
+
+    <access origin="*"/>
+
+    <preference name="pageBounce" value="false"/>
+
+    <preference name="appBackground" value="rgba(0,0,0,0.0)"/>
+
+    <preference name="windowBackground" value="rgba(0,0,0,0.0)"/>
+
+    <preference name="frameBackgroundColor" value="rgba(0,0,0,0.0)"/>
+
+    <preference name="hScrollBarEnabled" value="true"/>
+
+    <preference name="vScrollBarEnabled" value="true"/>
+
+    <preference name="autoLaunch" value="false"/>
+
+    <preference name="fullScreen" value="false"/>
+
+    <preference name="autoUpdate" value="true"/>
+
+    <preference name="smartUpdate" value="false"/>
+
+    <preference name="debug" value="true"/>
+
+    <preference name="statusBarAppearance" value="true"/>
+
+    <permission name="readPhoneState"/>
+
+    <permission name="camera"/>
+
+    <permission name="record"/>
+
+    <permission name="location"/>
+
+    <permission name="fileSystem"/>
+
+    <permission name="internet"/>
+
+    <permission name="bootCompleted"/>
+
+    <permission name="hardware"/>
+    <!--百度地图配置-->
+    <feature name="bMap">
+        <param name="andriod_api_key" value="8ewZ2oOuNSNzfzGgy83mdOgYYotKAPnk"/>
+    </feature>
+    <!--短信验证配置-->
+    <feature name="smsVerify">
+        <param name="android_app_key" value="2378dad082334"/>
+        <param name="android_app_secret" value="23b3bc460fa39891235a3d4eb499427c"/>
+        <param name="ios_app_key" value="2378dad082334"/>
+        <param name="ios_app_secret" value="23b3bc460fa39891235a3d4eb499427c"/>
+    </feature>
+    <!--个推配置-->
+    <feature name="pushGeTui">
+        <param name="android_appkey" value="hDIy04Y1Ue5LUEqy0mFFX" />
+        <param name="android_appid" value="mj6uyvHt1C6XYWi6kRZn68" />
+        <param name="android_appsecret" value="jueq9PghMN7qaNyi27yF01" />
+        <param name="android_groupid" value="" />
+    </feature>
+    <!--微信支付-->
+    <feature name="wxPay">
+    <param name="urlScheme" value="wx7b449a1ec9782fdb"/>
+    <param name="apiKey" value="wx7b449a1ec9782fdb"/>
+    <param name="apiSecret" value="75e63e0af8fa8bbb2ad521e4d5168419"/>
+  </feature>
+  <!--支付宝支付-->
+  <feature name="aliPayPlus">
+     <param name="urlScheme" value="AliPayPlusA000000011" />
+ </feature>
+</widget>
