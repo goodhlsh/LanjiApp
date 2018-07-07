@@ -118,7 +118,7 @@
 <script type="text/javascript" src="../script/localdb.js"></script>
 <script type="text/javascript">
     apiready = function() {
-        fnSaveOrder('待付款');
+        fnCreateOrder('待付款');
 
         fnReady();
         fnInitWallet();
@@ -320,7 +320,7 @@
             if (ret) {
                 //存入订单表
                 fnEditOrder('待发货');
-                $api.rmStorage('dingdankuan');                
+                $api.rmStorage('dingdankuan');
 
                 api.closeWin({
                     name: 'mypay'
@@ -341,7 +341,7 @@
         });
     }
 
-    function fnSaveOrder(status) {
+    function fnCreateOrder(status) {
         if ($api.getStorage('shoppingcart')) {
             fnPost('Spl_Orders/PostOrder', {
                 body: JSON.stringify({
