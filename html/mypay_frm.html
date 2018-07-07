@@ -240,34 +240,48 @@
             notifyUrl: ''
         }, function(ret, err) {
             if (ret.status) {
-                alert('配置商户支付参数成功');
+                if ($api.getStorage('dingdankuan') && $api.getStorage('dingdankuan') > 0) {
+                    wxPay.pay({
+                        description: 'iPad mini 16G 白色',
+                        totalFee: parseFloat($api.getStorage('dingdankuan')),
+                        tradeNo: '1217752501201407033233368018',
+                        //  spbillCreateIP: '196.168.1.1',
+                        //  deviceInfo: '013467007045764',
+                        //  detail: 'iPad mini 16G 白色',
+                        //    attach: '说明',
+                        //    feeType: 'CNY',
+                        //    timeStart: '20091225091010',
+                        //    timeExpire: '20091227091010',
+                        //    goodsTag: 'WXG',
+                        //    productId: '12235413214070356458058',
+                        //    openId: 'oUpF8uMuAJO_M2pxb1Q9zNjWeS6o'
+                    }, function(ret, err) {
+                        if (ret.status) {
+                            fnShowSuccess();
+                        } else {
+                            //alert(err.code);
+                            //错误码：
+                            //-2（用户取消）
+                            //-1（可能的原因：签名错误、未注册APPID、项目设置APPID不正确、注册的APPID与设置的不匹配、其他异常等）
+                            //1（必传参数缺失）
+                            if (err.code == -2) {
+                                alert("已经取消支付");
+                            }
+                            if (err.code == -1) {
+                                alert("未知错误");
+                            }
+                            if (err.code == 1) {
+                                alert("必传参数缺失");
+                            }
+                        }
+                    });
+                }
             } else {
-                alert(err.code);
+                //alert(err.code);
+                alert("对接支付接口失败");
             }
         });
-        if ($api.getStorage('dingdankuan') && $api.getStorage('dingdankuan') > 0) {
-            wxPay.pay({
-                description: 'iPad mini 16G 白色',
-                totalFee: parseFloat($api.getStorage('dingdankuan')),
-                tradeNo: '1217752501201407033233368018',
-                spbillCreateIP: '196.168.1.1',
-                deviceInfo: '013467007045764',
-                detail: 'iPad mini 16G 白色',
-                attach: '说明',
-                feeType: 'CNY',
-                timeStart: '20091225091010',
-                timeExpire: '20091227091010',
-                goodsTag: 'WXG',
-                productId: '12235413214070356458058',
-                openId: 'oUpF8uMuAJO_M2pxb1Q9zNjWeS6o'
-            }, function(ret, err) {
-                if (ret.status) {
-                    fnShowSuccess();
-                } else {
-                    alert(err.code);
-                }
-            });
-        }
+
     }
     //支付宝支付
     function aliPay() {
@@ -275,40 +289,80 @@
         /* 方法一 上线要用此法
         aliPayPlus.payOrder({    orderInfo: 'app_id=2015052600090779&biz_content=%7B%22timeout_express%22%3A%2230m%22%2C%22seller_id%22%3A%22%22%2C%22product_code%22%3A%22QUICK_MSECURITY_PAY%22%2C%22total_amount%22%3A%220.01%22%2C%22subject%22%3A%221%22%2C%22body%22%3A%22%E6%88%91%E6%98%AF%E6%B5%8B%E8%AF%95%E6%95%B0%E6%8D%AE%22%2C%22out_trade_no%22%3A%22IQJZSRC1YMQB5HU%22%7D&charset=utf-8&format=json&method=alipay.trade.app.pay&notify_url=http%3A%2F%2Fdomain.merchant.com%2Fpayment_notify&sign_type=RSA2&timestamp=2016-08-25%2020%3A26%3A31&version=1.0&sign=cYmuUnKi5QdBsoZEAbMXVMmRWjsuUj%2By48A2DvWAVVBuYkiBj13CFDHu2vZQvmOfkjE0YqCUQE04kqm9Xg3tIX8tPeIGIFtsIyp%2FM45w1ZsDOiduBbduGfRo1XRsvAyVAv2hCrBLLrDI5Vi7uZZ77Lo5J0PpUUWwyQGt0M4cj8g%3D'
         }, function(ret, err) {
-        api.alert({
-        title: '支付结果',
-        msg: ret.code,
-        buttons: ['确定']
-          });
+        if (ret.code == '9000') {
+                                                            api.alert({
+                                                                title: '系统提示',
+                                                                msg: '打赏成功',
+                                                            }, function(ret, err) {
+                                                                if (ret) {
+                                                                    api.closeWin();
+                                                                }
+                                                            });
+                                                        } else if (ret.code == '8000') {
+                                                            api.alert({
+                                                                msg: '正在处理中，支付结果未知',
+                                                                buttons: ['确定']
+                                                            });
+                                                        } else if (ret.code == '4000') {
+                                                            $("#alert-sign-fail").show();
+                                                        } else if (ret.code == '5000') {
+                                                            api.alert({
+                                                                msg: '重复请求',
+                                                                buttons: ['确定']
+                                                            });
+                                                        } else if (ret.code == '6001') {
+                                                            api.alert({
+                                                                msg: '用户中途取消支付操作',
+                                                                buttons: ['确定']
+                                                            });
+
+                                                        } else if (ret.code == '6002') {
+                                                            api.alert({
+                                                                msg: '网络连接出错',
+                                                                buttons: ['确定']
+                                                            });
+
+                                                        } else if (ret.code == '6004') {
+                                                            api.alert({
+                                                                msg: '支付结果未知',
+                                                                buttons: ['确定']
+                                                            });
+                                                        }
+
+                                                    });
       });
         */
         //方法二 测试用
         aliPayPlus.config({
-            appId: '12345678901234',
-            rsaPriKey: 'testKEY',
+            appId: '2018062660423192',
+            rsaPriKey: 'MIIEpAIBAAKCAQEA4pyO3yrDsLBUGaJ9C3hNzx82fkly1Gg0NDl2oHvhsXc+rj3Qdy9ZbMmRstuzQPw47J9d1md6zieGcglhwwX+26XvGUjSSWPb9q29wEnIXWWMJXIih/e99nXklz4rVc6QLSH9VGFbV1W8UgpBSs1isnPOqHTnzx+YlYjU0OiF67oTvZHP8R2btnMIQESOxbVzFiKlj5D0s58vrT1M3fkuvKUYp/LSkYJHv3K6QAJjAvXahk2casVN1DhJhWVfceYIWmon/GBgikT9WK4UZwbJ0adLRF7O0JekgvTBpTGUmypNKakJKPOxgv2YpjhMiBALX4yw88y7pmYWngR+T+hY3QIDAQABAoIBAQCU+lHfG1Etfq67b5x/hua4bQ+5NHY+eAch8kkvtmGo9vkJOfAr+r/yig20JUWSSn7t6NObGcqdb1Su8cYInY9wPYWT/NDqmLDKWmxt1tPXuuPI1mEnPFLxjY3rdF6u+a7FTRwrdhnDr8Svtrg4AhCJuyK4kqq2+1GntR4b/VHVpvGKW4IEnSJKaP8NuZlv013PelEapVBC88UAzkUpWeNgducgMwVOdN49/NQQZ9dftIV/S2bZNhRhOs8r3xDHjNLCY69uuq2tiphwRuRHDaBqsT9uWiCXof6BQ7chkzuDkjjI4Z5neQhRbr8SYACmVDNOpAMNgg1Qo3ThZsfwDbZhAoGBAPSlkB2sDkaXIh7MPV3WRIugd01ILhF5hU0ZU88zFkXzXPOYG5EIkPDTe+NunICAT2ECQDz0LyTS9BtLeNHRZMObwXU1rwfGmGR1tikNW/gy1dMP66wGI5fOPx2Xb/FZMznenh1zlVtV2/iXTAV+GkFULlWr1KikRYs85B7HSyMFAoGBAO0gvBk3NvhvEH6m7Vf2z1mtvym8xlpZ9GGMpk7LnPoD5TwpqzHpR/dL0mp7E7AjkjZNzgJh1qLvAZhS7Ox3JZdvSt+TDWrlsevPcSCqdSyJ/pKVKQHNv1xDqR6F8Z3kuRI3kbUdfS/5XE2J5JChoUOgE54A+foGbiiKErF6KnX5AoGBANnex+Vk4KHE3kIHKW9z7j9afGR6r2woiKoMsDKKEH/jJxhYkdQriMivzljQnNdjbU27L3IZFBL7OyFDqSlSDSaWg0batDF8jyKIId2VZB45R2tbdkoQfYonxtWXk72f7prOwoj/8jcQ04EjXDRYBRHA4jKxgAVfpf9GDvHKEgPxAoGAW7nI6RwhqHIV+FgMAXXYeYErLDL4q2SWktF8V4iNvWyaVO5taY4qp29uAoB/eigYW+c25FcCVt6LSGfze/kO0ohbdyaEDzCw5V3GDfPCBauPjRYj2a3D8yW9GrCHaSNbr79NHrk8fr0/xkKr5oKPRgB69ii8icnI/OeEGaD/IckCgYBcPC5cusW21bZ7cak2gaAhgFKoJzXdSwC+CySOhJUIUAsPF7aMR4zT7l58qxrM7UAR9PFcy2yLYWRoEBx+uKWs7ouMV8+1iPO8RTx9zITcfFV8pDZE9AgqgmqxW3cz3uO+bI2ieKW6b30yvyHgsILTELBhJsLORuO68Kq+y3IJdw==',
         }, function(ret, err) {
-            api.alert({
-                title: '支付结果',
-                msg: JSON.stringify(ret),
-                buttons: ['确定']
-            });
-        });
-        if ($api.getStorage('dingdankuan') && $api.getStorage('dingdankuan') > 0) {
-            aliPayPlus.pay({
-                subject: '订单名',
-                body: '订单描述',
-                amount: parseFloat($api.getStorage('dingdankuan')),
-                tradeNO: '4563548735674',
-                rsa2: true
-            }, function(ret, err) {
-                if (ret) {
-                    fnShowSuccess();
-                } else {
-                    alert(err.code);
+            if (ret.status == true) {
+                if ($api.getStorage('dingdankuan') && $api.getStorage('dingdankuan') > 0) {
+                    aliPayPlus.pay({
+                        subject: '订单名',
+                        body: '订单描述',
+                        amount: parseFloat($api.getStorage('dingdankuan')),
+                        tradeNO: order_one.OrderNo,
+                        rsa2: true
+                    }, function(ret, err) {
+                        if (ret.code == 9000) {
+                            fnShowSuccess();
+                        } else {
+                            if (ret.code == 6001) {
+                                api.toast({
+                                    msg: '支付已取消',
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            } else {
+                                alert(err.code);
+                            }
+                        }
+                    });
                 }
-
-            });
-        }
+            }
+        });
     }
     //支付成功后的处理
     //清理本地库中购物车中信息及localStorage信息
@@ -385,7 +439,7 @@
                     duration: 2000,
                     location: 'bottom'
                 });
-                order_one=null;
+                order_one = null;
             } else {
                 api.alert({
                     title: '故障报警',

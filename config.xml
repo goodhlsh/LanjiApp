@@ -83,6 +83,6 @@
   </feature>
   <!--支付宝支付-->
   <feature name="aliPayPlus">
-     <param name="urlScheme" value="AliPayPlusA000000011" />
+     <param name="urlScheme" value="AliPayPlusA6069365614406" />
  </feature>
 </widget>
