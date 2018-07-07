@@ -337,17 +337,20 @@
             appId: '2018062660423192',
             rsaPriKey: 'MIIEpAIBAAKCAQEA4pyO3yrDsLBUGaJ9C3hNzx82fkly1Gg0NDl2oHvhsXc+rj3Qdy9ZbMmRstuzQPw47J9d1md6zieGcglhwwX+26XvGUjSSWPb9q29wEnIXWWMJXIih/e99nXklz4rVc6QLSH9VGFbV1W8UgpBSs1isnPOqHTnzx+YlYjU0OiF67oTvZHP8R2btnMIQESOxbVzFiKlj5D0s58vrT1M3fkuvKUYp/LSkYJHv3K6QAJjAvXahk2casVN1DhJhWVfceYIWmon/GBgikT9WK4UZwbJ0adLRF7O0JekgvTBpTGUmypNKakJKPOxgv2YpjhMiBALX4yw88y7pmYWngR+T+hY3QIDAQABAoIBAQCU+lHfG1Etfq67b5x/hua4bQ+5NHY+eAch8kkvtmGo9vkJOfAr+r/yig20JUWSSn7t6NObGcqdb1Su8cYInY9wPYWT/NDqmLDKWmxt1tPXuuPI1mEnPFLxjY3rdF6u+a7FTRwrdhnDr8Svtrg4AhCJuyK4kqq2+1GntR4b/VHVpvGKW4IEnSJKaP8NuZlv013PelEapVBC88UAzkUpWeNgducgMwVOdN49/NQQZ9dftIV/S2bZNhRhOs8r3xDHjNLCY69uuq2tiphwRuRHDaBqsT9uWiCXof6BQ7chkzuDkjjI4Z5neQhRbr8SYACmVDNOpAMNgg1Qo3ThZsfwDbZhAoGBAPSlkB2sDkaXIh7MPV3WRIugd01ILhF5hU0ZU88zFkXzXPOYG5EIkPDTe+NunICAT2ECQDz0LyTS9BtLeNHRZMObwXU1rwfGmGR1tikNW/gy1dMP66wGI5fOPx2Xb/FZMznenh1zlVtV2/iXTAV+GkFULlWr1KikRYs85B7HSyMFAoGBAO0gvBk3NvhvEH6m7Vf2z1mtvym8xlpZ9GGMpk7LnPoD5TwpqzHpR/dL0mp7E7AjkjZNzgJh1qLvAZhS7Ox3JZdvSt+TDWrlsevPcSCqdSyJ/pKVKQHNv1xDqR6F8Z3kuRI3kbUdfS/5XE2J5JChoUOgE54A+foGbiiKErF6KnX5AoGBANnex+Vk4KHE3kIHKW9z7j9afGR6r2woiKoMsDKKEH/jJxhYkdQriMivzljQnNdjbU27L3IZFBL7OyFDqSlSDSaWg0batDF8jyKIId2VZB45R2tbdkoQfYonxtWXk72f7prOwoj/8jcQ04EjXDRYBRHA4jKxgAVfpf9GDvHKEgPxAoGAW7nI6RwhqHIV+FgMAXXYeYErLDL4q2SWktF8V4iNvWyaVO5taY4qp29uAoB/eigYW+c25FcCVt6LSGfze/kO0ohbdyaEDzCw5V3GDfPCBauPjRYj2a3D8yW9GrCHaSNbr79NHrk8fr0/xkKr5oKPRgB69ii8icnI/OeEGaD/IckCgYBcPC5cusW21bZ7cak2gaAhgFKoJzXdSwC+CySOhJUIUAsPF7aMR4zT7l58qxrM7UAR9PFcy2yLYWRoEBx+uKWs7ouMV8+1iPO8RTx9zITcfFV8pDZE9AgqgmqxW3cz3uO+bI2ieKW6b30yvyHgsILTELBhJsLORuO68Kq+y3IJdw==',
         }, function(ret, err) {
+
             if (ret.status == true) {
                 if ($api.getStorage('dingdankuan') && $api.getStorage('dingdankuan') > 0) {
+
                     aliPayPlus.pay({
                         subject: '订单名',
                         body: '订单描述',
                         amount: parseFloat($api.getStorage('dingdankuan')),
                         tradeNO: order_one.OrderNo,
-                        rsa2: true
+                        rsa2: false
                     }, function(ret, err) {
+                      console.log(ret.code);
                         if (ret.code == 9000) {
-                            fnShowSuccess();
+                          fnShowSuccess();
                         } else {
                             if (ret.code == 6001) {
                                 api.toast({
