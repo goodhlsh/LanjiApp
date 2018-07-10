@@ -77,9 +77,9 @@
     </feature>
     <!--微信支付-->
     <feature name="wxPay">
-    <param name="urlScheme" value="wx7b449a1ec9782fdb"/>
-    <param name="apiKey" value="wx7b449a1ec9782fdb"/>
-    <param name="apiSecret" value="75e63e0af8fa8bbb2ad521e4d5168419"/>
+    <param name="urlScheme" value="wxbf083887994f7d4d"/>
+    <param name="apiKey" value="wxbf083887994f7d4d"/>
+    <param name="apiSecret" value="f479f43fb848b0a3d13284fbd1fec6e4"/>
   </feature>
   <!--支付宝支付-->
   <feature name="aliPayPlus">
