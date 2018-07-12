@@ -214,272 +214,284 @@
     }
     //微信支付
     function wxPay() {
-        var wxPay = api.require('wxPay');
-        /* 方法一 上线要用此法
-         wxPay.payOrder({
-              apiKey: '',
-              orderId: '',
-              mchId: '',
-              nonceStr: '',
-              timeStamp: '',
-              package: '',
-              sign: ''
-          }, function(ret, err) {
-              if (ret.status) {
-                  //支付成功
-              } else {
-                  alert(err.code);
-              }
-          });
-        */
-        //方法二适合测试
-        wxPay.config({
-            apiKey: '',
-            mchId: '',
-            partnerKey: '',
-            notifyUrl: ''
-        }, function(ret, err) {
-            if (ret.status) {
-                if ($api.getStorage('dingdankuan') && $api.getStorage('dingdankuan') > 0) {
-                    wxPay.pay({
-                        description: 'iPad mini 16G 白色',
-                        totalFee: parseFloat($api.getStorage('dingdankuan')),
-                        tradeNo: '1217752501201407033233368018',
-                        //  spbillCreateIP: '196.168.1.1',
-                        //  deviceInfo: '013467007045764',
-                        //  detail: 'iPad mini 16G 白色',
-                        //    attach: '说明',
-                        //    feeType: 'CNY',
-                        //    timeStart: '20091225091010',
-                        //    timeExpire: '20091227091010',
-                        //    goodsTag: 'WXG',
-                        //    productId: '12235413214070356458058',
-                        //    openId: 'oUpF8uMuAJO_M2pxb1Q9zNjWeS6o'
-                    }, function(ret, err) {
-                        if (ret.status) {
-                            fnShowSuccess();
-                        } else {
-                            //alert(err.code);
-                            //错误码：
-                            //-2（用户取消）
-                            //-1（可能的原因：签名错误、未注册APPID、项目设置APPID不正确、注册的APPID与设置的不匹配、其他异常等）
-                            //1（必传参数缺失）
-                            if (err.code == -2) {
-                                alert("已经取消支付");
+        if ($api.getStorage('dingdankuan') && $api.getStorage('dingdankuan') > 0) {
+            api.confirm({
+                title: '支付提醒',
+                msg: '是否选择微信支付？如继续点击确认',
+                buttons: ['确定', '取消']
+            }, function(ret0, err) {
+                if (ret0.buttonIndex == 1) {
+                    fnpost('WxPay/GetUniorder', {
+                        body: JSON.stringify({
+                            body: order_one.description,
+                            total_fee: order_one.dingdankuan,
+                            out_trade_no: order_one.OrderNo,
+                            spbill_create_ip: '',
+                            device_info: '',
+                            detail: order_one.description,
+                            attach: '',
+                            fee_type: 'CNY',
+                            goods_tag: '',
+                            product_id: '',
+                        })
+                    }, 'application/json', false, false, function(ret, err) {
+                        var data = {
+                            description: ret.info.wx_pay_data.po_body,
+                            totalFee: ret.info.wx_pay_data.po_total_fee * 100,
+                            tradeNo: ret.info.wx_pay_data.po_order_no,
+                            spbillCreateIP: '',
+                            deviceInfo: '',
+                            detail: ret.info.wx_pay_data.po_body,
+                            attach: '',
+                            feeType: 'CNY',
+                            timeStart: '',
+                            timeExpire: '',
+                            goodsTag: '',
+                            productId: ''
+                        };
+                        var wxPay = api.require('wxPay');
+                        wxPay.config({
+                            apiKey: '', //
+                            mchId: '',
+                            partnerKey: '',
+                            notifyUrl: $app + 'WxPay/WxCallBack'
+                        }, function(ret1, err) {
+                            if (ret1.status) {
+                                wxPay.pay(data, function(ret2, err) {
+                                    if (ret2.status) {
+                                        api.alert({
+                                            title: '系统提示',
+                                            msg: '打赏成功',
+                                        }, function(ret3, err) {
+                                            if (ret3) {
+                                                api.closeWin();
+                                            }
+                                        });
+                                    } else {
+                                        if (err.code == '-2') {
+                                            api.toast({
+                                                msg: '用户取消'
+                                            });
+                                        } else {
+                                            api.toast({
+                                                msg: '打赏失败'
+                                            });
+                                        }
+                                    }
+                                });
+                            } else {
+                                api.toast({
+                                    msg: '打赏失败'
+                                });
+                                api.toast({
+                                    msg: '传输错误'
+                                })
                             }
-                            if (err.code == -1) {
-                                alert("未知错误");
-                            }
-                            if (err.code == 1) {
-                                alert("必传参数缺失");
-                            }
-                        }
+                        });
                     });
+
                 }
-            } else {
-                //alert(err.code);
-                alert("对接支付接口失败");
-            }
-        });
+            });
+        }
 
     }
     //支付宝支付
     //方法一 上线要用此法
     function aliPay() {
         api.confirm({
-                    title: '支付提醒',
-                    msg: '是否选择支付宝支付？如继续点击确认',
-                    buttons: ['确定', '取消']
-                }, function(ret, err) {
-                    if (ret.buttonIndex == 1) {
-                        fnPost('AliPay/GetAppTradeContent', {
-                            body: JSON.stringify({
-                                openId: order_one.Id,
-                                order_name: '订单支付',
-                                order_num: order_one.OrderNo,
-                                order_price: order_one.DingDanKuan
-                            })
-                        }, 'application/json', false, false, function(ret2, err) {
-                          console.log(JSON.stringify(ret2));
-                            if (ret2) {
-                                var aliPayPlus = api.require('aliPayPlus');
-                                aliPayPlus.payOrder({
-                                    orderInfo: ret2.data,
-                                }, function(ret3, err) {
-                                  console.log(JSON.stringify(ret3));
-                                    if (ret3.code == '9000') {
-                                        api.alert({
-                                            title: '系统提示',
-                                            msg: '打赏成功',
-                                        }, function(ret4, err) {
-                                            if (ret4) {
-                                                api.closeWin();
-                                            }
-                                        });
-                                    } else if (ret3.code == '8000') {
-                                        api.alert({
-                                            msg: '正在处理中，支付结果未知',
-                                            buttons: ['确定']
-                                        });
-                                    } else if (ret3.code == '4000') {
-                                      api.alert({
-                                          msg: '订单支付失败',
-                                          buttons: ['确定']
-                                      });//$("#alert-sign-fail").show();
-                                    } else if (ret3.code == '5000') {
-                                        api.alert({
-                                            msg: '重复请求',
-                                            buttons: ['确定']
-                                        });
-                                    } else if (ret3.code == '6001') {
-                                        api.alert({
-                                            msg: '用户中途取消支付操作',
-                                            buttons: ['确定']
-                                        });
-
-                                    } else if (ret3.code == '6002') {
-                                        api.alert({
-                                            msg: '网络连接出错',
-                                            buttons: ['确定']
-                                        });
-
-                                    } else if (ret3.code == '6004') {
-                                        api.alert({
-                                            msg: '支付结果未知',
-                                            buttons: ['确定']
-                                        });
+            title: '支付提醒',
+            msg: '是否选择支付宝支付？如继续点击确认',
+            buttons: ['确定', '取消']
+        }, function(ret, err) {
+            if (ret.buttonIndex == 1) {
+                fnPost('AliPay/GetAppTradeContent', {
+                    body: JSON.stringify({
+                        openId: order_one.Id,
+                        order_name: '订单支付',
+                        order_num: order_one.OrderNo,
+                        order_price: order_one.DingDanKuan
+                    })
+                }, 'application/json', false, false, function(ret2, err) {
+                    console.log(JSON.stringify(ret2));
+                    if (ret2) {
+                        var aliPayPlus = api.require('aliPayPlus');
+                        aliPayPlus.payOrder({
+                            orderInfo: ret2.data,
+                        }, function(ret3, err) {
+                            console.log(JSON.stringify(ret3));
+                            if (ret3.code == '9000') {
+                                api.alert({
+                                    title: '系统提示',
+                                    msg: '打赏成功',
+                                }, function(ret4, err) {
+                                    if (ret4) {
+                                        api.closeWin();
                                     }
                                 });
-                                api.hideProgress();
-                            } else {
-                                api.hideProgress();
+                            } else if (ret3.code == '8000') {
+                                api.alert({
+                                    msg: '正在处理中，支付结果未知',
+                                    buttons: ['确定']
+                                });
+                            } else if (ret3.code == '4000') {
+                                api.alert({
+                                    msg: '订单支付失败',
+                                    buttons: ['确定']
+                                }); //$("#alert-sign-fail").show();
+                            } else if (ret3.code == '5000') {
+                                api.alert({
+                                    msg: '重复请求',
+                                    buttons: ['确定']
+                                });
+                            } else if (ret3.code == '6001') {
+                                api.alert({
+                                    msg: '用户中途取消支付操作',
+                                    buttons: ['确定']
+                                });
+
+                            } else if (ret3.code == '6002') {
+                                api.alert({
+                                    msg: '网络连接出错',
+                                    buttons: ['确定']
+                                });
+
+                            } else if (ret3.code == '6004') {
+                                api.alert({
+                                    msg: '支付结果未知',
+                                    buttons: ['确定']
+                                });
                             }
                         });
-
-                    }
-
-                });
-                /*
-                  //方法二 测试用
-                  aliPayPlus.config({
-                      appId: '2018062660423192',
-                      rsaPriKey: 'MIIEpAIBAAKCAQEA4pyO3yrDsLBUGaJ9C3hNzx82fkly1Gg0NDl2oHvhsXc+rj3Qdy9ZbMmRstuzQPw47J9d1md6zieGcglhwwX+26XvGUjSSWPb9q29wEnIXWWMJXIih/e99nXklz4rVc6QLSH9VGFbV1W8UgpBSs1isnPOqHTnzx+YlYjU0OiF67oTvZHP8R2btnMIQESOxbVzFiKlj5D0s58vrT1M3fkuvKUYp/LSkYJHv3K6QAJjAvXahk2casVN1DhJhWVfceYIWmon/GBgikT9WK4UZwbJ0adLRF7O0JekgvTBpTGUmypNKakJKPOxgv2YpjhMiBALX4yw88y7pmYWngR+T+hY3QIDAQABAoIBAQCU+lHfG1Etfq67b5x/hua4bQ+5NHY+eAch8kkvtmGo9vkJOfAr+r/yig20JUWSSn7t6NObGcqdb1Su8cYInY9wPYWT/NDqmLDKWmxt1tPXuuPI1mEnPFLxjY3rdF6u+a7FTRwrdhnDr8Svtrg4AhCJuyK4kqq2+1GntR4b/VHVpvGKW4IEnSJKaP8NuZlv013PelEapVBC88UAzkUpWeNgducgMwVOdN49/NQQZ9dftIV/S2bZNhRhOs8r3xDHjNLCY69uuq2tiphwRuRHDaBqsT9uWiCXof6BQ7chkzuDkjjI4Z5neQhRbr8SYACmVDNOpAMNgg1Qo3ThZsfwDbZhAoGBAPSlkB2sDkaXIh7MPV3WRIugd01ILhF5hU0ZU88zFkXzXPOYG5EIkPDTe+NunICAT2ECQDz0LyTS9BtLeNHRZMObwXU1rwfGmGR1tikNW/gy1dMP66wGI5fOPx2Xb/FZMznenh1zlVtV2/iXTAV+GkFULlWr1KikRYs85B7HSyMFAoGBAO0gvBk3NvhvEH6m7Vf2z1mtvym8xlpZ9GGMpk7LnPoD5TwpqzHpR/dL0mp7E7AjkjZNzgJh1qLvAZhS7Ox3JZdvSt+TDWrlsevPcSCqdSyJ/pKVKQHNv1xDqR6F8Z3kuRI3kbUdfS/5XE2J5JChoUOgE54A+foGbiiKErF6KnX5AoGBANnex+Vk4KHE3kIHKW9z7j9afGR6r2woiKoMsDKKEH/jJxhYkdQriMivzljQnNdjbU27L3IZFBL7OyFDqSlSDSaWg0batDF8jyKIId2VZB45R2tbdkoQfYonxtWXk72f7prOwoj/8jcQ04EjXDRYBRHA4jKxgAVfpf9GDvHKEgPxAoGAW7nI6RwhqHIV+FgMAXXYeYErLDL4q2SWktF8V4iNvWyaVO5taY4qp29uAoB/eigYW+c25FcCVt6LSGfze/kO0ohbdyaEDzCw5V3GDfPCBauPjRYj2a3D8yW9GrCHaSNbr79NHrk8fr0/xkKr5oKPRgB69ii8icnI/OeEGaD/IckCgYBcPC5cusW21bZ7cak2gaAhgFKoJzXdSwC+CySOhJUIUAsPF7aMR4zT7l58qxrM7UAR9PFcy2yLYWRoEBx+uKWs7ouMV8+1iPO8RTx9zITcfFV8pDZE9AgqgmqxW3cz3uO+bI2ieKW6b30yvyHgsILTELBhJsLORuO68Kq+y3IJdw==',
-                  }, function(ret, err) {
-
-                      if (ret.status == true) {
-                          if ($api.getStorage('dingdankuan') && $api.getStorage('dingdankuan') > 0) {
-
-                              aliPayPlus.pay({
-                                  subject: '订单名',
-                                  body: '订单描述',
-                                  amount: parseFloat($api.getStorage('dingdankuan')),
-                                  tradeNO: order_one.OrderNo,
-                                  rsa2: false
-                              }, function(ret, err) {
-                                console.log(ret.code);
-                                  if (ret.code == 9000) {
-                                    fnShowSuccess();
-                                  } else {
-                                      if (ret.code == 6001) {
-                                          api.toast({
-                                              msg: '支付已取消',
-                                              duration: 2000,
-                                              location: 'bottom'
-                                          });
-                                      } else {
-                                          alert(err.code);
-                                      }
-                                  }
-                              });
-                          }
-                      }
-                  });*/
-            }
-            //支付成功后的处理
-            //清理本地库中购物车中信息及localStorage信息
-        function fnShowSuccess() {
-            api.alert({
-                title: '支付结果',
-                msg: '恭喜您支付成功，我们会尽快安排发货，谢谢惠顾！',
-            }, function(ret, err) {
-                if (ret) {
-                    //存入订单表
-                    fnEditOrder('待发货');
-                    $api.rmStorage('dingdankuan');
-
-                    api.closeWin({
-                        name: 'mypay'
-                    });
-
-                    api.closeWin({
-                        name: 'order'
-                    });
-                    api.closeWin({
-                        name: 'shoppingcart'
-                    });
-                    api.openWin({
-                        name: 'index',
-                        url: '../index.html'
-                    });
-
-                }
-            });
-        }
-
-        function fnCreateOrder(status) {
-            if ($api.getStorage('shoppingcart')) {
-                fnPost('Spl_Orders/PostOrder', {
-                    body: JSON.stringify({
-                        AddressId: $api.getStorage('AddressId'),
-                        UserId: $api.getStorage('userInfo').Id,
-                        Status: status,
-                        DingDanKuan: parseFloat($api.getStorage('dingdankuan')),
-                        spl_Wares: $api.getStorage('shoppingcart')
-                    })
-                }, 'application/json', false, false, function(ret, err) {
-                    if (ret) {
-                        api.toast({
-                            msg: '订单信息已添加，请付款',
-                            duration: 2000,
-                            location: 'bottom'
-                        });
-                        order_one = ret;
-                        $api.rmStorage('shoppingcart');
-                        $db.delete_true('shoppingCart', 'select');
+                        api.hideProgress();
                     } else {
-                        api.alert({
-                            title: '故障报警',
-                            msg: '订单生成有误',
-                            buttons: ['确定']
-                        });
+                        api.hideProgress();
                     }
                 });
-            }
-        }
 
-        function fnEditOrder(status) {
-            fnPost('Spl_Orders/PostEditOrder', {
+            }
+
+        });
+        /*
+          //方法二 测试用
+          aliPayPlus.config({
+              appId: '2018062660423192',
+              rsaPriKey: 'MIIEpAIBAAKCAQEA4pyO3yrDsLBUGaJ9C3hNzx82fkly1Gg0NDl2oHvhsXc+rj3Qdy9ZbMmRstuzQPw47J9d1md6zieGcglhwwX+26XvGUjSSWPb9q29wEnIXWWMJXIih/e99nXklz4rVc6QLSH9VGFbV1W8UgpBSs1isnPOqHTnzx+YlYjU0OiF67oTvZHP8R2btnMIQESOxbVzFiKlj5D0s58vrT1M3fkuvKUYp/LSkYJHv3K6QAJjAvXahk2casVN1DhJhWVfceYIWmon/GBgikT9WK4UZwbJ0adLRF7O0JekgvTBpTGUmypNKakJKPOxgv2YpjhMiBALX4yw88y7pmYWngR+T+hY3QIDAQABAoIBAQCU+lHfG1Etfq67b5x/hua4bQ+5NHY+eAch8kkvtmGo9vkJOfAr+r/yig20JUWSSn7t6NObGcqdb1Su8cYInY9wPYWT/NDqmLDKWmxt1tPXuuPI1mEnPFLxjY3rdF6u+a7FTRwrdhnDr8Svtrg4AhCJuyK4kqq2+1GntR4b/VHVpvGKW4IEnSJKaP8NuZlv013PelEapVBC88UAzkUpWeNgducgMwVOdN49/NQQZ9dftIV/S2bZNhRhOs8r3xDHjNLCY69uuq2tiphwRuRHDaBqsT9uWiCXof6BQ7chkzuDkjjI4Z5neQhRbr8SYACmVDNOpAMNgg1Qo3ThZsfwDbZhAoGBAPSlkB2sDkaXIh7MPV3WRIugd01ILhF5hU0ZU88zFkXzXPOYG5EIkPDTe+NunICAT2ECQDz0LyTS9BtLeNHRZMObwXU1rwfGmGR1tikNW/gy1dMP66wGI5fOPx2Xb/FZMznenh1zlVtV2/iXTAV+GkFULlWr1KikRYs85B7HSyMFAoGBAO0gvBk3NvhvEH6m7Vf2z1mtvym8xlpZ9GGMpk7LnPoD5TwpqzHpR/dL0mp7E7AjkjZNzgJh1qLvAZhS7Ox3JZdvSt+TDWrlsevPcSCqdSyJ/pKVKQHNv1xDqR6F8Z3kuRI3kbUdfS/5XE2J5JChoUOgE54A+foGbiiKErF6KnX5AoGBANnex+Vk4KHE3kIHKW9z7j9afGR6r2woiKoMsDKKEH/jJxhYkdQriMivzljQnNdjbU27L3IZFBL7OyFDqSlSDSaWg0batDF8jyKIId2VZB45R2tbdkoQfYonxtWXk72f7prOwoj/8jcQ04EjXDRYBRHA4jKxgAVfpf9GDvHKEgPxAoGAW7nI6RwhqHIV+FgMAXXYeYErLDL4q2SWktF8V4iNvWyaVO5taY4qp29uAoB/eigYW+c25FcCVt6LSGfze/kO0ohbdyaEDzCw5V3GDfPCBauPjRYj2a3D8yW9GrCHaSNbr79NHrk8fr0/xkKr5oKPRgB69ii8icnI/OeEGaD/IckCgYBcPC5cusW21bZ7cak2gaAhgFKoJzXdSwC+CySOhJUIUAsPF7aMR4zT7l58qxrM7UAR9PFcy2yLYWRoEBx+uKWs7ouMV8+1iPO8RTx9zITcfFV8pDZE9AgqgmqxW3cz3uO+bI2ieKW6b30yvyHgsILTELBhJsLORuO68Kq+y3IJdw==',
+          }, function(ret, err) {
+
+              if (ret.status == true) {
+                  if ($api.getStorage('dingdankuan') && $api.getStorage('dingdankuan') > 0) {
+
+                      aliPayPlus.pay({
+                          subject: '订单名',
+                          body: '订单描述',
+                          amount: parseFloat($api.getStorage('dingdankuan')),
+                          tradeNO: order_one.OrderNo,
+                          rsa2: false
+                      }, function(ret, err) {
+                        console.log(ret.code);
+                          if (ret.code == 9000) {
+                            fnShowSuccess();
+                          } else {
+                              if (ret.code == 6001) {
+                                  api.toast({
+                                      msg: '支付已取消',
+                                      duration: 2000,
+                                      location: 'bottom'
+                                  });
+                              } else {
+                                  alert(err.code);
+                              }
+                          }
+                      });
+                  }
+              }
+          });*/
+    }
+    //支付成功后的处理
+    //清理本地库中购物车中信息及localStorage信息
+    function fnShowSuccess() {
+        api.alert({
+            title: '支付结果',
+            msg: '恭喜您支付成功，我们会尽快安排发货，谢谢惠顾！',
+        }, function(ret, err) {
+            if (ret) {
+                //存入订单表
+                fnEditOrder('待发货');
+                $api.rmStorage('dingdankuan');
+
+                api.closeWin({
+                    name: 'mypay'
+                });
+
+                api.closeWin({
+                    name: 'order'
+                });
+                api.closeWin({
+                    name: 'shoppingcart'
+                });
+                api.openWin({
+                    name: 'index',
+                    url: '../index.html'
+                });
+
+            }
+        });
+    }
+
+    function fnCreateOrder(status) {
+        if ($api.getStorage('shoppingcart')) {
+            fnPost('Spl_Orders/PostOrder', {
                 body: JSON.stringify({
-                    Id: order_one.Id,
-                    Status: status
+                    AddressId: $api.getStorage('AddressId'),
+                    UserId: $api.getStorage('userInfo').Id,
+                    Status: status,
+                    DingDanKuan: parseFloat($api.getStorage('dingdankuan')),
+                    spl_Wares: $api.getStorage('shoppingcart')
                 })
             }, 'application/json', false, false, function(ret, err) {
                 if (ret) {
                     api.toast({
-                        msg: '订单已生成，准备发货',
+                        msg: '订单信息已添加，请付款',
                         duration: 2000,
                         location: 'bottom'
                     });
-                    order_one = null;
+                    order_one = ret;
+                    $api.rmStorage('shoppingcart');
+                    $db.delete_true('shoppingCart', 'select');
                 } else {
                     api.alert({
                         title: '故障报警',
-                        msg: '订单存入系统有误，请联系客服！',
+                        msg: '订单生成有误',
                         buttons: ['确定']
                     });
                 }
             });
         }
+    }
+
+    function fnEditOrder(status) {
+        fnPost('Spl_Orders/PostEditOrder', {
+            body: JSON.stringify({
+                Id: order_one.Id,
+                Status: status
+            })
+        }, 'application/json', false, false, function(ret, err) {
+            if (ret) {
+                api.toast({
+                    msg: '订单已生成，准备发货',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                order_one = null;
+            } else {
+                api.alert({
+                    title: '故障报警',
+                    msg: '订单存入系统有误，请联系客服！',
+                    buttons: ['确定']
+                });
+            }
+        });
+    }
 </script>
 
 </html>
