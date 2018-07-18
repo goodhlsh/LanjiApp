@@ -116,6 +116,7 @@
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript" src="../script/common.js"></script>
 <script type="text/javascript" src="../script/localdb.js"></script>
+
 <script type="text/javascript">
     apiready = function() {
         fnCreateOrder('待付款');
@@ -220,80 +221,51 @@
                 msg: '是否选择微信支付？如继续点击确认',
                 buttons: ['确定', '取消']
             }, function(ret0, err) {
-                if (ret0.buttonIndex == 1) {
-                    fnpost('WxPay/GetUniorder', {
+                if (ret0.buttonIndex == 1 && order_one != null) {
+                    fnPost('WxPay/GetAppPayInfo', {
                         body: JSON.stringify({
-                            body: order_one.description,
-                            total_fee: order_one.dingdankuan,
-                            out_trade_no: order_one.OrderNo,
-                            spbill_create_ip: '',
-                            device_info: '',
-                            detail: order_one.description,
-                            attach: '',
-                            fee_type: 'CNY',
-                            goods_tag: '',
-                            product_id: '',
+                            body: order_one.Description,
+                            total_fee: order_one.DingDanKuan * 100,
+                            out_trade_no: order_one.OrderNo
                         })
                     }, 'application/json', false, false, function(ret, err) {
-                        var data = {
-                            description: ret.info.wx_pay_data.po_body,
-                            totalFee: ret.info.wx_pay_data.po_total_fee * 100,
-                            tradeNo: ret.info.wx_pay_data.po_order_no,
-                            spbillCreateIP: '',
-                            deviceInfo: '',
-                            detail: ret.info.wx_pay_data.po_body,
-                            attach: '',
-                            feeType: 'CNY',
-                            timeStart: '',
-                            timeExpire: '',
-                            goodsTag: '',
-                            productId: ''
-                        };
-                        var wxPay = api.require('wxPay');
-                        wxPay.config({
-                            apiKey: '', //
-                            mchId: '',
-                            partnerKey: '',
-                            notifyUrl: $app + 'WxPay/WxCallBack'
-                        }, function(ret1, err) {
-                            if (ret1.status) {
-                                wxPay.pay(data, function(ret2, err) {
-                                    if (ret2.status) {
-                                        api.alert({
-                                            title: '系统提示',
-                                            msg: '打赏成功',
-                                        }, function(ret3, err) {
-                                            if (ret3) {
-                                                api.closeWin();
-                                            }
+                        if (ret&&ret.sign!=null) {
+                            var wxPay = api.require('wxPay');
+                            wxPay.payOrder({
+                                apiKey: ret.app_id,
+                                orderId: order_one.OrderNo,
+                                mchId: ret.mch_id,
+                                nonceStr: ret.nonce,
+                                timeStamp: ret.time_stamp,
+                                package: ret.package,
+                                sign: ret.sign
+                            }, function(ret2, err) {
+                                if (ret2.status) {
+                                    fnShowSuccess();
+                                } else {
+                                    if (err.code == '-2') {
+                                        api.toast({
+                                            msg: '用户取消'
                                         });
                                     } else {
-                                        if (err.code == '-2') {
-                                            api.toast({
-                                                msg: '用户取消'
-                                            });
-                                        } else {
-                                            api.toast({
-                                                msg: '打赏失败'
-                                            });
-                                        }
+                                        api.toast({
+                                            msg: '打赏失败'
+                                        });
                                     }
-                                });
-                            } else {
-                                api.toast({
-                                    msg: '打赏失败'
-                                });
-                                api.toast({
-                                    msg: '传输错误'
-                                })
-                            }
-                        });
+                                }
+                            });
+                        } else {
+                            api.toast({
+                                msg: '打赏失败'
+                            });
+                            api.toast({
+                                msg: '传输错误'
+                            })
+                        }
                     });
-
                 }
             });
         }
-
     }
     //支付宝支付
     //方法一 上线要用此法
@@ -303,7 +275,7 @@
             msg: '是否选择支付宝支付？如继续点击确认',
             buttons: ['确定', '取消']
         }, function(ret, err) {
-            if (ret.buttonIndex == 1) {
+            if (ret.buttonIndex == 1 && order_one != null) {
                 fnPost('AliPay/GetAppTradeContent', {
                     body: JSON.stringify({
                         openId: order_one.Id,
@@ -312,7 +284,6 @@
                         order_price: order_one.DingDanKuan
                     })
                 }, 'application/json', false, false, function(ret2, err) {
-                    console.log(JSON.stringify(ret2));
                     if (ret2) {
                         var aliPayPlus = api.require('aliPayPlus');
                         aliPayPlus.payOrder({
@@ -320,14 +291,7 @@
                         }, function(ret3, err) {
                             console.log(JSON.stringify(ret3));
                             if (ret3.code == '9000') {
-                                api.alert({
-                                    title: '系统提示',
-                                    msg: '打赏成功',
-                                }, function(ret4, err) {
-                                    if (ret4) {
-                                        api.closeWin();
-                                    }
-                                });
+                                fnShowSuccess();
                             } else if (ret3.code == '8000') {
                                 api.alert({
                                     msg: '正在处理中，支付结果未知',
@@ -446,7 +410,8 @@
                     UserId: $api.getStorage('userInfo').Id,
                     Status: status,
                     DingDanKuan: parseFloat($api.getStorage('dingdankuan')),
-                    spl_Wares: $api.getStorage('shoppingcart')
+                    spl_Wares: $api.getStorage('shoppingcart'),
+                    Description: '兰基优品-购物'
                 })
             }, 'application/json', false, false, function(ret, err) {
                 if (ret) {

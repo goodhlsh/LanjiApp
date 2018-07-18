@@ -51,7 +51,7 @@
         </div>
     </header>
     <div id="main">
-
+<div id="nowip" style="display:none"></div>
     </div>
     <footer class="aui-bar aui-bar-tab aui-border-t" id="aui-footer">
         <div id="tabbar0" class="aui-bar-tab-item aui-active" tapmode onclick="fnChange(this,0)">
@@ -95,6 +95,7 @@
         var homeid = $api.byId('tabbar0');
         fnChange(homeid, 0);
     };
+
     /*搜索框--begin*/
     var searchBar = document.querySelector(".aui-searchbar");
     var searchBarInput = document.querySelector(".aui-searchbar input");

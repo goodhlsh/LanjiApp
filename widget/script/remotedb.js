@@ -7,9 +7,10 @@
      if (false) {
          return "http://lj.com";
      } else {
-        // return "http://172.16.183.14:1693/api/";
-         return "http://154.8.159.50:1693/api/";
-         //return "http://192.168.0.7:1693/api/";
+         return "http://172.16.183.14:1693/api/";
+         //return "http://154.8.159.50:1693/api/";
+        // return "http://192.168.43.6:1693/api/";
+        //return "http://192.168.0.5:1693/api/";
          //return "http://172.31.244.108:1693/api/";
      }
  };
@@ -51,7 +52,6 @@
  };
  //实体类传递参数
  function fnGet2(path, data, callback) {
-     console.log("ssssssssssssssssssss");
      if (!path) {
          path = 'spl_ware/getall';
      }
