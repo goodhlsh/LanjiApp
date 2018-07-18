@@ -229,7 +229,9 @@
                             out_trade_no: order_one.OrderNo
                         })
                     }, 'application/json', false, false, function(ret, err) {
-                        if (ret&&ret.sign!=null) {
+                      console.log(JSON.stringify(ret));
+                        if (ret.sign!=null) {
+
                             var wxPay = api.require('wxPay');
                             wxPay.payOrder({
                                 apiKey: ret.app_id,
