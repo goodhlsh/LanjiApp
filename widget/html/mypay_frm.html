@@ -119,7 +119,14 @@
 
 <script type="text/javascript">
     apiready = function() {
+      var flag=api.pageParam.flagIndex;
+      var orderNo=api.pageParam.orderId;
+      if(flag=='ok'){
         fnCreateOrder('待付款');
+      }
+      if (orderNo!=null) {
+        fnGetOrder(orderNo);
+      }
 
         fnReady();
         fnInitWallet();
@@ -435,6 +442,16 @@
             });
         }
     }
+    function fnGetOrder(orderId_){
+      fnGet('Spl_Orders/GetOrderById',{
+        where:{
+          orderId:orderId_
+        }},function(ret,err){
+          if (ret) {
+            order_one=ret;
+          }
+        });
+      }
 
     function fnEditOrder(status) {
         fnPost('Spl_Orders/PostEditOrder', {

@@ -97,16 +97,17 @@
         //  fnReadyFrame();
         openFrames();
     };
+    var wareTypeList;
     // 初始化商品分类列表
     function initWareTypeList() {
         // 获取上一次的商品分类列表
-        var wareTypeList = $api.getStorage('wareTypeList') == null ? null : $api.getStorage('wareTypeList');
+        wareTypeList = $api.getStorage('wareTypeList') == null ? null : $api.getStorage('wareTypeList');
 
         // 如果没有商品分类列表，则使用默认的商品分类列表
         if (!wareTypeList) {
             // 从服务器端更新商品分类列表
             fnGetWareTypeList();
-        } 
+        }
     }
 
     // 从服务器端更新商品分类列表
@@ -140,6 +141,7 @@
                     "Id": "A48C196AE379499C9491092908BBE8F8",
                     "Name": "洗护系列"
                 }];
+                $api.setStorage('wareTypeList', wareTypeList);
             }
         });
     }
