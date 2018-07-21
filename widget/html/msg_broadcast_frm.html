@@ -5,90 +5,195 @@
         <meta charset="utf-8">
         <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
         <title>APICloud APP</title>
-        <link rel="stylesheet" type="text/css" href="../css/api.css" />
+        <link rel="stylesheet" type="text/css" href="../css/aui.css" />
         <style>
             html,
             body {
                 background-color: #f0f0f0;
             }
-
-            .empty>img {
-                float: left;
-                padding-left: 20px;
-                margin-top: 8px;
-                height: 24px;
+            body {
+                height: 100%;
             }
-
-            .empty>span {
-                height: 44px;
-                line-height: 44px;
-                padding-left: 20px;
-            }
-
-            .message {
-                display: none;
-                margin-top: 8px;
-                background-color: #fff;
-            }
-
-            .message>div {
+            .section {
                 position: relative;
-                top: -1px;
+                width: 100%;
+                height: auto;
                 box-sizing: border-box;
-                height: 49px;
-                border-top: 1px solid #eee;
+                padding: 0 8px;
+            }
+            .ware-1 {
+                position: relative;
+                width: 100%;
+                height: 110px;
+                box-sizing: border-box;
+                padding-top: 15px;
+                padding-bottom: 15px;
+                border-bottom: 1px solid #d1d1d1;
+            }
+            .ware-1  .info {
+                width: 100%;
+                height: 60px;
+                box-sizing: border-box;
+                padding-left: 28px;
+                padding-right: 28px;
             }
 
-            .message>div>.msg {
-                box-sizing: border-box;
-                height: 48px;
-                padding-left: 16px;
-                padding-right: 96px;
-                line-height: 48px;
-                color: #888;
-                font-size: 16px;
+
+            .ware-1  .info .title {
+              width: 100%;
+              height: 15px;
+              font-size: 15px;
+            }
+            .ware-1  .info .msg {
+              margin-top: 10px;
+              width: 100%;
+              height: 13px;
+              font-size: 13px;
+
             }
 
-            .message>div>.time {
-                position: absolute;
-                top: 0;
-                right: 16px;
-                height: 48px;
-                line-height: 48px;
-                color: #888;
-                text-align: right;
-                font-size: 12px;
+            .ware-1  .info .time {
+
+              margin-top: 10px;
+              width: 100%;
+              height: 12px;
+              font-size: 12px;
+              vertical-align: top;
             }
 
             .active {
                 -webkit-opacity: 0.7;
                 opacity: 0.7;
             }
+
         </style>
     </head>
 
     <body>
         <section class="h20"></section>
-        <section id="empty" class="empty">
-            <img src="../image/no_message.png">
-            <span>暂无消息</span>
-        </section>
+
         <section id="message" class="message">
         </section>
     </body>
     <script id="template" type="text/template">
-        {{~ it:data }}
-        <div>
-            <span class="msg">{{= data.msg }}</span>
-            <span class="time">{{= data.receiveTime }}</span>
+        {{~it:value:index}}
+        <div class="ware-1">
+        <div class="info">
+            <div class="title">标题：{{=value.Title}}</div>
+            <div class="msg">内容：{{=value.Cont}}</div>
+            <div class="time">日期：{{=value.CreateTime}}</div>
         </div>
+      </div>
         {{~}}
     </script>
     <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript" src="../script/doT.min.js"></script>
+    <script type="text/javascript" src="../script/SHA1.js"></script>
+    <script type="text/javascript" src="../script/remotedb.js"></script>
     <script type="text/javascript">
         apiready = function() {
-
+            // 初始化事件监听
+            initEventListenter();
+            // 初始化下拉刷新
+            initRefresh();
+            fnGetMessageList(false);
         };
+
+        function initEventListenter() {
+            // 监听滚动到Frame底部的事件
+            api.addEventListener({
+                name: 'scrolltobottom',
+                extra: {
+                    threshold: 300 // 距离底部还有多少触发scrolltobottom事件
+                }
+            }, function(ret, err) {
+                // 获取更多的消息
+                fnGetMessageList(true);
+            });
+        }
+        // 实现下拉刷新功能
+        function initRefresh() {
+            api.setRefreshHeaderInfo({
+                visible: true,
+                loadingImg: 'widget://image/refresh.png',
+                bgColor: '#fff',
+                textColor: '#e1017e',
+                showTime: true
+            }, function(ret, err) {
+                // 刷新消息列表
+                fnGetMessageList(false);
+            });
+        }
+        var skip = 0,
+            LIMIT = 8;
+
+        function fnGetMessageList(loadMore_) {
+            if (!loadMore_) {
+                // 显示加载状态对话框
+                api.hideProgress({
+                    style: 'default',
+                    animationType: 'fade',
+                    title: '努力加载中...',
+                    text: '请稍后...',
+                    modal: false
+                });
+            }
+            // 如果是加载更多，需要实现分页
+            if (loadMore_) {
+                skip += LIMIT;
+            } else {
+                skip = 0;
+            }
+
+            var filter = {
+                where: {
+                    'Category': 'message'
+                },
+                skip: skip,
+                limit: LIMIT
+            }
+            fnGet('SysMessage/GetMessageListByCategory', filter, function(ret, err) {
+                if (ret) {
+                    // 恢复下拉刷新的状态
+                    api.refreshHeaderLoadDone();
+
+                    // 在界面中更新消息列表显示
+                    fnUpdateMessageList(ret, loadMore_);
+                } else {
+                    api.toast({
+                        msg: '加载数据失败',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+                // 隐藏加载状态对话框
+                api.hideProgress();
+
+            });
+        }
+
+        function fnUpdateMessageList(data_, loadMore_) {
+            var list = $api.byId('message');
+            // 编译模板函数
+            var tempFn = doT.template($api.byId('template').innerHTML);
+            // 使用模板函数生成HTML文本
+            var resultHTML = tempFn(data_);
+            // 判断是否是加载更多，如果是加载更多，则追加到list中
+            if (loadMore_) {
+
+                $api.append(list, resultHTML);
+                // 如果服务器端已经没有更多数据返回，更新提示信息
+                if (data_.length < LIMIT) {
+                    var pushStatus = $api.byId('pushStatus');
+                    pushStatus.innerHTML = "没有啦！";
+                }
+            } else {
+                // 否则，直接替换list中的内容
+                $api.html(list, resultHTML);
+            }
+            // 由于是动态的将元素添加到Dom树上，所以需要手动触发tapmode检查，列表中的元素才能实现点击加速的效果
+            api.parseTapmode();
+        }
     </script>
 
 </html>

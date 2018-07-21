@@ -34,6 +34,12 @@
         .highlight {
             opacity: 0.7;
         }
+        .right
+        {
+          position: absolute;
+          right: 20px;
+          top:22px;
+        }
     </style>
 </head>
 
@@ -41,7 +47,7 @@
     <header class="aui-bar aui-bar-nav  aui-btn-danger" id="aui-header">
         <div class="login open-win" win="person_info" login="true">
             <div class="icon-panel">
-                <div id="userAvatar" class="icon"></div>
+                <img id="userAvatar" class="icon"></img>
             </div>
             <div id="username" class="username">lanyou</div>
             <div class="account-info">余额:￥<span id="currentamout">0.0</span></div>
@@ -75,8 +81,10 @@
             </div>
             <div class="aui-list-item open-win" win="message" login="true">
                 <div class="aui-list-item-inner aui-list-item-arrow">
+
                     <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-info">查看消息</i></div>
-                    <div class="aui-list-item-right">查看系统、公告等消息</div>
+                  <div class="aui-list-item-right">查看系统、公告等消息</div>  <div id="mydot" class="right"></div>
+
                 </div>
             </div>
             <div class="aui-list-item open-win" win="setting" login="true">
@@ -114,8 +122,14 @@
 
     function fnInit() {
         userName.innerHTML = $api.getStorage('userInfo').TrueName == null ? '没有填写' : $api.getStorage('userInfo').TrueName || '点击登录';
-        userAvatar.src = $api.getStorage('userInfo').Photo || '../image/my/default_square.png';
+        userAvatar.src =  $api.getStorage('avatar') || '../image/my/default_square.png';
         userYuE.innerHTML = $api.getStorage('currentwallet') == null ? '0.0' : ($api.getStorage('currentwallet').JieYu==null?'0.0':$api.getStorage('currentwallet').JieYu);
+
+        if ($api.getStorage('newmessage')) {
+          //设置我的小红点
+          var mydot = $api.byId('mydot');
+          $api.addCls(mydot, 'aui-dot');
+        }
     };
 
     function fnInitEvent() {
@@ -134,14 +148,9 @@
 
     function fnUpdateUserInfo() {
         userName.innerHTML = $api.getStorage('userInfo').TrueName == null ? '没有填写' : $api.getStorage('userInfo').TrueName || '点击登录';
-console.log($api.getStorage('userInfo').Photo);
-        var src = $api.getStorage('userInfo').Photo || '../image/my/default_square.png';
 
-        api.imageCache({
-            url: src
-        }, function(ret, err) {
-            userAvatar.src = ret.url;
-        });
+        userAvatar.src = $api.getStorage('avatar') || '../image/my/default_square.png';
+
         fnInitYuE();
 
     };

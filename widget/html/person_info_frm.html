@@ -67,7 +67,7 @@
 
         function fnSetInfo() {
             if (!flag) {
-                avatar.src = $api.getStorage('userInfo').Photo || '../image/my/default_square.png';
+                avatar.src = $api.getStorage('avatar') || '../image/my/default_square.png';
                 flag = true;
             }
             api.sendEvent({
@@ -88,7 +88,7 @@
 
                 api.getPicture({
                     sourceType: sourceType,
-                    encodingType: 'jpg',
+                    encodingType: '',
                     mediaValue: 'pic',
                     destinationType: 'url',
                     allowEdit: true,
@@ -102,18 +102,11 @@
                         //$api.setStorage('avatar', ret.data);
                         //写入用户库
                         avatar.src = ret.data;
-                        var fs = api.require('fs');
-fs.copyTo({
-    oldPath: ret.data,
-    newPath: 'fs://image/my/person.jpg'
-}, function(ret, err) {
-    if (ret.status) {
-        alert(JSON.stringify(ret));
-    } else {
-        alert(JSON.stringify(err));
-    }
-});
-                        fnUploadAtavar(ret.data);
+                        $api.setStorage('avatar', ret.data);
+
+                        //文件存在应用沙箱下picture路径下
+                        //服务端截取路径
+                      //  fnUploadAtavar(ret.data);
                     }
                 });
             });

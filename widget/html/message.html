@@ -128,6 +128,8 @@
             navs = $api.domAll(nav, 'div');
             mark = $api.dom(nav, 'mark');
             mark.style.width = (api.winWidth / 3) + 'px';
+            $api.rmStorage('newmessage');
+
         };
 
         function fnChange(index) {
