@@ -12,11 +12,11 @@
     body {
         height: 100%;
     }
-    
+
     body {
         background-color: #eee;
     }
-    
+
     header {
         box-sizing: border-box;
         display: -webkit-box;
@@ -30,7 +30,7 @@
         margin-bottom: 2px;
         background-color: #fff;
     }
-    
+
     header .input {
         -webkit-box-flex: 1;
         -webkit-flex: 1;
@@ -43,14 +43,14 @@
         background-color: #eee;
         border-radius: 14px;
     }
-    
+
     header .input input {
         width: 100%;
         height: 20px;
         vertical-align: top;
         font-size: 14px;
     }
-    
+
     header .button {
         box-sizing: border-box;
         width: 80px;
@@ -63,19 +63,19 @@
         border-radius: 14px;
         border: 1px solid #aaa;
     }
-    
+
     section {
         width: 100%;
         height: auto;
     }
-    
+
     .option {
         width: 100%;
         height: 60px;
         margin-bottom: 2px;
         background-color: #fff;
     }
-    
+
     .option .icon {
         position: absolute;
         top: 20px;
@@ -87,7 +87,7 @@
         background-repeat: no-repeat;
         background-position: center center;
     }
-    
+
     .option .info {
         box-sizing: border-box;
         width: 100%;
@@ -95,7 +95,7 @@
         padding-left: 40px;
         padding-right: 16px;
     }
-    
+
     .option .info .top {
         box-sizing: border-box;
         width: 100%;
@@ -106,7 +106,7 @@
         text-align: left;
         color: #444;
     }
-    
+
     .option .info .bottom {
         box-sizing: border-box;
         width: 100%;
@@ -116,7 +116,7 @@
         text-align: left;
         color: #888;
     }
-    
+
     .highlight {
         opacity: 0.7;
     }
@@ -128,7 +128,7 @@
         <div class="input">
             <input id="searchText" type="search" placeholder="小区/写字楼">
         </div>
-        <div class="button">清空</div>
+        <div class="button" >查询</div>
     </header>
     <section id="list">
         <!--         <div class="option">
@@ -161,7 +161,7 @@ apiready = function() {
 function fnInitUIInput() {
     var searchText = $api.byId('searchText');
     var rect = $api.offset(searchText);
-    var UIInput = api.require('UIInput');
+    var UIInput = api.require('UIInput')
     UIInput.open({
         rect: {
             x: rect.l,
@@ -179,7 +179,7 @@ function fnInitUIInput() {
         },
         autoFocus: false,
         maxRows: 1,
-        placeholder: '请输入地址',
+        placeholder: '请输入小区/写字楼',
         keyboardType: 'default',
         fixedOn: api.frameName
     }, function(ret, err) {
@@ -194,6 +194,7 @@ function fnInitUIInput() {
                     id: uiInputId
                 }, function(ret, err) {
                     if (ret) {
+
                         if (ret.status) {
                             //console.log(ret.msg);
                             fnSearchInCity(ret.msg);
@@ -213,11 +214,11 @@ function fnSearchInCity(msg_) {
     var currentCity = $api.getStorage('currentCity');
     var bMap = api.require('bMap');
     bMap.searchInCity({
-        city: currentCity.name,
+        city: currentCity,
         keyword: msg_,
         pageIndex: 0,
         pageCapacity: 20
-    }, function(ret) {
+    }, function(ret,err) {
         if (ret.status) {
             fnUpdateSearchList(ret);
         }

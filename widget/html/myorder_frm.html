@@ -121,8 +121,12 @@
             <div class="info" tapmode onclick="fnOpenOrderWin('{{=value.Id}}');">
                 <div class="name">{{=value.TrueName}}</div>
                 <div class="orderNo">订单号：{{=value.OrderNo}}</div>
+                {{? !(value.Status==="待付款")}}
+                <div class="orderNo">快递单号：{{=value.OrderWuliu}}</div>
+                {{?}}
                 <div class="createDate">下单日期：{{=value.CreateTime}}</div>
                 <div class="orderNo">金额：{{=value.DingDanKuan}}</div>
+
             </div>
 
         </div>

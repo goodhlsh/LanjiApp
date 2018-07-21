@@ -8,13 +8,60 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
     <style>
+        html,
+        body {
+            height: 100%;
+        }
 
+        body {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+        }
 
+        section {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            overflow: auto;
+        }
+
+        footer {
+            width: 100%;
+            height: 100px;
+            background-color: #fff;
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+        }
+
+                .col {
+                    -webkit-box-flex: 1;
+                    -webkit-flex: 1;
+                    flex: 1;
+                    text-align: center;
+                    height: 100px;
+                }
+
+                .col img {
+                    width: 50px;
+                    margin-top: 20px;
+                }
+
+                .col p {
+                    margin-top: 2px;
+                    color: #7d7d7d;
+                    font-size: 14px;
+                }
         .card-extend {
             text-align: center;
         }
-        .picCenter{
-          margin: 0 auto;
+
+        .picCenter {
+            margin: 0 auto;
         }
     </style>
 </head>
@@ -29,16 +76,59 @@
     </header>
 
     <div id="extenCode" class="card-extend aui-margin-15">
-        <img id="qrCore" src="../image/demo1.png" class="picCenter"></img>
+        <img id="qrCore" src="http://154.8.159.50:1693/iis-85.png" class="picCenter"></img>
     </div>
+    <section></section>
+    <footer>
+        <div id="footer_span1" class="col" onclick="fnShareQ()">
+            <img src="../image/share_timeline.png" />
+            <p>微信朋友圈</p>
+        </div>
+        <div id="footer_span2" class="col" onclick="fnShareY()">
+            <img src="../image/share_friend.png" />
+            <p>微信好友</p>
+        </div>
+    </footer>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/common.js"></script>
 <script type="text/javascript">
     apiready = function() {
-fnReady();
+        fnReady();
 
-}
+    }
+
+    function fnShareQ() {
+        var wx = api.require('wx');
+        wx.shareImage({
+            apiKey: 'wxbf083887994f7d4d',
+            scene: 'timeline',
+            thumb: 'http://154.8.159.50:1693/iis-85.png',
+            contentUrl: 'http://154.8.159.50:1693/iis-85.png'
+        }, function(ret, err) {
+            if (ret.status) {
+                alert('分享成功');
+            } else {
+                alert(err.code);
+            }
+        });
+    }
+
+    function fnShareY() {
+        var wx = api.require('wx');
+        wx.shareImage({
+            apiKey: 'wxbf083887994f7d4d',
+            scene: 'timeline',
+            thumb: 'http://154.8.159.50:1693/iis-85.png',
+            contentUrl: 'http://154.8.159.50:1693/iis-85.png'
+        }, function(ret, err) {
+            if (ret.status) {
+                alert('分享成功');
+            } else {
+                alert(err.code);
+            }
+        });
+    }
 </script>
 
 </html>

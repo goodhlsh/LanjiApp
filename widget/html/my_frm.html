@@ -134,6 +134,7 @@
 
     function fnUpdateUserInfo() {
         userName.innerHTML = $api.getStorage('userInfo').TrueName == null ? '没有填写' : $api.getStorage('userInfo').TrueName || '点击登录';
+console.log($api.getStorage('userInfo').Photo);
         var src = $api.getStorage('userInfo').Photo || '../image/my/default_square.png';
 
         api.imageCache({

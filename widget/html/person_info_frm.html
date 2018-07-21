@@ -102,7 +102,17 @@
                         //$api.setStorage('avatar', ret.data);
                         //写入用户库
                         avatar.src = ret.data;
-                        console.log("pic-----------------");
+                        var fs = api.require('fs');
+fs.copyTo({
+    oldPath: ret.data,
+    newPath: 'fs://image/my/person.jpg'
+}, function(ret, err) {
+    if (ret.status) {
+        alert(JSON.stringify(ret));
+    } else {
+        alert(JSON.stringify(err));
+    }
+});
                         fnUploadAtavar(ret.data);
                     }
                 });
@@ -113,18 +123,13 @@
         function fnUploadAtavar(avatarUrl_) {
             fnPost('SysUser/ChangePhoto', {
                 body: JSON.stringify({
-                    data: {
-                        values: {
-                            filename: $api.getStorage('userInfo').UserName + '_tx'
-                        },
-                        files: {
-                            file: avatarUrl_
-                        }
-                    }
+                    Id: $api.getStorage('userInfo').Id,
+                    Photo:avatarUrl_
                 })
-            }, 'application/json', false, false, function(ret, err) {
-              if (ret) {
-                    $api.setStorage('userInfo', ret);                    
+            }, 'application/json', false, true, function(ret, err) {
+                console.log(JSON.stringify(ret));
+                if (ret) {
+                    $api.setStorage('userInfo', ret);
                     fnSetInfo();
                 } else {
                     alert(JSON.stringify(err));

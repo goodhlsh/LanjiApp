@@ -59,7 +59,7 @@
     <permission name="hardware"/>
     <!--百度地图配置-->
     <feature name="bMap">
-        <param name="andriod_api_key" value="8ewZ2oOuNSNzfzGgy83mdOgYYotKAPnk"/>
+        <param name="andriod_api_key" value="qWGgzCevO2IHcp93XqbCIdEzQzVLNIr1"/>
     </feature>
     <!--短信验证配置-->
     <feature name="smsVerify">
@@ -81,6 +81,11 @@
     <param name="apiKey" value="wxbf083887994f7d4d"/>
     <param name="apiSecret" value="f479f43fb848b0a3d13284fbd1fec6e4"/>
   </feature>
+  <feature name="wx">
+   <param name="urlScheme" value="wxbf083887994f7d4d"/>
+   <param name="apiKey" value="wxbf083887994f7d4d"/>
+   <param name="apiSecret" value="f479f43fb848b0a3d13284fbd1fec6e4"/>
+ </feature>
   <!--支付宝支付-->
   <feature name="aliPayPlus">
      <param name="urlScheme" value="AliPayPlusA6069365614406" />

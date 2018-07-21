@@ -10,7 +10,7 @@
     <style>
         .input {
             height: 40px;
-            width: 80%;
+            width: 70%;
             font-size: 18px;
             line-height: 20px;
             color: #8E8C8C;
@@ -43,55 +43,67 @@
             <div class="aui-list-item">
                 <div class="aui-list-item-inner">
                     <div class="aui-list-item-label-icon">
-                        <i class="aui-iconfont aui-icon-my"></i>
-                    </div>
-                    <div class="aui-list-item-input">
-                        <input id="realname" class="input" type="text" placeholder="请输入真实姓名" />
-                    </div>
-                </div>
-            </div>
-            <div class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-label-icon">
-                        <i class="aui-iconfont aui-icon-profile"></i>
-                    </div>
-                    <div class="aui-list-item-input">
-                        <input id="cardId" class="input" type="text" placeholder="请输入身份证号" />
+                        <i class="aui-iconfont aui-icon-my"></i></div>
+                        <div class="aui-list-item-input">
+                            <input id="realname" class="input" type="text" placeholder="请输入真实姓名" />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-label-icon">
-                        <i class="aui-iconfont aui-icon-profile"></i>
-                    </div>
-                    <div class="aui-list-item-input">
-                        <div class="aui-title">请上传身份证照片<input id="sfzbtn" class="aui-btn-warning" type="button" value="上传正面照" onclick="fnSetshfzh('shfzh')" />/<input class="aui-btn-warning" type="button" value="上传背面照" onclick="fnSetshfzh('shfzhbei')" /></div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="aui-list-item">
-                <div class="aui-list-item-inner">
-                    <div class="aui-list-item-label-icon">
-                        <i class="aui-iconfont aui-icon-mobile"></i>
+                <div class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label-icon">
+                            <i class="aui-iconfont aui-icon-profile"></i></div>
+                            <div class="aui-list-item-input">
+                                <input id="cardId" class="input" type="text" placeholder="请输入身份证号" />
+                            </div>
+                        </div>
+
+                  </div>
+                    <div class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-label-icon">
+                                <i class="aui-iconfont aui-icon-profile"></i>
+                            </div>
+                            <div class="aui-list-item-input">
+                                <div class="aui-title">请上传身份证正面照片
+                                    <input id="sfzbtn" class="aui-btn-warning" type="button" value=" 上传 " onclick="fnSetshfzh('shfzh')" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="aui-list-item-input">
-                        <input id="mobile" class="input" type="text" placeholder="请输入手机号">
+                    <div class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-label-icon">
+                                <i class="aui-iconfont aui-icon-profile"></i>
+                            </div>
+                            <div class="aui-list-item-input">
+                                <div class="aui-title">请上传本人手持身份证照片
+                                    <input class="aui-btn-warning" type="button" value=" 上传 " onclick="fnSetshfzh('shfzhbei')" /></div>
+                            </div>
+
+                        </div>
+                    </div>
+                <div class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-label-icon">
+                            <i class="aui-iconfont aui-icon-mobile"></i>
+                        </div>
+                        <div class="aui-list-item-input">
+                            <input id="mobile" class="input" type="text" placeholder="请输入手机号"></div>
+                    </div>
+                </div>
+                <div class="aui-list-item" id="shfzh">
+                </div>
+                <div class="aui-list-item" id="shfzhbei">
+                </div>
+                <div class="aui-list-item">
+                    <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
+                        <div id="okbtn" class="aui-btn aui-btn-danger" tapmode="highlight" onclick="fnGotoAuth();">提交</div>
+                        <div id="cancelbtn" class="aui-btn aui-btn-danger aui-margin-l-10" tapmode="highlight" onclick="fnCloseWin();">取消</div>
                     </div>
                 </div>
             </div>
-            <div class="aui-list-item" id="shfzh">
-            </div>
-            <div class="aui-list-item" id="shfzhbei">
-            </div>
-            <div class="aui-list-item">
-                <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
-                    <div id="okbtn" class="aui-btn aui-btn-danger" tapmode="highlight" onclick="fnGotoAuth();">提交</div>
-                    <div id="cancelbtn" class="aui-btn aui-btn-danger aui-margin-l-10" tapmode="highlight" onclick="fnCloseWin();">取消</div>
-                </div>
-            </div>
-        </div>
 
 
 
@@ -143,7 +155,7 @@
     var realnameValue;
     var telValue;
     var cardIdValue;
-var isAuth;
+    var isAuth;
 
     function fnInitUIInput() {
         // 用户名输入框模块
@@ -276,9 +288,8 @@ var isAuth;
                             }
                         }
                     });
-                }
-                else {
-                  telValue=$api.getStorage('userInfo').UserName == null ? '' : $api.getStorage('userInfo').UserName;
+                } else {
+                    telValue = $api.getStorage('userInfo').UserName == null ? '' : $api.getStorage('userInfo').UserName;
                 }
             }
         });
@@ -396,11 +407,11 @@ var isAuth;
     }
     //存入用户表以待审核
     function fnGotoAuth() {
-      if (isAuth) {
-        return;
-      }
-        var userid = $api.getStorage('userInfo')==null?null:$api.getStorage('userInfo').Id;
-        if (realnameValue == null || $api.getStorage('shfzh')==null || $api.getStorage('shfzhbei')==null || telValue == null) {
+        if (isAuth) {
+            return;
+        }
+        var userid = $api.getStorage('userInfo') == null ? null : $api.getStorage('userInfo').Id;
+        if (realnameValue == null || $api.getStorage('shfzh') == null || $api.getStorage('shfzhbei') == null || telValue == null) {
             api.alert({
                 title: '警告',
                 msg: '提供的信息不全！',
