@@ -385,9 +385,13 @@
                     // 解析消息体
                     fnParsePayLoad(ret.payload);
                     //设置我的小红点
-                    var mydot = $api.byId('mydot');
-                    $api.addCls(mydot, 'aui-dot');
-                    $api.setStorage('newmessage', 'you');
+                    var num=    $api.getStorage('newmessage')==null?0:       $api.getStorage('newmessage');
+
+                    if (num>0) {
+                      var mydot = $api.byId('mydot');
+                      $api.addCls(mydot, 'aui-dot');
+                      $api.setStorage('newmessage', num+1);
+                    }
 
                     break;
                 case 'occurError':
@@ -395,30 +399,30 @@
                     break;
                 case 'onNotificationMessageArrived':
                     //设置我的小红点
+                    var num=    $api.getStorage('newmessage')==null?0:       $api.getStorage('newmessage');
                     var mydot = $api.byId('mydot');
                     $api.addCls(mydot, 'aui-dot');
-                    $api.setStorage('newmessage', 'you');
+                    $api.setStorage('newmessage', num+1);
+
                     break;
                 case 'onNotificationMessageClicked':
-                    //设置我的小红点
-                    var mydot = $api.byId('mydot');
-                    $api.removeCls(mydot, 'aui-dot');
+
                     var data = {
                         body: JSON.stringify({
                             'Title': ret.title,
                             'FromWho': 'system',
                             'ToWho': 'all',
                             'Category': 'system',
-                            'Cont': ret.content
+                            'Cont': ret.content,
+                            'UpdateTime':$api.date()
                         })
                     };
                     fnPost('SysMessage/PutMessage', data, 'application/json', false, false, function(ret2, err) {
                         if (ret2) {
-                            api.toast({
-                                msg: ret.content,
-                                duration: 2000,
-                                location: 'bottom'
-                            });
+                            //更新下新消息的数量
+                            var num=    $api.getStorage('newmessage')>0?$api.getStorage('newmessage'):1;
+
+                            $api.setStorage('newmessage', num-1);
                         }
                     });
 

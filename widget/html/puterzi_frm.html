@@ -130,7 +130,7 @@
         initEventListenter();
         // 初始化下拉刷新
         initRefresh();
-        // 获取商品列表
+        // 获取用户列表
         fnGetUserList(false);
     };
     var skip = 0,
@@ -145,7 +145,7 @@
                 threshold: 300 // 距离底部还有多少触发scrolltobottom事件
             }
         }, function(ret, err) {
-            // 获取更多的商品
+            // 获取更多的用户
             fnGetUserList(true);
         });
     }
@@ -159,7 +159,7 @@
             textColor: '#e1017e',
             showTime: true
         }, function(ret, err) {
-            // 刷新商品列表
+            // 刷新用户列表
             fnGetUserList(false);
         });
     }
@@ -203,7 +203,7 @@
 }////
         });//
     }
-    // 获取商品列表，通过loadMore_参数区分是首次加载还是加载更多
+    // 获取用户列表，通过loadMore_参数区分是首次加载还是加载更多
     function fnGetUserList(loadMore_) {
         if (!loadMore_) {
             // 显示加载状态对话框
@@ -221,7 +221,7 @@
         } else {
             skip = 0;
         }
-        // 根据商品分类获得相应的商品列表
+        // 根据推荐人获得相应的用户列表
         var params = {
             where: {
                 'tid': $api.getStorage('userInfo').Id
@@ -234,11 +234,11 @@
                 // 恢复下拉刷新的状态
                 api.refreshHeaderLoadDone();
 
-                // 在界面中更新商品列表显示
+                // 在界面中更新列表显示
                 fnUpdateWareList(ret, loadMore_);
             } else {
                 api.toast({
-                    msg: '加载数据失败',
+                    msg: '没有新会员加入',
                     duration: 2000,
                     location: 'bottom'
                 });
@@ -248,7 +248,7 @@
         });
     }
 
-    // 更新商品列表显示
+    // 更新列表显示
     function fnUpdateWareList(data_, loadMore_) {
         var list = $api.byId('list');
         // 编译模板函数

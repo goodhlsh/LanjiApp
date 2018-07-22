@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
     <title>APICloud APP</title>
-    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <style>
         html,
         body {
@@ -77,12 +77,15 @@
 <script id="template" type="text/template">
     {{~it:value:index }}
     <div class="ware-1">
-    <div class="info">
-        <div class="title">标题：{{=value.Title}}</div>
-        <div class="msg">内容：{{=value.Cont}}</div>
-        <div class="time">日期：{{=value.CreateTime}}</div>
+        <div class="info" onclick="fnUpdateMessage('{{=value.Id}}')">
+            <div class="title">标题：{{=value.Title}}</div>
+            <div class="msg">内容：{{=value.Cont}}</div>
+            <div class="time">日期：{{=value.CreateTime}}</div>
+        </div>
+        {{?!value.UpdateTime}}
+        <div id="mydot" class="aui-dot"></div>
+        {{?}}
     </div>
-  </div>
     {{~}}
 </script>
 <script type="text/javascript" src="../script/api.js"></script>
@@ -154,7 +157,7 @@
             limit: LIMIT
         }
         fnGet('SysMessage/GetMessageListByCategory', filter, function(ret, err) {
-            if (ret ) {
+            if (ret) {
                 // 恢复下拉刷新的状态
                 api.refreshHeaderLoadDone();
 
@@ -194,6 +197,58 @@
         }
         // 由于是动态的将元素添加到Dom树上，所以需要手动触发tapmode检查，列表中的元素才能实现点击加速的效果
         api.parseTapmode();
+    }
+
+    function fnUpdateMessage(Id_) {
+        var myhot = $api.byId('myhot');
+
+        if (myhot.classList.contains('aui-dot') == true) {
+
+            var data = {
+                body: JSON.stringify({
+                    'Id': Id_
+                })
+            };
+            fnPost('SysMessage/UpdateTimeMessage', data, 'application/json', false, false, function(ret2, err) {
+                if (ret2) {
+                    fnReloadMessageList(true);
+                    //更新下新消息的数量
+                    var num = $api.getStorage('newmessage') > 0 ? $api.getStorage('newmessage') : 1;
+                    $api.setStorage('newmessage', num - 1);
+                }
+            });
+
+        }
+    }
+
+    function fnReloadMessageList(loadMore_) {
+
+
+        var filter = {
+            where: {
+                'Category': 'message'
+            },
+            skip: skip,
+            limit: LIMIT
+        }
+        fnGet('SysMessage/GetMessageListByCategory', filter, function(ret, err) {
+            if (ret) {
+                // 恢复下拉刷新的状态
+                api.refreshHeaderLoadDone();
+
+                // 在界面中更新消息列表显示
+                fnUpdateMessageList(ret, loadMore_);
+            } else {
+                api.toast({
+                    msg: '没有新数据',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+            // 隐藏加载状态对话框
+            api.hideProgress();
+
+        });
     }
 </script>
 

@@ -74,7 +74,7 @@
 <script type="text/javascript">
     apiready = function() {
         fnReady();
-        fnReadyFrame();
+
         var footer = $api.byId('footer');
         var footerH = $api.offset(footer).h;
 
@@ -92,6 +92,7 @@
                 w: 150,
                 h: 34
             },
+            reload:true,
             bounces: false // 关闭弹动
 
         });
@@ -100,6 +101,7 @@
         api.bringFrameToFront({
             from: 'minicart_frame'
         });
+        fnReadyFrame();
     };
     var count;
 

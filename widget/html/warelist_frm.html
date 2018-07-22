@@ -159,7 +159,7 @@
     var wareTypeList, skip = 0,
         LIMIT = 5;
 
-    function init() {      
+    function init() {
         // 从缓存中获得商品分类列表
         wareTypeList = $api.getStorage('wareTypeList');
     }
@@ -191,13 +191,14 @@
         });
     }
     // 打开商品详情Window，指定商品Id
-    function fnOpenWareWin(wareId_) {
+    function fnOpenWareWin(wareId_) {    
         api.openWin({
             name: 'ware',
             url: './ware.html',
             pageParam: {
                 'wareId': wareId_
             },
+            reload:true,
             animation: {
                 type: "fade"
             }
@@ -243,7 +244,7 @@
                 fnUpdateWareList(ret, loadMore_);
             } else {
                 api.toast({
-                    msg: '加载数据失败',
+                    msg: '没有加载数据',
                     duration: 2000,
                     location: 'bottom'
                 });

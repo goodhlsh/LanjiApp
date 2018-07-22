@@ -1,16 +1,16 @@
 <!doctype html>
 <html>
 
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
-        <title>APICloud APP</title>
-        <link rel="stylesheet" type="text/css" href="../css/api.css" />
-        <style>
-            html,
-            body {
-                background-color: #f0f0f0;
-            }
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>APICloud APP</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <style>
+        html,
+        body {
+            background-color: #f0f0f0;
+        }
 
             body {
                 height: 100%;
@@ -72,32 +72,35 @@
     <body>
         <section class="h20"></section>
 
-        <section id="message" class="message">
-        </section>
-    </body>
-    <script id="template" type="text/template">
-        {{~it:value:index }}
-        <div class="ware-1">
-        <div class="info">
+    <section id="message" class="message">
+    </section>
+</body>
+<script id="template" type="text/template">
+    {{~it:value:index}}
+    <div class="ware-1">
+        <div class="info" onclick="fnUpdateMessage('{{=value.Id}}')">
             <div class="title">标题：{{=value.Title}}</div>
             <div class="msg">内容：{{=value.Cont}}</div>
             <div class="time">日期：{{=value.CreateTime}}</div>
         </div>
-      </div>
-        {{~}}
-    </script>
-    <script type="text/javascript" src="../script/api.js"></script>
-    <script type="text/javascript" src="../script/doT.min.js"></script>
-    <script type="text/javascript" src="../script/SHA1.js"></script>
-    <script type="text/javascript" src="../script/remotedb.js"></script>
-    <script type="text/javascript">
-        apiready = function() {
-            // 初始化事件监听
-            initEventListenter();
-            // 初始化下拉刷新
-            initRefresh();
-            fnGetMessageList(false);
-        };
+        {{?!value.UpdateTime}}
+        <div id="mydot" class="aui-dot"></div>
+        {{?}}
+    </div>
+    {{~}}
+</script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        // 初始化事件监听
+        initEventListenter();
+        // 初始化下拉刷新
+        initRefresh();
+        fnGetMessageList(false);
+    };
 
         function initEventListenter() {
             // 监听滚动到Frame底部的事件
@@ -154,7 +157,7 @@
                 limit: LIMIT
             }
             fnGet('SysMessage/GetMessageListByCategory', filter, function(ret, err) {
-              console.log(JSON.stringify(ret));
+             
                 if (ret) {
                     // 恢复下拉刷新的状态
                     api.refreshHeaderLoadDone();
@@ -183,19 +186,71 @@
             // 判断是否是加载更多，如果是加载更多，则追加到list中
             if (loadMore_) {
 
-                $api.append(list, resultHTML);
-                // 如果服务器端已经没有更多数据返回，更新提示信息
-                if (data_.length < LIMIT) {
-                    var pushStatus = $api.byId('pushStatus');
-                    pushStatus.innerHTML = "没有啦！";
-                }
-            } else {
-                // 否则，直接替换list中的内容
-                $api.html(list, resultHTML);
+            $api.append(list, resultHTML);
+            // 如果服务器端已经没有更多数据返回，更新提示信息
+            if (data_.length < LIMIT) {
+                var pushStatus = $api.byId('pushStatus');
+                pushStatus.innerHTML = "没有啦！";
             }
-            // 由于是动态的将元素添加到Dom树上，所以需要手动触发tapmode检查，列表中的元素才能实现点击加速的效果
-            api.parseTapmode();
+        } else {
+            // 否则，直接替换list中的内容
+            $api.html(list, resultHTML);
         }
-    </script>
+        // 由于是动态的将元素添加到Dom树上，所以需要手动触发tapmode检查，列表中的元素才能实现点击加速的效果
+        api.parseTapmode();
+    }
+
+    function fnUpdateMessage(Id_) {
+        var myhot = $api.byId('myhot');
+
+        if (myhot.classList.contains('aui-dot') == true) {
+
+            var data = {
+                body: JSON.stringify({
+                    'Id': Id_
+                })
+            };
+            fnPost('SysMessage/UpdateTimeMessage', data, 'application/json', false, false, function(ret2, err) {
+                if (ret2) {
+                    fnReloadMessageList(true);
+                    //更新下新消息的数量
+                    var num = $api.getStorage('newmessage') > 0 ? $api.getStorage('newmessage') : 1;
+                    $api.setStorage('newmessage', num - 1);
+                }
+            });
+
+        }
+    }
+
+    function fnReloadMessageList(loadMore_) {
+
+
+        var filter = {
+            where: {
+                'Category': 'message'
+            },
+            skip: skip,
+            limit: LIMIT
+        }
+        fnGet('SysMessage/GetMessageListByCategory', filter, function(ret, err) {
+            if (ret) {
+                // 恢复下拉刷新的状态
+                api.refreshHeaderLoadDone();
+
+                // 在界面中更新消息列表显示
+                fnUpdateMessageList(ret, loadMore_);
+            } else {
+                api.toast({
+                    msg: '没有新数据',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+            // 隐藏加载状态对话框
+            api.hideProgress();
+
+        });
+    }
+</script>
 
 </html>

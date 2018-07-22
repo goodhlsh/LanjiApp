@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
-    <title>title</title>
+    <title>我的上级</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <style>
         body {}
@@ -46,7 +46,7 @@
         var filter = {
             userId: recommenderID
         }
-        fnGet('SysUser/GetById', filter, function(ret, err) {      
+        fnGet('SysUser/GetById', filter, function(ret, err) {
             if (ret) {
                 var recommender = $api.byId('name');
                 recommender.innerHTML = "姓名： " + ret.TrueName; //推荐人真实姓名

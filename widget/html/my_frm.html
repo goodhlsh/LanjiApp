@@ -125,7 +125,7 @@
         userAvatar.src =  $api.getStorage('avatar') || '../image/my/default_square.png';
         userYuE.innerHTML = $api.getStorage('currentwallet') == null ? '0.0' : ($api.getStorage('currentwallet').JieYu==null?'0.0':$api.getStorage('currentwallet').JieYu);
 
-        if ($api.getStorage('newmessage')) {
+        if ($api.getStorage('newmessage')>0) {
           //设置我的小红点
           var mydot = $api.byId('mydot');
           $api.addCls(mydot, 'aui-dot');

@@ -37,7 +37,8 @@ function fnReadyOpenWin() {
             api.openWin({
                 name: winName.replace('html/', ''),
                 url: './' + winName + '.html',
-                pageParam: param
+                pageParam: param,
+                reload:true
             });
         };
     }
@@ -81,13 +82,15 @@ function fnReadyFrame() {
         url: './' + frameName + '.html',
         bounces: true,
         bgColor: '#f0f0f0',
+        reload:true,
         rect: {
             x: 0,
             y: headerHeight + navHeight,
             w: 'auto',
             h: api.winHeight - headerHeight - footerHeight - navHeight
         },
-        pageParam: api.pageParam
+        pageParam: api.pageParam,
+        reload:true
         //pageParam:{ a:headerHeight,b:footerHeight,c:navHeight}
     });
 };

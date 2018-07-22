@@ -174,7 +174,6 @@
     apiready = function() {
         // 初始化轮播图模块
         initUIScrollPicture();
-
         // 获取商品详情数据
         getWareInfo(api.pageParam.wareId);
     };
@@ -254,6 +253,7 @@
             api.hideProgress();
             // 更新商品详情展示
             fnUpdateWareInfo(ret);
+
             //console.log(JSON.stringify(ret));
         });
     }
