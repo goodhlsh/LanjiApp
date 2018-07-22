@@ -38,10 +38,33 @@
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
-fnInitYuE();
+        var isAuth = $api.getStorage('userInfo').IsAuth; //先验证后扫描
+
+        if (!isAuth) {
+            api.alert({
+                title: '帮助',
+                msg: '请先实名验证，验证后再充值入会金',
+            }, function(ret, err) {
+                if (ret) {
+                    //alert( JSON.stringify( ret ) );
+                    //打开验证窗口
+                    api.openWin({
+                        name: 'myauth',
+                        url: './myauth.html',
+                        pageParam: {
+                            userid: $api.getStorage('userInfo').Id
+                        }
+                    });
+                }
+            });
+        }
+        fnInitYuE();
     };
+
     function fnInitYuE() {
 
         userYuE = $api.byId('YuE');
@@ -70,6 +93,7 @@ fnInitYuE();
             });
         }
     }
+
     function fnOk() {
         var level = $api.byId('level');
         var mywall = $api.getStorage('currentwallet').JieYu;
@@ -143,7 +167,7 @@ fnInitYuE();
                         url: './mywallet.html',
                         pageParam: {
                             levelvalue: mustwall,
-                            levelid:levelid
+                            levelid: levelid
                         }
                     });
 
