@@ -31,7 +31,7 @@
             <li class="aui-list-item">
                 <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
                     <div class="aui-btn aui-btn-info aui-margin-r-5" onclick="fnOk();">提交</div>
-                    <div class="aui-btn aui-btn-danger aui-margin-l-5"onclick="fnCloseWin();">取消</div>
+                    <div class="aui-btn aui-btn-danger aui-margin-l-5" onclick="fnCloseWin();">取消</div>
                 </div>
             </li>
         </ul>
@@ -40,23 +40,119 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
     apiready = function() {
-
+fnInitYuE();
     };
-    function fnOk()
-    {
-      var level=$api.byId('level');
+    function fnInitYuE() {
 
-      api.alert({
-          title: '消息',
-          msg: '您选择的是 '+level.value+' ,已提交申请，请等待我们审核……',
-      }, function(ret, err){
-          if( ret ){
-               //alert( JSON.stringify( ret ) );
-          }else{
-              // alert( JSON.stringify( err ) );
-          }
-      });
+        userYuE = $api.byId('YuE');
+        if ($api.getStorage('currentwallet')) {
+            userYuE.innerHTML = $api.getStorage('currentwallet') == null ? '0.0' : $api.getStorage('currentwallet').JieYu;
+        } else {
+            var filter = {
+                where: {
+                    userid: $api.getStorage('userInfo').Id
+                },
+                //order: "createAt DESC",
+                limit: 1,
+                skip: 0
+            };
+            fnGet('Syswallet/GetWallet', filter, function(ret, err) {
+                if (ret) {
+                    userYuE.innerHTML = ret.JieYu;
+                    $api.setStorage('currentwallet', ret);
 
+                } else {
+                    api.alert({
+                        title: '消息',
+                        msg: '查不到余额',
+                    });
+                }
+            });
+        }
+    }
+    function fnOk() {
+        var level = $api.byId('level');
+        var mywall = $api.getStorage('currentwallet').JieYu;
+        var mustwall, levelid;
+        if (level.value == '8800会员') {
+            mustwall = 8800;
+            levelid = '3';
+        } else if (level.value == '1314会员') {
+            mustwall = 1314;
+            levelid = '2';
+        } else {
+            mustwall = 398;
+            levelid = '1';
+        }
+        if (mywall >= mustwall) {
+            api.alert({
+                title: '消息',
+                msg: '您选择的是 ' + level.value + ' ,是否提交办理？',
+            }, function(ret, err) {
+                if (ret) {
+                    var filter = {
+                            where: {
+                                'userId': $api.getStorage('userInfo').Id
+                            },
+                            skip: 0,
+                            limit: 1
+                        }
+                        //判断是新入会还是老会员
+                    fnGet('SysUser/GetByIdFromJiaPu', filter, , function(ret2, err) {
+                        if (ret2) {
+                            var data = {
+                                body: JSON.stringify({
+                                    uid: $api.getStorage('userInfo').Id,
+                                    fje: mustwall,
+                                    levelid: levelid
+                                })
+                            };
+                            fnPost('SysUser/EditJiaPu', data, 'application/json', false, false, function(ret3, err) {
+                                if (ret3) {
+                                    alert('变更成功！')
+                                }
+                            });
+                        } else { //新会员
+                            var data = {
+                                body: JSON.stringify({
+                                    uid: $api.getStorage('userInfo').Id,
+                                    tid: $api.getStorage('userInfo').Id,
+                                    fje: mustwall
+                                })
+                            };
+                            fnPost('SysUser/PutJiaPu', data, 'application/json', false, false, function(ret4, err) {
+                                    if (ret4) {
+                                        alert('操作成功！')
+                                    }
+                                } //
+                            );
+                        }
+                    });
+                }
+            });
+
+
+        } else {
+            api.alert({
+                title: '消息',
+                msg: '您选择的是 ' + level.value + ' ,因余额不足，需向余额充值到该会员金限额要求，是否充值？',
+            }, function(ret, err) {
+                if (ret) {
+                    api.openWin({
+                        name: 'mywallet',
+                        url: './mywallet.html',
+                        pageParam: {
+                            levelvalue: mustwall,
+                            levelid:levelid
+                        }
+                    });
+
+                } else {
+                    // alert( JSON.stringify( err ) );
+                }
+            });
+
+        }
     }
     //关闭窗口
     function fnCloseWin() {

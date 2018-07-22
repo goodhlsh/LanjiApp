@@ -33,7 +33,7 @@
                 <div class="aui-list-item-input">
                     <input id="jinE" type="text" placeholder="输入充值金额">
                 </div>
-                <div class="aui-btn aui-btn-info aui-list-item-right5 aui-margin-5" onclick="">提交</div>
+                <div class="aui-btn aui-btn-info aui-list-item-right5 aui-margin-5" onclick="fnPostWallet()">提交</div>
             </div>
         </div>
     </section>
@@ -59,7 +59,7 @@
 
         userYuE = $api.byId('YuE');
         if ($api.getStorage('currentwallet')) {
-            userYuE.innerHTML = $api.getStorage('currentwallet')==null?'0.0':$api.getStorage('currentwallet').JieYu;
+            userYuE.innerHTML = $api.getStorage('currentwallet') == null ? '0.0' : $api.getStorage('currentwallet').JieYu;
         } else {
             var filter = {
                 where: {
@@ -133,72 +133,208 @@
         });
     }
 
-    function aliPay() {
+    function fnPostWallet() {
+        //先充值
+        if (JinEValue > api.pageParam.levelvalue) {
+            fnCreateOrder('待付款', JinEValue);
+        }
+        //服务器端判断收到款后写入wallet
+    }
 
-        var aliPayPlus = api.require('aliPayPlus');
-        /* 方法一 上线要用此法
-        aliPayPlus.payOrder({    orderInfo: 'app_id=2015052600090779&biz_content=%7B%22timeout_express%22%3A%2230m%22%2C%22seller_id%22%3A%22%22%2C%22product_code%22%3A%22QUICK_MSECURITY_PAY%22%2C%22total_amount%22%3A%220.01%22%2C%22subject%22%3A%221%22%2C%22body%22%3A%22%E6%88%91%E6%98%AF%E6%B5%8B%E8%AF%95%E6%95%B0%E6%8D%AE%22%2C%22out_trade_no%22%3A%22IQJZSRC1YMQB5HU%22%7D&charset=utf-8&format=json&method=alipay.trade.app.pay&notify_url=http%3A%2F%2Fdomain.merchant.com%2Fpayment_notify&sign_type=RSA2&timestamp=2016-08-25%2020%3A26%3A31&version=1.0&sign=cYmuUnKi5QdBsoZEAbMXVMmRWjsuUj%2By48A2DvWAVVBuYkiBj13CFDHu2vZQvmOfkjE0YqCUQE04kqm9Xg3tIX8tPeIGIFtsIyp%2FM45w1ZsDOiduBbduGfRo1XRsvAyVAv2hCrBLLrDI5Vi7uZZ77Lo5J0PpUUWwyQGt0M4cj8g%3D'
+    function aliPay() {
+        api.confirm({
+            title: '支付提醒',
+            msg: '是否选择支付宝充值？如继续点击确认',
+            buttons: ['确定', '取消']
         }, function(ret, err) {
-        api.alert({
-        title: '支付结果',
-        msg: ret.code,
-        buttons: ['确定']
-          });
-      });
-        */
-        //方法二 测试用
-        console.log('config pay');
-        aliPayPlus.config({
-            appId: '12345678901234',
-            rsaPriKey: 'testKEY',
-        }, function(ret, err) {
-          if(ret){
-            api.alert({
-                title: '支付结果',
-                msg: JSON.stringify(ret),
-                buttons: ['确定']
-            });
-          }
-          else {
-            console.log(err);
-          }
-        });
-        console.log('begin pay');
-        aliPayPlus.pay({
-            subject: '充值',
-            body: '余额充值',
-            amount: JinEValue,
-            tradeNO: '4563548735674',
-            rsa2: true
-        }, function(ret, err) {
-            if (ret) {
-                fnPost('Syswallet/PostWallet', {
+            if (ret.buttonIndex == 1 && order_one != null) {
+                fnPost('AliPay/GetAppTradeContent', {
                     body: JSON.stringify({
-                        UserId: $api.getStorage('userInfo').Id,
-                        Balance: JinEValue,
-                        JieYu:$api.getStorage('currentwallet').JieYu==null?0:$api.getStorage('currentwallet').JieYu,
-                        Note:$api.getStorage('userInfo').TrueName+'充值'+JinEValue+'元',
-                        Froms: '充值',
-                        ShunXu:$api.getStorage('userInfo').ShunXu==null?1:$api.getStorage('userInfo').ShunXu
+                        openId: order_one.Id,
+                        order_name: '余额充值',
+                        order_num: order_one.OrderNo,
+                        order_price: JinEValue
                     })
-                }, 'application/json', false, false, function(ret, err) {
-                    if (ret && ret.Id) {
-                        fnInitYuE();
-                    } else {
-                        api.alert({
-                            title: '支付结果',
-                            msg: JSON.stringify(ret),
-                            buttons: ['确定']
+                }, 'application/json', false, false, function(ret2, err) {
+                    if (ret2) {
+                        var aliPayPlus = api.require('aliPayPlus');
+                        aliPayPlus.payOrder({
+                            orderInfo: ret2.data,
+                        }, function(ret3, err) {
+                            if (ret3.code == '9000') {
+                                fnShowSuccess();
+                            } else if (ret3.code == '8000') {
+                                api.alert({
+                                    msg: '正在处理中，支付结果未知',
+                                    buttons: ['确定']
+                                });
+                            } else if (ret3.code == '4000') {
+                                api.alert({
+                                    msg: '充值支付失败',
+                                    buttons: ['确定']
+                                }); //$("#alert-sign-fail").show();
+                            } else if (ret3.code == '5000') {
+                                api.alert({
+                                    msg: '重复请求',
+                                    buttons: ['确定']
+                                });
+                            } else if (ret3.code == '6001') {
+                                api.alert({
+                                    msg: '用户中途取消操作',
+                                    buttons: ['确定']
+                                });
+
+                            } else if (ret3.code == '6002') {
+                                api.alert({
+                                    msg: '网络连接出错',
+                                    buttons: ['确定']
+                                });
+
+                            } else if (ret3.code == '6004') {
+                                api.alert({
+                                    msg: '结果未知',
+                                    buttons: ['确定']
+                                });
+                            }
                         });
+                        api.hideProgress();
+                    } else {
+                        api.hideProgress();
                     }
                 });
+
             }
-            else
-            {
-              console.log(err);
+
+        });
+    }
+    var order_one;
+
+    function fnCreateOrder(status, jinE) {
+        if (api.pageParam.mustwall > 0) {
+            fnPost('Spl_Orders/PostOrder', {
+                body: JSON.stringify({
+                    AddressId: '',
+                    UserId: $api.getStorage('userInfo').Id,
+                    Status: status,
+                    DingDanKuan: jinE,
+                    spl_Wares: '',
+                    Description: '兰基优品-充值'
+                })
+            }, 'application/json', false, false, function(ret, err) {
+                if (ret) {
+                    order_one = ret;
+                    aliPay();
+                } else {
+                    api.alert({
+                        title: '故障报警',
+                        msg: '订单生成有误',
+                        buttons: ['确定']
+                    });
+                }
+            });
+        }
+    }
+
+    function fnShowSuccess() {
+        api.alert({
+            title: '支付结果',
+            msg: '恭喜您充值成功！',
+        }, function(ret, err) {
+            if (ret) {
+                //存入订单表
+                fnEditOrder('已完成');
+
+                api.closeWin({
+                    name: 'mywallet'
+                });
+                fnUpdateJiapu();
+                fnUpdateWallet();
+                api.openWin({
+                    name: 'index',
+                    url: '../index.html'
+                });
             }
         });
     }
+    function fnEditOrder(status) {
+        fnPost('Spl_Orders/PostEditOrder', {
+            body: JSON.stringify({
+                Id: order_one.Id,
+                Status: status
+            })
+        }, 'application/json', false, false, function(ret, err) {
+            if (ret) {
+                order_one = null;
+            } else {
+                api.alert({
+                    title: '故障报警',
+                    msg: '订单存入系统有误，请联系客服！',
+                    buttons: ['确定']
+                });
+            }
+        });
+    }
+    function fnUpdateJiapu(){
+      var filter = {
+              where: {
+                  'userId': $api.getStorage('userInfo').Id
+              },
+              skip: 0,
+              limit: 1
+          }
+          //判断是新入会还是老会员
+      fnGet('SysUser/GetByIdFromJiaPu', filter, , function(ret2, err) {
+          if (ret2) {
+              var data = {
+                  body: JSON.stringify({
+                      uid: $api.getStorage('userInfo').Id,
+                      fje: api.pageParam.mustwall,
+                      levelid: api.pageParam.levelid
+                  })
+              };
+              fnPost('SysUser/EditJiaPu', data, 'application/json', false, false, function(ret3, err) {
+                  if (ret3) {
+                      alert('变更成功！')
+                  }
+              });
+          } else { //新会员
+              var data = {
+                  body: JSON.stringify({
+                      uid: $api.getStorage('userInfo').Id,
+                      tid: $api.getStorage('userInfo').Id,
+                      fje: mustwall
+                  })
+              };
+              fnPost('SysUser/PutJiaPu', data, 'application/json', false, false, function(ret4, err) {
+                      if (ret4) {
+                          alert('操作成功！')
+                      }
+                  } //
+              );
+          }
+      });
+    }
+    function fnUpdateWallet(){
+      fnPost('Syswallet/PostWallet', {
+          body: JSON.stringify({
+              //Id: $api.getStorage('currentwallet').Id,
+              UserId: $api.getStorage('userInfo').Id,
+              Balance: JinEValue,
+              JieYu: $api.getStorage('currentwallet').JieYu,
+              Froms: '充值',
+              ShunXu: $api.getStorage('currentwallet').ShunXu,
+              Note: $api.getStorage('currentwallet').TrueName + '充值 ' + JinEValue + ' 元'
+          })
+      }, 'application/json', false, false, function(ret, err) {
+          if (ret) {
+            api.toast({
+                msg: '充值成功！',
+                duration: 2000,
+                location: 'bottom'
+            });  
+          }
+    });
+  }
 </script>
 
 </html>
