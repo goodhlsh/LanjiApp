@@ -67,31 +67,25 @@
 
     function fnInitYuE() {
 
-        userYuE = $api.byId('YuE');
-        if ($api.getStorage('currentwallet')) {
-            userYuE.innerHTML = $api.getStorage('currentwallet') == null ? '0.0' : $api.getStorage('currentwallet').JieYu;
-        } else {
-            var filter = {
-                where: {
-                    userid: $api.getStorage('userInfo').Id
-                },
-                //order: "createAt DESC",
-                limit: 1,
-                skip: 0
-            };
-            fnGet('Syswallet/GetWallet', filter, function(ret, err) {
-                if (ret) {
-                    userYuE.innerHTML = ret.JieYu;
-                    $api.setStorage('currentwallet', ret);
 
-                } else {
-                    api.alert({
-                        title: '消息',
-                        msg: '查不到余额',
-                    });
-                }
-            });
-        }
+        var filter = {
+            where: {
+                userid: $api.getStorage('userInfo').Id
+            },
+            //order: "createAt DESC",
+            limit: 1,
+            skip: 0
+        };
+        fnGet('Syswallet/GetWallet', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('currentwallet', ret);
+            } else {
+                api.alert({
+                    title: '消息',
+                    msg: '查不到余额',
+                });
+            }
+        });
     }
 
     function fnOk() {
@@ -122,13 +116,14 @@
                             limit: 1
                         }
                         //判断是新入会还是老会员
-                    fnGet('SysUser/GetByIdFromJiaPu', filter, , function(ret2, err) {
+                    fnGet('SysUser/GetByIdFromJiaPu', filter, function(ret2, err) {
+                      console.log(JSON.stringify(ret2));
                         if (ret2) {
                             var data = {
                                 body: JSON.stringify({
-                                    uid: $api.getStorage('userInfo').Id,
-                                    fje: mustwall,
-                                    levelid: levelid
+                                    UserId: $api.getStorage('userInfo').Id,
+                                    FirstJinE: mustwall,
+                                    LevelId: levelid
                                 })
                             };
                             fnPost('SysUser/EditJiaPu', data, 'application/json', false, false, function(ret3, err) {
@@ -140,11 +135,12 @@
                             var data = {
                                 body: JSON.stringify({
                                     uid: $api.getStorage('userInfo').Id,
-                                    tid: $api.getStorage('userInfo').Id,
+                                    tid: null,
                                     fje: mustwall
                                 })
                             };
                             fnPost('SysUser/PutJiaPu', data, 'application/json', false, false, function(ret4, err) {
+console.log(JSON.stringify(ret4));
                                     if (ret4) {
                                         alert('操作成功！')
                                     }

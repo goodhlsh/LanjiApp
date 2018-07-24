@@ -301,7 +301,7 @@
               var data = {
                   body: JSON.stringify({
                       uid: $api.getStorage('userInfo').Id,
-                      tid: $api.getStorage('userInfo').Id,
+                      tid: '',
                       fje: mustwall
                   })
               };
@@ -331,7 +331,7 @@
                 msg: '充值成功！',
                 duration: 2000,
                 location: 'bottom'
-            });  
+            });
           }
     });
   }
