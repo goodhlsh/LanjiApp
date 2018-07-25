@@ -24,7 +24,7 @@
 
         .input {
             height: 40px;
-            width: 80%;
+            width: auto;
             font-size: 18px;
             line-height: 20px;
             color: #8E8C8C;
@@ -43,6 +43,10 @@
             opacity: 0.7;
         }
 
+        .r20 {
+            margin-right: 50px;
+        }
+
         .dis {
             disabled: disabled
         }
@@ -59,8 +63,8 @@
                     <div class="aui-list-item-label-icon">
                         <i class="aui-iconfont aui-icon-my"></i>
                     </div>
-                    <div class="aui-list-item-input">
-                        <input id="oldpasswd" class="input" type="text" placeholder="" />
+                    <div class="aui-list-item-right">
+                        <span id="username" class="r20"><span>
                     </div>
                 </div>
             </div>
@@ -70,7 +74,10 @@
                         <i class="aui-iconfont aui-icon-profile"></i>
                     </div>
                     <div class="aui-list-item-input">
-                        <input id="newpasswd" class="input" type="text" placeholder="" />
+                        <input id="code" class="input" type="text" placeholder="" />
+                    </div>
+                    <div class="aui-list-item-right r20">
+                        <span id="sendSms" class="aui-btn  aui-btn-sm" tapmode="highlight" onclick="sendSms(this)">获取验证码</span>
                     </div>
                 </div>
             </div>
@@ -81,14 +88,14 @@
                         <i class="aui-iconfont aui-icon-mobile"></i>
                     </div>
                     <div class="aui-list-item-input">
-                        <input id="newpasswd2" class="input" type="text" placeholder="">
+                        <input id="newpasswd" class="input" type="text" placeholder="">
                     </div>
                 </div>
             </div>
 
             <div class="aui-list-item">
                 <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
-                    <div id="okbtn" class="aui-btn aui-btn-block  aui-btn-sm aui-btn-danger" tapmode="highlight" onclick="fnGotoChangePasswd();">确认更改</div>
+                    <div id="okbtn" class="aui-btn aui-btn-block  aui-btn-sm aui-btn-danger" tapmode="highlight" onclick="verify();">确认更改</div>
                 </div>
             </div>
         </div>
@@ -96,63 +103,28 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">
     apiready = function() {
+        init();
         fnInitUIInput();
+        smsVerify = api.require('smsVerify');
+        // 短信模块初始化
+        registerSms();
     };
+
+    function init() {
+        username = $api.byId('username');
+        $api.html(username, $api.getStorage('userInfo').TrueName);
+        usernameValue = $api.getStorage('userInfo').UserName;
+    }
+    var username;
     var UIInput;
-    var oldpasswdUIInputId;
+
     var newpasswdUIInputId;
-    var newpasswd2UIInputId;
-    var oldpasswdValue;
+    var codeUIInputId;
     var newpasswdValue;
-    var newpasswd2Value;
+    var codeValue;
 
     function fnInitUIInput() {
-        // 原密码输入框模块
-        var oldpasswd = $api.byId('oldpasswd');
-        var oldpasswdRect = $api.offset(oldpasswd);
-        UIInput = api.require('UIInput');
-        UIInput.open({
-            rect: {
-                x: oldpasswdRect.l,
-                y: oldpasswdRect.t,
-                w: oldpasswdRect.w,
-                h: oldpasswdRect.h
-            },
-            styles: {
-                bgColor: '#fff',
-                size: 16,
-                color: '#000',
-                placeholder: {
-                    color: '#ccc'
-                }
-            },
-            autoFocus: false,
-            maxRows: 1,
-            placeholder: '请输入原密码',
-            keyboardType: 'default',
-            fixedOn: api.frameName
-        }, function(ret, err) {
-            if (ret) {
-                oldpasswdUIInputId = ret.id;
-                if (ret && ret.eventType == "show") {
-                    setTimeout(function() {
-                        UIInput.popupKeyboard({
-                            id: oldpasswdUIInputId
-                        });
-                    }, 200);
-                } else if (ret.eventType == "change") {
-                    UIInput.value({
-                        id: oldpasswdUIInputId
-                    }, function(ret, err) {
-                        if (ret) {
-                            if (ret.status) {
-                                oldpasswdValue = ret.msg;
-                            }
-                        }
-                    });
-                }
-            }
-        });
+
         // 密码输入框模块
         var newpasswd = $api.byId('newpasswd');
         var newpasswdRect = $api.offset(newpasswd);
@@ -199,15 +171,15 @@
                 }
             }
         });
-        // 确认密码输入框模块
-        var newpasswd2 = $api.byId('newpasswd2');
-        var newpasswd2Rect = $api.offset(newpasswd2);
+        // 确认验证码输入框模块
+        var code = $api.byId('code');
+        var codeRect = $api.offset(code);
         UIInput.open({
             rect: {
-                x: newpasswd2Rect.l,
-                y: newpasswd2Rect.t,
-                w: newpasswd2Rect.w,
-                h: newpasswd2Rect.h
+                x: codeRect.l,
+                y: codeRect.t,
+                w: codeRect.w - 100,
+                h: codeRect.h
             },
             styles: {
                 bgColor: '#fff',
@@ -219,20 +191,20 @@
             },
             autoFocus: false,
             maxRows: 1,
-            placeholder: '请输入确认密码',
+            placeholder: '请输入验证码',
             keyboardType: 'default',
             inputType: 'text',
             fixedOn: api.frameName
         }, function(ret, err) {
             if (ret) {
-                newpasswd2UIInputId = ret.id;
+                codeUIInputId = ret.id;
                 if (ret.eventType == "change") {
                     UIInput.value({
-                        id: newpasswd2UIInputId
+                        id: codeUIInputId
                     }, function(ret, err) {
                         if (ret) {
                             if (ret.status) {
-                                newpasswd2Value = ret.msg;
+                                codeValue = ret.msg;
                             }
                         }
                     });
@@ -240,19 +212,38 @@
             }
         });
     }
+    // 短信模块注册，初始化
+    function registerSms() {
+        smsVerify.register(function(ret, err) {
+            if (ret.status) {
+                //console.log('注册成功');
+            } else {
+                api.alert({
+                    msg: ' 短信模块注册失败' //err.code +
+                });
+            }
+        });
+    }
 
     function fnGotoChangePasswd() {
-        var userid = $api.getStorage('userInfo')==null?null:$api.getStorage('userInfo').Id;
-
-        if (oldpasswdValue == null || newpasswdValue == null || newpasswd2Value == null) {
+        var userid = $api.getStorage('userInfo') == null ? null : $api.getStorage('userInfo').Id;
+        if (codeValue == null) {
             api.alert({
                 title: '警告',
-                msg: '提供的信息不全！',
+                msg: '验证码没有输入！',
+            }, function(ret, err) {});
+            return;
+        }
+
+        if (newpasswdValue == null) {
+            api.alert({
+                title: '警告',
+                msg: '新密码没有输入！',
             }, function(ret, err) {});
             return;
         }
         //加密比对
-        var Md5;
+        /*var Md5;
         var signature = api.require('signature');
         signature.md5Sync({
             data: oldpasswdValue
@@ -271,9 +262,9 @@
                 msg: '原密码不对！',
             }, function(ret, err) {});
             return;
-        }
+        }*/
 
-        if (newpasswdValue.length <= 6 || newpasswd2Value.length <= 6) {
+        if (newpasswdValue.length <= 6) {
             api.alert({
                 title: '警告',
                 msg: '密码长度不能小于6！',
@@ -283,20 +274,136 @@
         fnPost('SysUser/PostPasswd',
             JSON.stringify({
                 UserId: userid,
-                OldPasswd: oldpasswdValue,
                 NewPasswd: newpasswdValue
             }),
             'application/json', false, false,
             function(ret, err) {
                 if (ret) {
-                  api.toast({
-                      msg: '密码修改成功',
-                      duration: 2000,
-                      location: 'bottom'
-                  });
+                    api.toast({
+                        msg: '密码修改成功',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
 
                 }
             });
+    }
+    var usernameValue;
+    // 发短信验证码
+    function sendSms(o) {
+        setTimeout(function() {
+            if (!isExist) {
+
+
+                if (usernameValue != null && usernameValue.length == 11) {
+
+                    time(o);
+                    smsVerify.sms({
+                        phone: usernameValue,
+                    }, function(ret, err) {
+                        if (ret.status) {
+                            api.toast({
+                                msg: '短信发送成功'
+                            });
+                        } else {
+                            api.toast({
+                                msg: '网络故障' // JSON.stringify(err)
+                            });
+                        }
+                    });
+                } else {
+                    api.toast({
+                        msg: '手机号输入有误！'
+                    });
+                }
+            }
+        }, 1000)
+    };
+    var wait = 60;
+
+    function time(o) {
+        if (wait == 0) {
+            o.onclick = function() {
+                sendSms(o);
+            }
+            o.innerHTML = "获取验证码";
+            wait = 60;
+        } else {
+            o.onclick = function() {
+                return false;
+            };
+            o.innerHTML = "重新发送(" + wait + ")";
+            wait--;
+            setTimeout(function() {
+                time(o)
+            }, 1000)
+        }
+    }
+
+    // 校验验证码
+    function verify() {
+        api.hideProgress({
+            title: '修改中...',
+            modal: false
+        });
+        var userid = $api.getStorage('userInfo') == null ? null : $api.getStorage('userInfo').Id;
+        if (codeValue == null) {
+            api.alert({
+                title: '警告',
+                msg: '验证码没有输入！',
+            }, function(ret, err) {});
+            return;
+        }
+
+        if (newpasswdValue == null) {
+            api.alert({
+                title: '警告',
+                msg: '新密码没有输入！',
+            }, function(ret, err) {});
+            return;
+        }
+
+
+
+        if (usernameValue.length == 11 && newpasswdValue.length >= 6) {
+
+            smsVerify.verify({
+                phone: usernameValue,
+                code: codeValue,
+            }, function(ret, err) {
+                if (!ret.status) {
+                    api.showProgress({
+                        title: '修改中...',
+                        modal: false
+                    });
+                    fnPost('SysUser/PostPasswd',
+                        JSON.stringify({
+                            UserId: userid,
+                            NewPasswd: newpasswdValue
+                        }),
+                        'application/json', false, false,
+                        function(ret, err) {
+                            if (ret) {
+                                api.toast({
+                                    msg: '密码修改成功',
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+
+                            }
+                        });
+                } else {
+                    api.alert({
+                        msg: ' 验证失败，请查看验证码是否正确！'
+                    });
+                }
+            });
+        } else {
+            api.alert({
+                msg: '手机号或密码格式不正确'
+            });
+        }
+        api.hideProgress();
     }
 </script>
 

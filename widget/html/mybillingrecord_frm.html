@@ -136,7 +136,7 @@
         // 获取订单列表
         fnGetWalletList(false);
     };
-    var wareTypeList, skip = 0,
+    var skip = 0,
         LIMIT = 8;
 
     function initEventListenter() {
@@ -165,7 +165,7 @@
         });
     }
 
-    var aSearch = [];
+    //var aSearch = [];
 
     function fnGetWalletList(loadMore_) {
         if (!loadMore_) {
@@ -201,7 +201,7 @@
                 api.refreshHeaderLoadDone();
 
                 // 在界面中更新订单列表显示
-                fnUpdateWalletList(aSearch, loadMore_);
+                fnUpdateWalletList(ret, loadMore_);
             } else {
                 fnShowWareList(false);
             }
