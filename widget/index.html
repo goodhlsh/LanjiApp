@@ -385,12 +385,12 @@
                     // 解析消息体
                     fnParsePayLoad(ret.payload);
                     //设置我的小红点
-                    var num=    $api.getStorage('newmessage')==null?0:       $api.getStorage('newmessage');
+                    var num = $api.getStorage('newmessage') == null ? 0 : $api.getStorage('newmessage');
 
-                    if (num>0) {
-                      var mydot = $api.byId('mydot');
-                      $api.addCls(mydot, 'aui-dot');
-                      $api.setStorage('newmessage', num+1);
+                    if (num > 0) {
+                        var mydot = $api.byId('mydot');
+                        $api.addCls(mydot, 'aui-dot');
+                        $api.setStorage('newmessage', num + 1);
                     }
 
                     break;
@@ -399,33 +399,32 @@
                     break;
                 case 'onNotificationMessageArrived':
                     //设置我的小红点
-                    var num=    $api.getStorage('newmessage')==null?0:       $api.getStorage('newmessage');
+                    var num = $api.getStorage('newmessage') == null ? 0 : $api.getStorage('newmessage');
                     var mydot = $api.byId('mydot');
                     $api.addCls(mydot, 'aui-dot');
-                    $api.setStorage('newmessage', num+1);
-
-                    break;
-                case 'onNotificationMessageClicked':
-
+                    $api.setStorage('newmessage', num + 1);
                     var data = {
                         body: JSON.stringify({
                             'Title': ret.title,
                             'FromWho': 'system',
                             'ToWho': 'all',
                             'Category': 'system',
-                            'Cont': ret.content,
-                            'UpdateTime':$api.date()
+                            'Cont': ret.content
                         })
                     };
                     fnPost('SysMessage/PutMessage', data, 'application/json', false, false, function(ret2, err) {
-                        if (ret2) {
-                            //更新下新消息的数量
-                            var num=    $api.getStorage('newmessage')>0?$api.getStorage('newmessage'):1;
 
-                            $api.setStorage('newmessage', num-1);
+                    });
+                    break;
+                case 'onNotificationMessageClicked':
+                    //打开消息窗口
+                    api.openWin({
+                        name: 'message',
+                        url: './html/message.html',
+                        pageParam: {
+                            name: 'test'
                         }
                     });
-
 
                     break;
                 default:
@@ -514,24 +513,24 @@
                 break;
             case 'order':
 
-            var data = {
-                body: JSON.stringify({
-                    'Title': payload.title,
-                    'FromWho': 'system',
-                    'ToWho': $api.getStorage('userInfo').Id,
-                    'Category': 'user',
-                    'Cont': payload.content
-                })
-            };
-            fnPost('SysMessage/PutMessage', data, 'application/json', false, false, function(ret, err) {
-                if (ret) {
-                    api.toast({
-                        msg: payload.content,
-                        duration: 2000,
-                        location: 'bottom'
-                    });
-                }
-            });
+                var data = {
+                    body: JSON.stringify({
+                        'Title': payload.title,
+                        'FromWho': 'system',
+                        'ToWho': $api.getStorage('userInfo').Id,
+                        'Category': 'user',
+                        'Cont': payload.content
+                    })
+                };
+                fnPost('SysMessage/PutMessage', data, 'application/json', false, false, function(ret, err) {
+                    if (ret) {
+                        api.toast({
+                            msg: payload.content,
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                });
 
                 break;
 

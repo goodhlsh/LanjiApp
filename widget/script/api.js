@@ -246,11 +246,18 @@
             console.warn('$api.hasCls Function need el param, el param must be DOM Element');
             return;
         }
-        if(el.className.indexOf(cls) > -1){
+        var classNameArr = el.className.split(" ");
+       for(index in classNameArr){
+                        if(classNameArr[index]==cls){
+                                return true;
+                        }
+                }
+                return false;
+      /*  if(el.className.indexOf(cls) > -1){
             return true;
         }else{
             return false;
-        }
+        }*/
     };
     u.addCls = function(el, cls){
         if(!u.isElement(el)){

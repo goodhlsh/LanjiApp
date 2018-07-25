@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
+    <style>
+        body {}
+    </style>
+</head>
+
+<body>
+    <section class="aui-content">
+        <div class="aui-card-list aui-border-t aui-border-b">
+
+            <div id="message_title" class="aui-card-list-header aui-padded-t-5 aui-padded-b-5">
+            </div>
+            <div id="message_content" class="aui-card-list-content-padded aui-padded-t-0 aui-padded-b-0" style="color:#7b7b7b;">
+            </div>
+            <div class="aui-card-list-footer aui-font-size-12" style="color:#999;">
+                <div>
+                    <span id="message_createtime"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        title = $api.byId('message_title');
+        content = $api.byId('message_content');
+        createtime = $api.byId('message_createtime');
+        init();
+    };
+    var title, content, createtime;
+
+    function init() {
+        var filter = {
+            where: {
+                Id: api.pageParam.Id
+            }
+        }
+        fnGet('SysMessage/GetById', filter, function(ret, err) {
+            if (ret) {
+                $api.html(title, '标题：' + ret.Title);
+                $api.html(content, '内容：' + ret.Cont);
+                $api.html(createtime, '日期：' + ret.CreateTime);
+                if (!ret.IsRead) {
+                    var data = {
+                        body: JSON.stringify({
+                            'Id': api.pageParam.Id
+                        })
+                    };
+                    fnPost('SysMessage/UpdateMessage', data, 'application/json', false, false, function(ret2, err) {
+                        if (ret2) {
+                            var num = $api.getStorage('newmessage') > 0 ? $api.getStorage('newmessage') : 1;
+                            $api.setStorage('newmessage', num - 1);
+                        }
+                    });
+
+                }
+            }
+        });
+    }
+</script>
+
+</html>

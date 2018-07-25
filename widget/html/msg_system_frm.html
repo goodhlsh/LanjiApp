@@ -12,79 +12,91 @@
             background-color: #f0f0f0;
         }
 
-            body {
-                height: 100%;
-            }
-            .section {
-                position: relative;
-                width: 100%;
-                height: auto;
-                box-sizing: border-box;
-                padding: 0 8px;
-            }
-            .ware-1 {
-                position: relative;
-                width: 100%;
-                height: 110px;
-                box-sizing: border-box;
-                padding-top: 15px;
-                padding-bottom: 15px;
-                border-bottom: 1px solid #d1d1d1;
-            }
-          .ware-1  .info {
-                width: 100%;
-                height: 60px;
-                box-sizing: border-box;
-                padding-left: 28px;
-                padding-right: 28px;
-            }
+        body {
+            height: 100%;
+        }
 
+        .section {
+            position: relative;
+            width: 100%;
+            height: auto;
+            box-sizing: border-box;
+            padding: 0 8px;
+        }
 
-          .ware-1  .info .title {
-              width: 100%;
-              height: 15px;
-              font-size: 15px;
-            }
-          .ware-1  .info .msg {
-              margin-top: 10px;
-              width: 100%;
-              height: 13px;
-              font-size: 13px;
+        .ware-1 {
+            position: relative;
+            width: 100%;
+            height: 110px;
+            box-sizing: border-box;
+            padding-top: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #d1d1d1;
+        }
 
-            }
+        .ware-1 .info {
+            width: 100%;
+            height: 60px;
+            box-sizing: border-box;
+            padding-left: 28px;
+            padding-right: 28px;
+        }
 
-          .ware-1  .info .time {
+        .ware-1 .info .title {
+            width: 100%;
+            height: 15px;
+            font-size: 15px;
+        }
 
-              margin-top: 10px;
-              width: 100%;
-              height: 12px;
-              font-size: 12px;
-              vertical-align: top;
-            }
+        .ware-1 .info .msg {
+            margin-top: 10px;
+            width: 100%;
+            height: 13px;
+            font-size: 13px;
+        }
 
-            .active {
-                -webkit-opacity: 0.7;
-                opacity: 0.7;
-            }
-        </style>
-    </head>
+        .ware-1 .info .time {
+            margin-top: 10px;
+            width: 100%;
+            height: 12px;
+            font-size: 12px;
+            vertical-align: top;
+        }
 
-    <body>
-        <section class="h20"></section>
+        .push-status {
+            width: 100%;
+            height: 40px;
+            font-size: 16px;
+            color: #888;
+            line-height: 40px;
+            text-align: center;
+            background-color: #fff;
+        }
+
+        .active {
+            -webkit-opacity: 0.7;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="h20"></section>
 
     <section id="message" class="message">
     </section>
+    <div class="push-status" id="pushStatus">上拉显示更多</div>
 </body>
 <script id="template" type="text/template">
     {{~it:value:index}}
     <div class="ware-1">
-        <div class="info" onclick="fnUpdateMessage('{{=value.Id}}')">
+        <div class="info" tapmode onclick="fnUpdateMessage('{{=value.Id}}')">
             <div class="title">标题：{{=value.Title}}</div>
             <div class="msg">内容：{{=value.Cont}}</div>
             <div class="time">日期：{{=value.CreateTime}}</div>
         </div>
-        {{?!value.UpdateTime}}
-        <div id="mydot" class="aui-dot"></div>
+        {{?!value.IsRead}}
+        <div id="mydot+'{{=value.Id}}'" class="aui-dot"></div>
         {{?}}
     </div>
     {{~}}
@@ -102,89 +114,89 @@
         fnGetMessageList(false);
     };
 
-        function initEventListenter() {
-            // 监听滚动到Frame底部的事件
-            api.addEventListener({
-                name: 'scrolltobottom',
-                extra: {
-                    threshold: 300 // 距离底部还有多少触发scrolltobottom事件
-                }
-            }, function(ret, err) {
-                // 获取更多的消息
-                fnGetMessageList(true);
-            });
-        }
-        // 实现下拉刷新功能
-        function initRefresh() {
-            api.setRefreshHeaderInfo({
-                visible: true,
-                loadingImg: 'widget://image/refresh.png',
-                bgColor: '#fff',
-                textColor: '#e1017e',
-                showTime: true
-            }, function(ret, err) {
-                // 刷新消息列表
-                fnGetMessageList(false);
-            });
-        }
-        var skip = 0,
-            LIMIT = 8;
+    function initEventListenter() {
+        // 监听滚动到Frame底部的事件
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra: {
+                threshold: 300 // 距离底部还有多少触发scrolltobottom事件
+            }
+        }, function(ret, err) {
+            // 获取更多的消息
+            fnGetMessageList(true);
+        });
+    }
+    // 实现下拉刷新功能
+    function initRefresh() {
+        api.setRefreshHeaderInfo({
+            visible: true,
+            loadingImg: 'widget://image/refresh.png',
+            bgColor: '#fff',
+            textColor: '#e1017e',
+            showTime: true
+        }, function(ret, err) {
+            // 刷新消息列表
+            fnGetMessageList(false);
+        });
+    }
+    var skip = 0,
+        LIMIT = 8;
 
-        function fnGetMessageList(loadMore_) {
-            if (!loadMore_) {
-                // 显示加载状态对话框
-                api.hideProgress({
-                    style: 'default',
-                    animationType: 'fade',
-                    title: '努力加载中...',
-                    text: '请稍后...',
-                    modal: false
+    function fnGetMessageList(loadMore_) {
+        if (!loadMore_) {
+            // 显示加载状态对话框
+            api.hideProgress({
+                style: 'default',
+                animationType: 'fade',
+                title: '努力加载中...',
+                text: '请稍后...',
+                modal: false
+            });
+        }
+        // 如果是加载更多，需要实现分页
+        if (loadMore_) {
+            skip += LIMIT;
+        } else {
+            skip = 0;
+        }
+
+        var filter = {
+            where: {
+                'Category': 'system'
+
+            },
+            skip: skip,
+            limit: LIMIT
+        }
+        fnGet('SysMessage/GetMessageListByCategory', filter, function(ret, err) {
+
+            if (ret) {
+                // 恢复下拉刷新的状态
+                api.refreshHeaderLoadDone();
+
+                // 在界面中更新消息列表显示
+                fnUpdateMessageList(ret, loadMore_);
+            } else {
+                api.toast({
+                    msg: '加载数据失败',
+                    duration: 2000,
+                    location: 'bottom'
                 });
             }
-            // 如果是加载更多，需要实现分页
-            if (loadMore_) {
-                skip += LIMIT;
-            } else {
-                skip = 0;
-            }
+            // 隐藏加载状态对话框
+            api.hideProgress();
 
-            var filter = {
-                where: {
-                    'Category': 'system'
+        });
+    }
 
-                },
-                skip: skip,
-                limit: LIMIT
-            }
-            fnGet('SysMessage/GetMessageListByCategory', filter, function(ret, err) {
-             
-                if (ret) {
-                    // 恢复下拉刷新的状态
-                    api.refreshHeaderLoadDone();
-
-                    // 在界面中更新消息列表显示
-                    fnUpdateMessageList(ret, loadMore_);
-                } else {
-                    api.toast({
-                        msg: '加载数据失败',
-                        duration: 2000,
-                        location: 'bottom'
-                    });
-                }
-                // 隐藏加载状态对话框
-                api.hideProgress();
-
-            });
-        }
-
-        function fnUpdateMessageList(data_, loadMore_) {
-            var list = $api.byId('message');
-            // 编译模板函数
-            var tempFn = doT.template($api.byId('template').innerHTML);
-            // 使用模板函数生成HTML文本
-            var resultHTML = tempFn(data_);
-            // 判断是否是加载更多，如果是加载更多，则追加到list中
-            if (loadMore_) {
+    function fnUpdateMessageList(data_, loadMore_) {
+        var list = $api.byId('message');
+        // 编译模板函数
+        var tempFn = doT.template($api.byId('template').innerHTML);
+        // 使用模板函数生成HTML文本
+        var resultHTML = tempFn(data_);
+        // 判断是否是加载更多，如果是加载更多，则追加到list中
+        if (loadMore_) {
 
             $api.append(list, resultHTML);
             // 如果服务器端已经没有更多数据返回，更新提示信息
@@ -201,54 +213,12 @@
     }
 
     function fnUpdateMessage(Id_) {
-        var myhot = $api.byId('myhot');
-
-        if (myhot.classList.contains('aui-dot') == true) {
-
-            var data = {
-                body: JSON.stringify({
-                    'Id': Id_
-                })
-            };
-            fnPost('SysMessage/UpdateTimeMessage', data, 'application/json', false, false, function(ret2, err) {
-                if (ret2) {
-                    fnReloadMessageList(true);
-                    //更新下新消息的数量
-                    var num = $api.getStorage('newmessage') > 0 ? $api.getStorage('newmessage') : 1;
-                    $api.setStorage('newmessage', num - 1);
-                }
-            });
-
-        }
-    }
-
-    function fnReloadMessageList(loadMore_) {
-
-
-        var filter = {
-            where: {
-                'Category': 'message'
-            },
-            skip: skip,
-            limit: LIMIT
-        }
-        fnGet('SysMessage/GetMessageListByCategory', filter, function(ret, err) {
-            if (ret) {
-                // 恢复下拉刷新的状态
-                api.refreshHeaderLoadDone();
-
-                // 在界面中更新消息列表显示
-                fnUpdateMessageList(ret, loadMore_);
-            } else {
-                api.toast({
-                    msg: '没有新数据',
-                    duration: 2000,
-                    location: 'bottom'
-                });
+        api.openWin({
+            name: 'showmessage',
+            url: './showmessage.html',
+            pageParam: {
+                Id: Id_
             }
-            // 隐藏加载状态对话框
-            api.hideProgress();
-
         });
     }
 </script>

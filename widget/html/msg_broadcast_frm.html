@@ -62,7 +62,15 @@
             font-size: 12px;
             vertical-align: top;
         }
-
+        .push-status {
+            width: 100%;
+            height: 40px;
+            font-size: 16px;
+            color: #888;
+            line-height: 40px;
+            text-align: center;
+            background-color: #fff;
+        }
         .active {
             -webkit-opacity: 0.7;
             opacity: 0.7;
@@ -75,17 +83,18 @@
 
     <section id="message">
     </section>
+    <div class="push-status" id="pushStatus">上拉显示更多</div>
 </body>
 <script id="template" type="text/template">
     {{~it:value:index}}
     <div class="ware-1">
-        <div class="info" onclick="fnUpdateMessage('{{=value.Id}}')">
+        <div class="info" tapmode onclick="fnUpdateMessage('{{=value.Id}}')">
             <div class="title">标题：{{=value.Title}}</div>
             <div class="msg">内容：{{=value.Cont}}</div>
             <div class="time">日期：{{=value.CreateTime}}</div>
         </div>
-        {{?!value.UpdateTime}}
-        <div id="mydot" class="aui-dot"></div>
+        {{?!value.IsRead}}
+        <div id="mydot+'{{=value.Id}}'" class="aui-dot"></div>
         {{?}}
     </div>
     {{~}}
@@ -200,56 +209,35 @@
     }
 
     function fnUpdateMessage(Id_) {
-        var myhot = $api.byId('myhot');
-
-        if (myhot.classList.contains('aui-dot') == true) {
-
-            var data = {
+      api.openWin({
+          name: 'showmessage',
+          url: './showmessage.html',
+          pageParam: {
+              Id: Id_
+          }
+      });
+      //  var myhot = $api.byId('myhot'+Id_);
+      //  $api.removeCls(myhot, 'aui-dot');
+        //if ($api.hasCls(myhot, 'aui-dot')) {
+        /*    var data = {
                 body: JSON.stringify({
                     'Id': Id_
                 })
             };
             fnPost('SysMessage/UpdateTimeMessage', data, 'application/json', false, false, function(ret2, err) {
                 if (ret2) {
-                    fnReloadMessageList(true);
+                    fnReloadMessageList(false);
                     //更新下新消息的数量
-                    var num = $api.getStorage('newmessage') > 0 ? $api.getStorage('newmessage') : 1;
-                    $api.setStorage('newmessage', num - 1);
+                    //var num = $api.getStorage('newmessage') > 0 ? $api.getStorage('newmessage') : 1;
+                    //$api.setStorage('newmessage', num - 1);
                 }
             });
 
-        }
+        //}
+        */
     }
 
-    function fnReloadMessageList(loadMore_) {
 
-
-        var filter = {
-            where: {
-                'Category': 'message'
-            },
-            skip: skip,
-            limit: LIMIT
-        }
-        fnGet('SysMessage/GetMessageListByCategory', filter, function(ret, err) {
-            if (ret) {
-                // 恢复下拉刷新的状态
-                api.refreshHeaderLoadDone();
-
-                // 在界面中更新消息列表显示
-                fnUpdateMessageList(ret, loadMore_);
-            } else {
-                api.toast({
-                    msg: '没有新数据',
-                    duration: 2000,
-                    location: 'bottom'
-                });
-            }
-            // 隐藏加载状态对话框
-            api.hideProgress();
-
-        });
-    }
 </script>
 
 </html>

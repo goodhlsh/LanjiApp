@@ -392,10 +392,19 @@
         count.innerHTML = countValue + '件';
         amount.innerHTML = amountValue;
 
-        var shifu, youhui, yunfei;
+        var shifu, youhui, yunfei,jiebie;
         yunfei = $api.byId('yunfei');
         shifu = $api.byId('shifu');
         youhui = $api.byId('youhui');
+        jiebie=$api.getStorage('userInfo').Jiebie;
+        if (jiebie=='8800会员') {
+          $api.html(youhui, '0.5');
+        }else if ( jiebie=='1314会员') {
+          $api.html(youhui, '0.8');
+        }else {
+          $api.html(youhui, '1.0');
+        }
+
         //优惠根据政策
         //实付=商品金额*优惠折扣+运费
         shifu.innerHTML = parseFloat(amountValue)*parseFloat(youhui.innerText) + parseFloat(yunfei.innerText);
@@ -403,5 +412,4 @@
       }
     }
 </script>
-
 </html>
