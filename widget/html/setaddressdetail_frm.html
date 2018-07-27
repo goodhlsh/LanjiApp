@@ -161,7 +161,7 @@ apiready = function() {
 function fnInitUIInput() {
     var searchText = $api.byId('searchText');
     var rect = $api.offset(searchText);
-    var UIInput = api.require('UIInput')
+    var UIInput = api.require('UIInput');
     UIInput.open({
         rect: {
             x: rect.l,
@@ -197,6 +197,7 @@ function fnInitUIInput() {
 
                         if (ret.status) {
                             //console.log(ret.msg);
+
                             fnSearchInCity(ret.msg);
                         }
                     } else {
@@ -212,6 +213,7 @@ function fnInitUIInput() {
 
 function fnSearchInCity(msg_) {
     var currentCity = $api.getStorage('currentCity');
+    console.log(currentCity);
     var bMap = api.require('bMap');
     bMap.searchInCity({
         city: currentCity,
@@ -236,7 +238,7 @@ function fnUpdateSearchList(data_) {
 function fnSelectAddress(address_) {
     api.execScript({
         name: 'setaddress',
-        frameName: 'setaddress_frame',
+        frameName: 'setaddress_frm',
         script: 'setAddressDetail(\'' + address_ + '\');'
     });
     api.closeWin();

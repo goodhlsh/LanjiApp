@@ -100,6 +100,13 @@
 
     function fnShareQ() {
         var wx = api.require('wx');
+        wx.isInstalled(function(ret){
+           if(ret.installed) {
+               api.toast({msg:'分享中，请稍候',duration:2000,location:"middle"});
+           } else {
+               api.toast({msg:'没有安装微信，无法进行分享',duration:2000,location:"middle"});
+           }
+       });
         wx.shareImage({
             apiKey: 'wxbf083887994f7d4d',
             scene: 'timeline',
@@ -116,9 +123,16 @@
 
     function fnShareY() {
         var wx = api.require('wx');
+        wx.isInstalled(function(ret){
+           if(ret.installed) {
+               api.toast({msg:'分享中，请稍候',duration:2000,location:"middle"});
+           } else {
+               api.toast({msg:'没有安装微信，无法进行分享',duration:2000,location:"middle"});
+           }
+       });
         wx.shareImage({
             apiKey: 'wxbf083887994f7d4d',
-            scene: 'timeline',
+            scene: 'session',
             thumb: 'http://154.8.159.50:1693/iis-85.png',
             contentUrl: 'http://154.8.159.50:1693/iis-85.png'
         }, function(ret, err) {

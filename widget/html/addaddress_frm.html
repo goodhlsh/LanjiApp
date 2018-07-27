@@ -168,7 +168,6 @@
         }
     </style>
 </head>
-
 <body>
     <header>
         <div id="isDefault" class="select select-on" topmode onclick="fnSetDefault(true);"></div>
@@ -192,15 +191,10 @@
             <div id="area" class="select">点击选择收货所在的区域</div>
             <div class="arrow-right-highlight"></div>
         </div>
-        <div class="option" tapmode onclick="fnOpenSetAddressDetailWin();">
-            <div class="name">具体地址：</div>
-            <div id="focus" class="select">点击选择具体的小区或写字楼</div>
-            <div class="arrow-right-highlight"></div>
-        </div>
         <div class="option">
-            <div class="name">楼号门牌：</div>
+            <div class="name">具体地址：</div>
             <div class="input">
-                <input id="house" type="text" placeholder="点击输入楼号门牌（例A座3单元1201">
+                <input id="house" type="text" placeholder="点击输入具体地址">
             </div>
         </div>
         <div class="option">
@@ -229,27 +223,15 @@
         IsDefault: true,
         Typs: 0
     };
-    var consignee, mobile, area, focus, house;
+    var consignee, mobile, area, house;
 
     function init() {
 
         consignee = $api.byId('consignee');
         mobile = $api.byId('mobile');
         area = $api.byId('area');
-        focus = $api.byId('focus');
         house = $api.byId('house');
-
-        if (api.pageParam.Id) {
-            addressInfo.IsDefault = api.pageParam.IsDefault;
-            fnSetDefault(false);
-            addressInfo.Typs = api.pageParam.Typs;
-            fnSelectAddressType(addressInfo.Typs);
-            consignee.value = api.pageParam.Name;
-            mobile.value = api.pageParam.Mobile;
-            area.innerHTML = api.pageParam.Province+api.pageParam.City;
-            focus.innerHTML = api.pageParam.Streat;
-            house.value = api.pageParam.House;
-        }
+        fnSelectAddressType(addressInfo.Typs);
     }
 
     function fnOpenActionSelector() {
@@ -305,30 +287,21 @@
             if (ret) {
                 var area = $api.byId('area');
                 area.innerHTML = ret.level1 + ret.level2 + (ret.level3 ? ret.level3 : '');
-                $api.setStorage('currentProvice', ret.level1);
 
-                $api.setStorage('currentCity', ret.level2);
+                if (ret.level1=='北京市'||ret.level1=='上海市'||ret.level1=='天津市'||ret.level1=='重庆市') {
+                  $api.setStorage('currentProvice', '');
+                  $api.setStorage('currentCity', ret.level1);
+                  $api.setStorage('currentQu', ret.level2);
 
+                }else {
+                  $api.setStorage('currentProvice', ret.level1);
+                  $api.setStorage('currentCity', ret.level2);
+                  $api.setStorage('currentQu', ret.level3);
+                }
             } else {
                 alert(JSON.stringify(err));
             }
         });
-    }
-
-    function fnOpenSetAddressDetailWin() {
-        api.openWin({
-            name: 'setaddressdetail',
-            url: './setaddressdetail.html',
-            pageParam: {
-                name: 'test'
-            }
-        });
-    }
-
-    // 被setaddressdetail_frame中调用
-    function setAddressDetail(address_) {
-        var focus = $api.byId('focus');
-        $api.html(focus, address_);
     }
 
     function fnSelectAddressType(index_) {
@@ -361,27 +334,22 @@
         addressInfo.Mobile = mobile.value;
         addressInfo.Province = $api.getStorage('currentProvice');
         addressInfo.City = $api.getStorage('currentCity');
-        addressInfo.Address = focus.innerHTML;
+        addressInfo.Street=$api.getStorage('currentQu');
         addressInfo.House = house.value;
         addressInfo.UserId = $api.getStorage('userInfo').Id;
-        addressInfo.Id = api.pageParam.id != null ? api.pageParam.id : '';
-
 
         fnPost('SysUser/SetAddress', {
             body: addressInfo
         }, 'application/json', false, false, function(ret, err) {
             if (ret) {
                 api.sendEvent({
-                    name: 'updateAddress'
+                    name: 'updateaddress'
                 });
                 api.closeWin();
             } else {
                 alert(JSON.stringify(err));
             }
         });
-
-
-
     }
 </script>
 

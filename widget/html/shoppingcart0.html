@@ -211,7 +211,7 @@
 
         // 打开购物车Frame
         api.openFrame({
-            name: 'shoppingcart_frame',
+            name: 'shoppingcart_frm',
             url: './shoppingcart_frm.html',
             rect: {
                 x: 0,
@@ -247,14 +247,14 @@
             $api.addCls(wareAllSelect, 'select-off');
             // 在购物车Frame中显示
             api.execScript({
-                frameName: 'shoppingcart_frame',
+                frameName: 'shoppingcart_frm',
                 script: 'fnSetAllSelect(' + curShoppingCart + ',"off");'
             });
         } else {
             $api.removeCls(wareAllSelect, 'select-off');
             // 在购物车Frame中显示
             api.execScript({
-                frameName: 'shoppingcart_frame',
+                frameName: 'shoppingcart_frm',
                 script: 'fnSetAllSelect(' + curShoppingCart + ',"on");'
             });
         }

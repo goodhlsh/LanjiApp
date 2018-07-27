@@ -340,7 +340,7 @@
                     // 跨窗口执行Script, 将用户名传给登录页面
                     api.execScript({
                         name: 'login',
-                        frameName: 'login_frame',
+                        frameName: 'login_frm',
                         script: 'fnSetUsername(\"' + usernameValue + '\");'
                     });
                     api.closeWin();
@@ -392,7 +392,7 @@
                 // 跨窗口执行Script, 将用户名传给登录页面
                 api.execScript({
                     name: 'login',
-                    frameName: 'login_frame',
+                    frameName: 'login_frm',
                     script: 'fnSetUsername(\"' + usernameValue + '\");'
                 });
 

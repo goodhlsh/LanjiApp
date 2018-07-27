@@ -101,8 +101,9 @@
         .info-discount {
             box-sizing: border-box;
             width: 100%;
-            height: 34px;
+            height: 40px;
             border-bottom: 1px solid #ddd;
+
         }
 
         .info-discount .name {
@@ -117,7 +118,7 @@
         .info-discount .value {
             display: inline-block;
             width: auto;
-            height: 15px;
+            height: 24px;
             line-height: 15px;
             margin-top: 3px;
             padding: 4px;
@@ -147,6 +148,12 @@
             height: 20px;
             line-height: 20px;
         }
+        .info-stock{
+
+        }
+        .info-stock .stock{
+
+        }
     </style>
 </head>
 
@@ -158,7 +165,21 @@
             <div id="description" class="description">商品描述:</div>
         </div>
         <div class="info-price">
-            <div id="price" class="price">价格:</div>
+            <div id="price" class="price">¥18.9</div>
+            <div class="other">
+                <div class="origin-price">
+                    <del id="originPrice">原价：</del>
+                </div>
+                <div id="stock" class="place">销量：0件</div>
+
+            </div>
+        </div>
+        <div class="info-discount">
+            <div class="name">优惠活动：</div>
+            <div class="value">参与首单、满减等活动</div>
+        </div>
+        <div>
+          <img  id="pic" src="" class="picture"/>
         </div>
 
         <div class="push">
@@ -271,7 +292,24 @@
 
         // 商品价格
         var price = $api.byId('price');
-        price.innerHTML = '￥' + ware_.Price;
+        price.innerHTML = '价格：￥ ' + ware_.Price;
+        //商品原价
+        var originPrice=$api.byId('originPrice');
+        if (ware_.OriginPrice!=null) {
+          originPrice.innerHTML='原价：￥ '+ware_.OriginPrice;
+        }
+
+        //图片介绍
+        var pic=$api.byId('pic');
+        if (ware_.Picture5) {
+        pic.src=ware_.Picture5;
+      }
+        //销售
+        var stock=$api.byId('stock');
+        if (ware_.Stock!=null) {
+          stock.innerHTML='销量： '+ware_.Stock;
+        }
+
 
         // 更新轮播图中的图片
         var paths = [];
@@ -291,9 +329,7 @@
         if (ware_.Picture4) {
             paths.push("widget://"+ware_.Picture4.substring(3));
         }
-        if (ware_.Picture5) {
-            paths.push("widget://"+ware_.Picture5.substring(3));
-        }
+
 
         UIScrollPicture.reloadData({
             data: {

@@ -165,14 +165,14 @@
 </body>
 <script type="text/template" id="template">
     {{~it:value:index}}
-    <div class="address" tapmode onclick="fnOpenSetAddressWin('{{=index}}');">
+    <div class="address">
         <div class="icon"></div>
         {{?value.IsDefault == true}}
         <div class="sign sign-1">[默认]</div>
         {{??}}
         <div class="sign">[默认]</div>
         {{?}}
-        <div class="info">
+        <div class="info"  tapmode onclick="fnSelectAddress('{{=value.Id}}');">
             <div class="top">
                 <div class="consignee">地址别名：{{=value.Name}}</div>
                 <div class="mobile">{{=value.Mobile}}</div>
@@ -182,7 +182,7 @@
                 <div class="text">{{=value.Province}}{{=value.City}}{{=value.Street}}-{{=value.House}}</div>
             </div>
         </div>
-        <div class="arrow"></div>
+        <div class="arrow"  tapmode onclick="fnOpenSetAddressWin('{{=index}}');"></div>
     </div>
     {{~}}
 </script>
@@ -194,13 +194,13 @@
 <script type="text/javascript">
     apiready = function() {
         // 初始化事件监听
-        initEventListenter();
+        initEventListener();
         // 初始化下拉刷新
         initRefresh();
 
         getAddressList(false);
     };
-    function initEventListenter() {
+    function initEventListener() {
         // 监听滚动到Frame底部的事件
         api.addEventListener({
             name: 'scrolltobottom',
@@ -210,6 +210,11 @@
         }, function(ret, err) {
             // 获取更多的
             getAddressList(true);
+        });
+        api.addEventListener({
+            name: 'updateaddress'
+        }, function(ret, err) {
+            getAddressList(false);
         });
     }
     // 实现下拉刷新功能
@@ -271,24 +276,10 @@
         });
     }
 
-    function initEventListener() {
-        // 监听滚动到Frame底部的事件
-        api.addEventListener({
-            name: 'scrolltobottom',
-            extra: {
-                threshold: 300 // 距离底部还有多少触发scrolltobottom事件
-            }
-        }, function(ret, err) {
-            // 获取更多的
-            getAddressList(true);
-        });
 
-        api.addEventListener({
-            name: 'updateAddress'
-        }, function(ret, err) {
-            getAddressList(false);
-        });
-    }
+
+
+
 
     function fnUpdateAddressList(data_, loadMore_) {
         var list = $api.byId('list');
@@ -328,10 +319,18 @@
 
     function fnOpenSetAddressWin(index_) {
         api.openWin({
-            name: 'addaddress',
-            url: './addaddress.html',
+            name: 'setaddress',
+            url: './setaddress.html',
             pageParam: data[index_]
         });
+    }
+    function fnSelectAddress(Id_) {
+      api.execScript({
+          name: 'order',
+          frameName: 'order_frm',
+          script: 'setAddress(\'' + Id_ + '\');'
+      });
+      api.closeWin();
     }
 </script>
 

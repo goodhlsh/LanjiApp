@@ -84,7 +84,7 @@
 
         // 打开mini购物车Frame
         api.openFrame({
-            name: 'minicart_frame',
+            name: 'minicart_frm',
             url: './minicart_frm.html',
             rect: {
                 x: 0,
@@ -99,7 +99,7 @@
 
         // 将mini购物车Frame放置在首页Window所有Frame的最上层
         api.bringFrameToFront({
-            from: 'minicart_frame'
+            from: 'minicart_frm'
         });
         fnReadyFrame();
     };
@@ -149,7 +149,7 @@
     // 打开分享Frame
     function fnOpenShareFrame() {
         api.openFrame({
-            name: 'share_frame',
+            name: 'share_frm',
             url: './share_frm.html',
             rect: {
                 x: 0,

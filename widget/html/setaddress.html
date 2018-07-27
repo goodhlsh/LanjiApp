@@ -64,11 +64,14 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
         fnReady();
         fnReadyFrame();
     };
+
 
     function fnDelete() {
         var userInfo = $api.getStorage('userInfo');
@@ -79,24 +82,23 @@
         }, function(ret, err) {
             if (ret) {
                 if (1 == ret.buttonIndex) {
-                    api.ajax({
-                        url: 'https://d.apicloud.com/mcm/api/address/' + api.pageParam.id,
-                        method: 'delete',
-                        headers: {
-                            "X-APICloud-AppId": "A6921544633372",
-                            "X-APICloud-AppKey": "2672b5911d8551540c1ea598e01c87fee217a1e5.1482500122476",
-                            "Authorization": userInfo.Id
-                        }
-                    }, function(ret, err) {
-                        if (ret) {
-                            api.sendEvent({
-                                name: 'updateAddress'
-                            });
-                            api.closeWin();
-                        } else {
-                            alert(JSON.stringify(err));
-                        }
-                    });
+                  var data = {
+                      body: JSON.stringify({
+                          Id: api.pageParam.Id
+                      })
+                  };
+                    fnPost('SysUser/DeletAddress', data, 'application/json', false, false,
+                        function(ret, err) {
+                            if (ret) {
+                                alert('操作成功！');
+                                api.sendEvent({
+                                    name: 'updateaddress'
+                                });
+                                api.closeWin();
+                            } else {
+                              //  alert(JSON.stringify(err));
+                            }
+                        });
                 }
             }
         });
