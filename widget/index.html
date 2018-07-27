@@ -193,6 +193,13 @@
         $api.fixStatusBar(header);
         headerHeight = $api.offset(header).h;
         footerHeight = $api.offset(footer).h;
+        //设置我的小红点
+        var num = $api.getStorage('newmessage') == null ? 0 : $api.getStorage('newmessage');
+
+        if (num > 0) {
+            var mydot = $api.byId('mydot');
+            $api.addCls(mydot, 'aui-dot');
+        }
     }
 
     var isAuth;
@@ -297,6 +304,7 @@
         });
         $api.addCls(obj, 'aui-active');
         currindex = index;
+
         api.openFrame({
             name: frames[currindex],
             url: './html/' + frames[currindex] + '.html',

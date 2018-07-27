@@ -71,7 +71,26 @@
         <div class="menu" tapmode="selected" onclick="fnSetNavMenuIndex(3);">套装系列</div>
         <div class="menu" tapmode="selected" onclick="fnSetNavMenuIndex(4);">洗护系列</div>
     </nav>
-
+    <footer class="aui-bar aui-bar-tab aui-border-t" id="aui-footer">
+        <div id="tabbar0" class="aui-bar-tab-item open-win" tapmode="highlight" win="../index">
+            <i class="aui-iconfont aui-icon-home"></i>
+            <div class="aui-bar-tab-label">首页</div>
+        </div>
+        <div id="tabbar1" class="aui-bar-tab-item  aui-active " tapmode>
+            <i class="aui-iconfont aui-icon-apps"></i>
+            <div class="aui-bar-tab-label">分类</div>
+        </div>
+        <div id="tabbar2" class="aui-bar-tab-item open-win" tapmode="highlight" win="shoppingcart">
+            <div id="cartbadge" class=""></div>
+            <i class="aui-iconfont aui-icon-cart"></i>
+            <div class="aui-bar-tab-label">购物车</div>
+        </div>
+        <div id="tabbar3" class="aui-bar-tab-item open-win" tapmode="highlight" win="my" login="true">
+            <div id="mydot" class=""></div>
+            <i class="aui-iconfont aui-icon-my"></i>
+            <div class="aui-bar-tab-label">我的</div>
+        </div>
+    </footer>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/common.js"></script>
@@ -81,16 +100,23 @@
     apiready = function() {
         var header = $api.byId('aui-header');
         var nav = $api.byId('nav');
-
+        var footer=$api.byId('aui-footer');
         // 实现沉浸式状态栏效果
         $api.fixStatusBar(header);
 
         // 计算header和nav元素的高度
         headerH = $api.offset(header).h;
         navH = $api.offset(nav).h;
-
+        footerHeight=$api.offset(footer).h;
         // 获取所有的分类菜单
         menus = $api.domAll(nav, '.menu');
+        //设置我的小红点
+        var num = $api.getStorage('newmessage') == null ? 0 : $api.getStorage('newmessage');
+
+        if (num > 0) {
+            var mydot = $api.byId('mydot');
+            $api.addCls(mydot, 'aui-dot');
+        }
         // 初始化商品分类列表
         initWareTypeList();
         fnReady();
@@ -147,7 +173,7 @@
     }
 
     var framesOpened = false;
-    var menus, navH, headerH;
+    var menus, navH, headerH,footerHeight;
 
     // 打开商品列表FrameGroup
     function openFrames() {
@@ -177,7 +203,7 @@
                 x: 0,
                 y: headerH + navH,
                 w: 'auto', // 自动填充所在Window的宽度
-                h: 'auto' // 自动填充所在Window的高度
+                h: api.frameHeight-headerH-navH-footerHeight // 自动填充所在Window的高度
             },
             index: 0, // 默认显示第一个Frame
             frames: frames,

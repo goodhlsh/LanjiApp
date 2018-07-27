@@ -128,15 +128,14 @@
         }, function(ret, err) {
             if (ret) {
                 if (1 == ret.buttonIndex) {
-                    $api.rmStorage('userInfo');
-                    $api.rmStorage('currentwallet');
-                    $api.rmStorage('shoppingcart');
-                    $api.rmStorage('dingdankuan');
-
-
-                    api.closeWin({
-                        name: 'setting'
+                    api.sendEvent({
+                        name: 'logout',
+                        extra: {
+                            msg: '退出成功'
+                        }
                     });
+
+                    setTimeout("api.closeWin({})", 2000);
                 }
             }
         });

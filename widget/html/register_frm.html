@@ -9,27 +9,49 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
     <style>
-        .input {
-            width: 70%;
-        }
+    html,
+    body {
+        height: 100%;
+        background: #f0f0f0;
+    }
+
+    section {
+        position: relative;
+        height: auto;
+        margin-top: 8px;
+        overflow: hidden;
+        background-color: #fff;
+    }
+
+    .input {
+        height: 40px;
+        width: auto;
+        font-size: 18px;
+        line-height: 20px;
+        color: #8E8C8C;
+        padding-top: 10px;
+    }
 
         .input::-webkit-input-placeholder {
             color: #ccc;
         }
 
         .divider {
-            height: 15px;
+            height: 5px;
         }
 
         .highlight {
             opacity: 0.7;
         }
+        .r20 {
+            margin-right: 20px;
+            width: 180px;
+        }
     </style>
 </head>
 
-<body>
-    <section class="divider"></section>
-    <div class="aui-content">
+<body>    
+    <section class="aui-content">
         <div class="aui-list aui-form-list">
             <div class="aui-list-item">
                 <div class="aui-list-item-inner">
@@ -37,7 +59,7 @@
                         <i class="aui-iconfont aui-icon-my"></i>
                     </div>
                     <div class="aui-list-item-input">
-                        <input id="username" class="input" type="text" onblur="checkPhoneConflict()" placeholder="请输入手机号码" />
+                        <input id="username" class="input" type="text" onblur="checkPhoneConflict()" placeholder="" />
                     </div>
                 </div>
             </div>
@@ -47,7 +69,7 @@
                         <i class="aui-iconfont aui-icon-lock"></i>
                     </div>
                     <div class="aui-list-item-input">
-                        <input id="password1" class="input" type="password" placeholder="请输入密码">
+                        <input id="password1" class="input" type="password" placeholder="">
                     </div>
                 </div>
             </div>
@@ -57,7 +79,7 @@
                         <i class="aui-iconfont aui-icon-lock"></i>
                     </div>
                     <div class="aui-list-item-input">
-                        <input id="password2" class="input" type="password" placeholder="请再次输入密码">
+                        <input id="password2" class="input" type="password" placeholder="">
                     </div>
                 </div>
             </div>
@@ -67,11 +89,11 @@
                         <i class="aui-iconfont aui-icon-command"></i>
                     </div>
                     <div class="aui-list-item-input">
-                        <input id="code" class="input" type="text" placeholder="请输入短信验证码">
+                        <input id="code" class="input" type="text" placeholder="">
                     </div>
-                    <div class="aui-list-item-right">
-                        <div id="sendSms" class="aui-btn  aui-btn-sm" tapmode="highlight" onclick="sendSms(this)">获取验证码</div>
-                    </div>
+
+                        <div id="sendSms" class="aui-btn aui-btn-info  r20" tapmode="highlight" onclick="sendSms(this)">获取验证码</div>
+
                 </div>
             </div>
             <div class="aui-list-item">
@@ -79,7 +101,8 @@
                     <div class="aui-btn aui-btn-block  aui-btn-sm aui-btn-danger" tapmode="highlight" onclick="verify();">立即注册</div>
                 </div>
             </div>
-        </div>
+          </div>
+        </section>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/SHA1.js"></script>

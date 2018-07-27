@@ -252,8 +252,11 @@
         }
 
         .buy {
-            width: 112px;
+          position: relative;
+            width: auto;
             height: 50px;
+            margin-right: 10px;
+            text-align: right;
         }
 
         .buy .buy-button {
@@ -265,7 +268,7 @@
             line-height: 40px;
         }
 
-        footer {
+        .footer {
             width: 100%;
             height: 50px;
             display: -webkit-box;
@@ -316,46 +319,32 @@
             text-align: right;
             line-height: 14px;
         }
-
-        .buy {
-            width: 112px;
-            height: 50px;
-        }
-
-        .buy .buy-button {
-            width: 112px;
-            height: 40px;
-            margin-top: 5px;
-            margin-bottom: 5px;
-            font-size: 16px;
-            line-height: 40px;
-        }
     </style>
 </head>
 
 <body>
+  <section class="footer">
+      <div class="control">
+          <div id="select_all" class="select"></div>
+          <div class="info">
+              <div class="top" tapmode onclick="fnSetAllSelect();">全选</div>
+              <div class="bottom">已选<span id="count" class="count">0</span>件</div>
+          </div>
+      </div>
+      <div class="panel">
+          <div class="info">
+              <div class="top">总金额:<span id="amount" class="amount">￥0</span></div>
+          </div>
+      </div>
+
+  </section>
     <section id="list" class="list"></section>
     <section id="empty" class="empty" tapmode onclick="fnCloseWin();"></section>
-    <footer id="footer">
-        <div class="control">
-            <div id="select_all" class="select"></div>
-            <div class="info">
-                <div class="top" tapmode onclick="fnSetAllSelect();">全选</div>
-                <div class="bottom">已选<span id="count" class="count">0</span>件</div>
-            </div>
+    <div id="btnPay" class="buy open-win" win="order" login="true">
+        <div class="buy-button aui-btn aui-btn-danger" disabled="true">
+            去结算
         </div>
-        <div class="panel">
-            <div class="info">
-                <div class="top">总金额:<span id="amount" class="amount">￥0</span></div>
-                <div class="bottom">不含运费</div>
-            </div>
-        </div>
-        <div id="btnPay" class="buy open-win" win="order" login="true">
-            <div class="buy-button aui-btn aui-btn-danger" disabled="true">
-                去结算
-            </div>
-        </div>
-    </footer>
+    </div>
 </body>
 
 <script type="text/template" id="template">
@@ -388,9 +377,7 @@
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
-        fnReady();
-        //底部显示在窗口底部
-        initFooter();
+        fnReady();        
 
         // 读取本地库，显示购物车内容Frame
         getWareListFromDB();
@@ -399,13 +386,7 @@
 
         initWareStateEventListener();
     };
-    var footer;
-    //通过javasc设置css属性
-    function initFooter() {
-        footer = $api.byId('footer');
-        //pageParam:{ a:headerHeight,b:footerHeight,c:navHeight}
-        footer.style.paddingTop = api.pageParam.a - 50 + 'px';
-    }
+
 
     function getWareListFromDB() {
         var ret = $db.select('shoppingCart', userId);
@@ -448,7 +429,7 @@
                 }
             }
             getWareListFromDB();
-        });        
+        });
     }
 
     function initWareStateEventListener() {
@@ -496,13 +477,6 @@
                     }
                 }
                 api.hideProgress();
-                if (ret.length >= 6) {
-                    footer.style.paddingTop = api.pageParam.a - 50 - 140 * ret.length / 2 + 'px';
-                } else if (ret.length > 0) {
-                    footer.style.paddingTop = api.pageParam.a - 50 - 138 * ret.length + 'px';
-                } else {
-                    footer.style.paddingTop = api.pageParam.a - 50 + 'px';
-                }
 
                 // 显示出购物车中的商品列表
                 fnUpdateWareListByShoppingCart(ret);

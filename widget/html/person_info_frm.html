@@ -26,8 +26,8 @@
             <li class="aui-list-item" onclick="fnSetAvatar();">
                 <div class="aui-media-list-item-inner">
                     <div class="aui-list-item-inner">
-                        <div class="aui-list-item-title">我的头像</div>
-                        <div class="aui-list-item-text">
+                        <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-my"></i>我的头像</div>
+                        <div class="aui-list-item-right">
                             单击图片可以更换
                         </div>
                     </div>
@@ -37,10 +37,17 @@
                 </div>
             </li>
             <li class="aui-list-item">
+              <div class="aui-list-item-inner aui-list-item-arrow">
+                  <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-punch">我的优惠券</i></div>
+                  <div class="aui-list-item-right"></div>
+                <div>
+              </div>
+            </li>
+          <!--  <li class="aui-list-item">
                 <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn" onclick="fnLogout();">
                     <div class="aui-btn aui-btn-danger aui-margin-l-5">退出登录</div>
                 </div>
-            </li>
+            </li>-->
         </ul>
     </div>
     <script type="text/javascript" src="../script/api.js"></script>
@@ -103,6 +110,13 @@
                         //写入用户库
                         avatar.src = ret.data;
                         $api.setStorage('avatar', ret.data);
+                        api.sendEvent({
+                            name: 'setuserinfo',
+                            extra: {
+                                key1: 'value1',
+                                key2: 'value2'
+                            }
+                        });
 
                         //文件存在应用沙箱下picture路径下
                         //服务端截取路径

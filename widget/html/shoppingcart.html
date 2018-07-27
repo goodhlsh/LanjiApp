@@ -57,18 +57,45 @@
         <div class="right open-win" win="warelist">继续选购</div>
     </header>
     <section></section>
+    <footer class="aui-bar aui-bar-tab aui-border-t" id="aui-footer">
+        <div id="tabbar0" class="aui-bar-tab-item open-win" tapmode="highlight" win="../index">
+            <i class="aui-iconfont aui-icon-home"></i>
+            <div class="aui-bar-tab-label">首页</div>
+        </div>
+        <div id="tabbar1" class="aui-bar-tab-item open-win" tapmode="highlight" win="warelist">
+            <i class="aui-iconfont aui-icon-apps"></i>
+            <div class="aui-bar-tab-label">分类</div>
+        </div>
+        <div id="tabbar2" class="aui-bar-tab-item   aui-active" tapmode>
+            <div id="cartbadge" class=""></div>
+            <i class="aui-iconfont aui-icon-cart"></i>
+            <div class="aui-bar-tab-label">购物车</div>
+        </div>
+        <div id="tabbar3" class="aui-bar-tab-item open-win" tapmode="highlight" win="my" login="true">
+            <div id="mydot" class=""></div>
+            <i class="aui-iconfont aui-icon-my"></i>
+            <div class="aui-bar-tab-label">我的</div>
+        </div>
+    </footer>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/common.js"></script>
 <script type="text/javascript">
     apiready = function() {
       fnReady();
+
       var header = $api.byId('aui-header');
-
-      $api.fixStatusBar(header);
-
       var headerH = $api.offset(header).h;
+      $api.fixStatusBar(header);
+      var footer=$api.byId('aui-footer');
+      var footerHeight=$api.offset(footer).h;
+      //设置我的小红点
+      var num = $api.getStorage('newmessage') == null ? 0 : $api.getStorage('newmessage');
 
+      if (num > 0) {
+          var mydot = $api.byId('mydot');
+          $api.addCls(mydot, 'aui-dot');
+      }
 
       // 打开购物车Frame
       api.openFrame({
@@ -78,11 +105,9 @@
               x: 0,
               y: headerH,
               w: 'auto',
-              h: api.winHeight - headerH
+              h: api.frameHeight - headerH-footerHeight
           },
-          pageParam: {
-             a:api.winHeight - headerH
-          },
+          pageParam: '',
           bounces: true,
           reload:true
       });
