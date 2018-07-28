@@ -20,6 +20,10 @@
             -webkit-box-orient: vertical;
             -webkit-flex-flow: column;
             flex-flow: column;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url('../image/my/mingpian.png');
+            background-size: contain;
         }
 
         section {
@@ -31,24 +35,27 @@
 
         .card-extend {
             text-align: center;
+
         }
 
         .picCenter {
             margin: 0 auto;
         }
+
+
     </style>
 </head>
 
 <body>
-    <header class="aui-bar aui-bar-nav  aui-btn-danger" id="aui-header">
+    <header class="aui-bar aui-bar-nav" id="aui-header">
         <a class="aui-btn aui-pull-left" tapmode onclick="fnCloseWin()">
             <span class="aui-iconfont aui-icon-left"></span>
         </a>
-        <div class="aui-title">我的二维码</div>
+        <div class="aui-title">我的会员名片</div>
 
     </header>
-
-    <div id="extenCode" class="card-extend aui-margin-15">
+    <div id="username"></div>
+    <div id="extenCode" class="card-extend">
         <img id="qrCore" src="" class="picCenter"></img>
     </div>
     <section></section>
@@ -59,7 +66,7 @@
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
-      fnReady();
+        fnReady();
         api.parseTapmode();
         var tid;
         if ($api.getStorage('userInfo')) {
@@ -92,6 +99,11 @@
                 var qr_image = $api.byId('qrCore');
                 qr_image.src = ret.imgPath;
                 //$api.attr(qr_image, 'src', ret.imgPath);
+                var username=$api.byId('username');
+                username.style.paddingTop=280+'px';
+                username.innerHtml=$api.getStorage('userInfo').UserName;
+                var extenCode=$api.byId('extenCode');
+                extenCode.style.paddingTop =400+'px';
             }
         });
         // inter =   window.setInterval(getDone(tid), 3000);

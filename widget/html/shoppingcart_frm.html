@@ -252,20 +252,19 @@
         }
 
         .buy {
-          position: relative;
+            display: none;
             width: auto;
             height: 50px;
-            margin-right: 10px;
-            text-align: right;
+            text-align: center;
         }
 
-        .buy .buy-button {
-            width: 112px;
-            height: 40px;
-            margin-top: 5px;
-            margin-bottom: 5px;
-            font-size: 16px;
-            line-height: 40px;
+        .buy .box {
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            /* Firefox */
+            -webkit-box-sizing: border-box;
+            /* Safari */
+            width: 40%;
         }
 
         .footer {
@@ -323,25 +322,27 @@
 </head>
 
 <body>
-  <section class="footer">
-      <div class="control">
-          <div id="select_all" class="select"></div>
-          <div class="info">
-              <div class="top" tapmode onclick="fnSetAllSelect();">全选</div>
-              <div class="bottom">已选<span id="count" class="count">0</span>件</div>
-          </div>
-      </div>
-      <div class="panel">
-          <div class="info">
-              <div class="top">总金额:<span id="amount" class="amount">￥0</span></div>
-          </div>
-      </div>
+    <section class="footer">
+        <div class="control">
+            <div id="select_all" class="select"></div>
+            <div class="info">
+                <div class="top" tapmode onclick="fnSetAllSelect();">全选</div>
+                <div class="bottom">已选<span id="count" class="count">0</span>件</div>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="info">
+                <div class="top">总金额:<span id="amount" class="amount">￥0</span></div>
+            </div>
+        </div>
 
-  </section>
+    </section>
     <section id="list" class="list"></section>
     <section id="empty" class="empty" tapmode onclick="fnCloseWin();"></section>
-    <div id="btnPay" class="buy open-win" win="order" login="true">
-        <div class="buy-button aui-btn aui-btn-danger" disabled="true">
+
+    <div id="buy" class="buy">
+        <div class="box aui-btn aui-btn-danger open-win" win="warelist">继续选购</div>
+        <div class="box aui-btn aui-btn-danger open-win" win="order" login="true">
             去结算
         </div>
     </div>
@@ -377,7 +378,7 @@
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
-        fnReady();        
+        fnReady();
 
         // 读取本地库，显示购物车内容Frame
         getWareListFromDB();
@@ -393,6 +394,7 @@
         // 本地库购物车表中有商品，则显示商品列表
         if (ret && ret.data.length > 0) {
             fnGetWareList(ret.data);
+            fnShowWareList(true);
         } else {
             // 购物车中无商品，则显示empty部分
             fnShowWareList(false);
@@ -403,7 +405,7 @@
     }
     //存放购物车内商品
     var curShoppingCart;
-    var userId = $api.getStorage('userInfo')==null?null:$api.getStorage('userInfo').Id;
+    var userId = $api.getStorage('userInfo') == null ? null : $api.getStorage('userInfo').Id;
 
     function initEventListener() {
         // 监听购物车更新事件(自定义事件)，同步更新列表展示中选定商品的数量
@@ -542,12 +544,15 @@
     function fnShowWareList(show_) {
         var empty = $api.byId('empty');
         var list = $api.byId('list');
+        var buy = $api.byId('buy');
         if (show_) {
             empty.style.display = 'none';
             list.style.display = 'block';
+            buy.style.display = 'block';
         } else {
             empty.style.display = 'block';
             list.style.display = 'none';
+            buy.style.display = 'none';
         }
     }
 

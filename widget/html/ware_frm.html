@@ -103,7 +103,6 @@
             width: 100%;
             height: 40px;
             border-bottom: 1px solid #ddd;
-
         }
 
         .info-discount .name {
@@ -148,18 +147,21 @@
             height: 20px;
             line-height: 20px;
         }
-        .info-stock{
-
+        .picture{
+          height: auto;
+          width: auto;
         }
-        .info-stock .stock{
-
+        .picture img{
+          width: 90%;
+          height: auto;
+          margin: 0 auto;
         }
     </style>
 </head>
 
 <body>
     <section>
-        <div id="picture" class="picture"></div>
+        <div id="picture"></div>
         <div class="info-name">
             <div id="wareName" class="name">商品名:</div>
             <div id="description" class="description">商品描述:</div>
@@ -176,16 +178,22 @@
         </div>
         <div class="info-discount">
             <div class="name">优惠活动：</div>
-            <div class="value">参与首单、满减等活动</div>
+            <div id="discount" class="value">可参与</div>
         </div>
-        <div>
-          <img  id="pic" src="" class="picture"/>
+        <div class="picture">
+            <img id="pic3" src="" />
+        </div>
+        <div class="picture">
+            <img id="pic4" src="" />
+        </div>
+        <div class="picture">
+            <img id="pic5" src="" />
         </div>
 
-        <div class="push">
+        <!--  <div class="push">
             <div class="top">""</div>
             <div class="bottom">下滑查看商品详情</div>
-        </div>
+        </div>-->
     </section>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
@@ -205,8 +213,9 @@
 
         // 获取占位的div元素，并设置元素的宽高
         var picture = $api.byId('picture');
-        picture.style.width = api.winWidth + 'px';
-        picture.style.height = api.winWidth + 'px';
+        picture.style.width = api.winWidth  + 'px';
+        picture.style.height = api.winWidth*0.8  + 'px';
+
         var rect = $api.offset(picture);
 
         // 引入UIScrollPicture模块，并指定位置和宽高
@@ -240,9 +249,10 @@
                 }
             },
             placeholderImg: 'widget://image/default_square.png',
-            contentMode: 'scaleToFill',
+            contentMode: 'scaleAspectFit',
             interval: 5,
             fixedOn: api.frameName,
+            auto:true,
             loop: true,
             fixed: false
         }, function(ret, err) {
@@ -294,40 +304,65 @@
         var price = $api.byId('price');
         price.innerHTML = '价格：￥ ' + ware_.Price;
         //商品原价
-        var originPrice=$api.byId('originPrice');
-        if (ware_.OriginPrice!=null) {
-          originPrice.innerHTML='原价：￥ '+ware_.OriginPrice;
+        var originPrice = $api.byId('originPrice');
+        if (ware_.OriginPrice != null) {
+            originPrice.innerHTML = '原价：￥ ' + ware_.OriginPrice;
         }
 
-        //图片介绍
-        var pic=$api.byId('pic');
-        if (ware_.Picture5) {
-        pic.src=ware_.Picture5;
-      }
         //销售
-        var stock=$api.byId('stock');
-        if (ware_.Stock!=null) {
-          stock.innerHTML='销量： '+ware_.Stock;
+        var stock = $api.byId('stock');
+        if (ware_.Stock != null) {
+            stock.innerHTML = '销量： ' + ware_.Stock;
         }
+        //优惠活动
+        var discount=$api.byId('discount');
+        if (ware_.IsShowdan) {
+            discount.innerHTML+='【首单活动】';
+        }
+        if (ware_.IsManjian) {
+            discount.innerHTML+='【满减活动】';
+        }
+        if (ware_.IsQuan) {
+            discount.innerHTML+='【优惠券活动】';
+        }
+        if (ware_.IsShowdan==null&&ware_.IsManjian==null&&ware_.IsQuan==null) {
+            discount.innerHTML='无';
+        }
+        //图片介绍
+        var pic3 = $api.byId('pic3');
+        var pic4 = $api.byId('pic4');
+        var pic5 = $api.byId('pic5');
+
+
+        if (ware_.Picture3) {
+            pic3.src = ware_.Picture3;
+        }else {
+          pic3.display='none';
+        }
+        if (ware_.Picture4) {
+            pic4.src = ware_.Picture4;
+        }else {
+          pic4.display='none';
+        }
+        if (ware_.Picture5) {
+            pic5.src = ware_.Picture5;
+        }else {
+          pic5.display='none';
+        }
+
 
 
         // 更新轮播图中的图片
         var paths = [];
         if (ware_.Picture0) {
-          //"widget://"+ware_.Picture0.substring(3)
-            paths.push("widget://"+ware_.Picture0.substring(3));
+            //"widget://"+ware_.Picture0.substring(3)
+            paths.push("widget://" + ware_.Picture0.substring(3));
         }
         if (ware_.Picture1) {
-            paths.push("widget://"+ware_.Picture1.substring(3));
+            paths.push("widget://" + ware_.Picture1.substring(3));
         }
         if (ware_.Picture2) {
-            paths.push("widget://"+ware_.Picture2.substring(3));
-        }
-        if (ware_.Picture3) {
-            paths.push("widget://"+ware_.Picture3.substring(3));
-        }
-        if (ware_.Picture4) {
-            paths.push("widget://"+ware_.Picture4.substring(3));
+            paths.push("widget://" + ware_.Picture2.substring(3));
         }
 
 

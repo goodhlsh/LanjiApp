@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
-    <title>分享二维码</title>
+    <title>我的推广名片</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
     <style>
@@ -20,6 +20,10 @@
             -webkit-box-orient: vertical;
             -webkit-flex-flow: column;
             flex-flow: column;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url('../image/my/tuiguang.png');
+            background-size: contain;
         }
 
         section {
@@ -68,15 +72,15 @@
 </head>
 
 <body>
-    <header class="aui-bar aui-bar-nav  aui-btn-danger" id="aui-header">
+    <header class="aui-bar aui-bar-nav" id="aui-header">
         <a class="aui-btn aui-pull-left" tapmode onclick="fnCloseWin()">
             <span class="aui-iconfont aui-icon-left"></span>
         </a>
-        <div class="aui-title">分享我的二维码</div>
+        <div class="aui-title">我的推广名片</div>
 
     </header>
 
-    <div id="extenCode" class="card-extend aui-margin-15">
+    <div id="extenCode" class="card-extend">
         <img id="qrCore" src="" class="picCenter"></img>
     </div>
     <section></section>
@@ -120,14 +124,16 @@
             saveToAlbum: false,
             saveImg: {
                 path: 'fs://album.png',
-                w: 300,
-                h: 300
+                w: 200,
+                h: 200
             }
         }, function(ret, err) {
             if (ret.status) {
                 var qr_image = $api.byId('qrCore');
                 qr_image.src = ret.imgPath;
                 //$api.attr(qr_image, 'src', ret.imgPath);
+                var extenCode=$api.byId('extenCode');
+                extenCode.style.paddingTop =400+'px';
             }
         });
     };

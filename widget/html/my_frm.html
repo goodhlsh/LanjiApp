@@ -47,7 +47,7 @@
             box-sizing: border-box;
             width: 80px;
             height: 80px;
-            border: 2px solid #b10063;
+
             border-radius: 80px;
             background-image: url(../image/my/default_square.png);
             background-size: 100% 100%;
@@ -86,7 +86,7 @@
 </head>
 
 <body>
-    <header class="aui-bar aui-bar-nav  aui-btn-danger" id="aui-header">
+    <header class="aui-bar aui-bar-nav  " id="aui-header">
         <div class="login open-win" win="person_info" login="true">
             <div class="icon-panel">
                 <img id="userAvatar" class="icon"></img>
@@ -194,7 +194,7 @@
         userName = $api.byId('username');
         userYuE = $api.byId('currentamout');
         fnReadyOpenWin();
-        fnInitYuE();
+
         fnInit();
         fnInitEvent();
 
@@ -235,7 +235,7 @@
 
         userAvatar.src = $api.getStorage('avatar') || '../image/my/default_square.png';
 
-        fnInitYuE();
+        
 
     };
 

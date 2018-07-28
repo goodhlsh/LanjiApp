@@ -23,7 +23,9 @@
             -webkit-flex-flow: column;
             flex-flow: column;
         }
-
+        header{
+          height: 80px;
+        }
         nav {
             display: -webkit-box;
             display: -webkit-flex;
@@ -58,11 +60,8 @@
 </head>
 
 <body>
-    <header class="aui-bar aui-bar-nav  aui-btn-danger" id="aui-header">
-        <a class="aui-btn aui-pull-left" tapmode onclick="closeWin()">
-            <span class="aui-iconfont aui-icon-left"></span>
-        </a>
-        <div class="aui-title">所有商品</div>
+    <header class="aui-bar aui-bar-nav  " id="aui-header">
+        <div class="aui-title">分类</div>
     </header>
     <nav id="nav">
         <div class="menu selected" tapmode="selected" onclick="fnSetNavMenuIndex(0);">海植晶萃</div>

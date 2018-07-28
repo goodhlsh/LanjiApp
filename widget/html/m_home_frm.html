@@ -12,8 +12,18 @@
     <style>
         body {}
 
-        .h15 {
-            height: 15px;
+        .banner {
+            width: 100%;
+            height: 82px;
+        }
+
+        .banner img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .h10 {
+            height: 10px;
         }
 
         .hightitem {
@@ -21,9 +31,14 @@
         }
         /*滚动图片*/
 
+        .aui-slide-node {
+            width: auto;
+            height: 160px;
+        }
+
         .aui-slide-node img {
             width: auto;
-            height:auto;
+            height: auto;
             /*宽度 自适应*/
             max-width: 100%;
             /*高度 百分百*/
@@ -55,7 +70,9 @@
         }
 
         .fl {
-            margin: 0 auto;
+            margin-left: 2px;
+            margin-right: 2px;
+
         }
         /* 猜你喜欢 */
 
@@ -225,6 +242,9 @@
 </head>
 
 <body>
+    <div id="banner" class="banner">
+        <img src="../image/header/banner.png" />
+    </div>
     <div id="aui-slide">
         <div id="swiplist" class="aui-slide-wrap">
         </div>
@@ -233,10 +253,54 @@
         </div>
     </div>
 
-    <div class="h15"></div>
+    <div class="h10"></div>
     <section class="aui-grid">
         <div class="aui-row">
             <div id="activelist">
+              <div class="aui-col-xs-6  aui-padded-5">
+                  <div class="fl open-win" win="active" param=''>
+                      <div class="matrix">
+                          <div class="matrixcell">
+                              <div class="aui-grid-label"></div>
+                          </div>
+                      </div>
+
+                      <img  src="../image/active/0.png" class="" />
+                  </div>
+              </div>
+              <div class="aui-col-xs-6  aui-padded-5">
+                  <div class="fl open-win" win="" param=''>
+                      <div class="matrix">
+                          <div class="matrixcell">
+                              <div class="aui-grid-label"></div>
+                          </div>
+                      </div>
+
+                      <img  src="../image/active/1.png" class="fl" />
+                  </div>
+              </div>
+              <div class="aui-col-xs-6  aui-padded-5">
+                  <div class="fl open-win" win="" param=''>
+                      <div class="matrix">
+                          <div class="matrixcell">
+                              <div class="aui-grid-label"></div>
+                          </div>
+                      </div>
+
+                      <img  src="../image/active/2.png" class="fl" />
+                  </div>
+              </div>
+              <div class="aui-col-xs-6  aui-padded-5">
+                  <div class="fl open-win" win="" param=''>
+                      <div class="matrix">
+                          <div class="matrixcell">
+                              <div class="aui-grid-label"></div>
+                          </div>
+                      </div>
+
+                      <img  src="../image/active/3.png" class="fl" />
+                  </div>
+              </div>
             </div>
         </div>
     </section>
@@ -251,21 +315,7 @@
         <img id="thumbnail_{{= swipdata.Id }}" src="{{= swipdata.Thumbnail}}" /></div>
     {{~}}
 </script>
-<script type="text/template" id="activetemplate">
-    {{~ it:activedata }}
-    <div class="aui-col-xs-6  aui-padded-5">
-        <div class="open-win" win="active" param='{"Id":"{{= activedata.Id }}"}'>
-            <div class="matrix">
-                <div class="matrixcell">
-                    <div class="aui-grid-label">{{= activedata.Title }}</div>
-                </div>
-            </div>
 
-            <img id="thumbnail_{{= activedata.Id }}" src="../image/activedefault.png" class="fl" />
-        </div>
-    </div>
-    {{~}}
-</script>
 <script type="text/template" id="template">
     {{~ it:data }}
     <div class="item Fix hightitem open-win" win="ware" param='{"wareId":"{{= data.Id }}"}'>
@@ -320,7 +370,7 @@
             'skip': skip,
             'limit': swipLIMIT
         }, function(ret, err) {
-          //console.log(JSON.stringify(ret));
+            //console.log(JSON.stringify(ret));
             if (ret) {
                 api.hideProgress();
                 api.refreshHeaderLoadDone();
@@ -356,7 +406,7 @@
         }, function(ret, err) {
             api.hideProgress();
             api.refreshHeaderLoadDone();
-            fnShowActiveList(ret);
+
             fnCacheImage(ret, 0);
         });
     };
@@ -381,8 +431,8 @@
             'skip': skip,
             'limit': likeLIMIT
         }, function(ret, err) {
-          //console.log("//////////////////////////////");
-        //  console.log(JSON.stringify(ret));
+            //console.log("//////////////////////////////");
+            //  console.log(JSON.stringify(ret));
             if (ret) {
                 api.hideProgress();
                 api.refreshHeaderLoadDone();

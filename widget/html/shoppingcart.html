@@ -22,17 +22,9 @@
             -webkit-flex-flow: column;
             flex-flow: column;
         }
-        header .right {
-            position: absolute;
-            bottom: 0;
-            right: 0;
 
-            height: 50px;
-            line-height: 50px;
-            color: #fff;
-            font-size: 15px;
-            text-align: center;
-            padding-right: 10px;
+        header {
+            height: 80px;
         }
 
         section {
@@ -49,12 +41,8 @@
 </head>
 
 <body>
-    <header class="aui-bar aui-bar-nav  aui-btn-danger" id="aui-header">
-        <a class="aui-btn aui-pull-left" tapmode onclick="fnCloseWin()">
-            <span class="aui-iconfont aui-icon-left"></span>
-        </a>
+    <header class="aui-bar aui-bar-nav  " id="aui-header">
         <div class="aui-title">购物车</div>
-        <div class="right open-win" win="warelist">继续选购</div>
     </header>
     <section></section>
     <footer class="aui-bar aui-bar-tab aui-border-t" id="aui-footer">
@@ -81,36 +69,36 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/common.js"></script>
 <script type="text/javascript">
+    var headerH, footerHeight;
     apiready = function() {
-      fnReady();
+        fnReady();
 
-      var header = $api.byId('aui-header');
-      var headerH = $api.offset(header).h;
-      $api.fixStatusBar(header);
-      var footer=$api.byId('aui-footer');
-      var footerHeight=$api.offset(footer).h;
-      //设置我的小红点
-      var num = $api.getStorage('newmessage') == null ? 0 : $api.getStorage('newmessage');
+        var header = $api.byId('aui-header');
+        headerH = $api.offset(header).h;
+        $api.fixStatusBar(header);
+        var footer = $api.byId('aui-footer');
+        footerHeight = $api.offset(footer).h;
+        //设置我的小红点
+        var num = $api.getStorage('newmessage') == null ? 0 : $api.getStorage('newmessage');
 
-      if (num > 0) {
-          var mydot = $api.byId('mydot');
-          $api.addCls(mydot, 'aui-dot');
-      }
-
-      // 打开购物车Frame
-      api.openFrame({
-          name: 'shoppingcart_frm',
-          url: './shoppingcart_frm.html',
-          rect: {
-              x: 0,
-              y: headerH,
-              w: 'auto',
-              h: api.frameHeight - headerH-footerHeight
-          },
-          pageParam: '',
-          bounces: true,
-          reload:true
-      });
+        if (num > 0) {
+            var mydot = $api.byId('mydot');
+            $api.addCls(mydot, 'aui-dot');
+        }
+        // 打开购物车Frame
+        api.openFrame({
+            name: 'shoppingcart_frm',
+            url: './shoppingcart_frm.html',
+            rect: {
+                x: 0,
+                y: headerH,
+                w: 'auto',
+                h: api.winHeight - headerH - footerHeight
+            },
+            pageParam: '',
+            bounces: true,
+            reload: true
+        });
 
     };
 </script>
