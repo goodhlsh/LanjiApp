@@ -7,6 +7,7 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title></title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
     <style type="text/css">
         .aui-list .aui-list-item-media {
             width: 3rem;
@@ -20,22 +21,22 @@
 
             <li class="aui-list-item aui-list-item-middle">
                 <div class="aui-list-item-inner aui-list-item-arrow" onclick="showcode()">
-                    我的会员名片
+                    <i class="aui-iconfont aui-icon-copy">我的会员名片</i>
                 </div>
             </li>
             <li class="aui-list-item aui-list-item-middle">
                 <div class="aui-list-item-inner aui-list-item-arrow" onclick="showshare()">
-                    我的推广名片
+                    <i class="aui-iconfont aui-icon-magic">我的推广名片</i>
                 </div>
             </li>
             <li class="aui-list-item aui-list-item-middle">
                 <div class="aui-list-item-inner aui-list-item-arrow" onclick="showdownload()">
-                    分享软件给朋友
+                    <i class="aui-iconfont aui-icon-refresharrow">分享软件给朋友</i>
                 </div>
             </li>
             <li class="aui-list-item aui-list-item-middle">
                 <div class="aui-list-item-inner aui-list-item-arrow" onclick="puterzi()">
-                    确认新会员
+                    <i class="aui-iconfont aui-icon-friendfavor">确认新会员</i>
                 </div>
             </li>
         </ul>
@@ -76,6 +77,7 @@
             }
         });
     }
+
     function puterzi() {
         api.openWin({
             name: 'puterzi',

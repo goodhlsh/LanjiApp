@@ -316,18 +316,13 @@
         }
         //优惠活动
         var discount=$api.byId('discount');
-        if (ware_.IsShowdan) {
-            discount.innerHTML+='【首单活动】';
+        if (ware_.YTypeName) {
+            discount.innerHTML+=ware_.YTypeName;
         }
-        if (ware_.IsManjian) {
-            discount.innerHTML+='【满减活动】';
-        }
-        if (ware_.IsQuan) {
-            discount.innerHTML+='【优惠券活动】';
-        }
-        if (ware_.IsShowdan==null&&ware_.IsManjian==null&&ware_.IsQuan==null) {
+        else {
             discount.innerHTML='无';
         }
+
         //图片介绍
         var pic3 = $api.byId('pic3');
         var pic4 = $api.byId('pic4');

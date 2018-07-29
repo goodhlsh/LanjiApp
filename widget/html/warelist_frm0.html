@@ -5,11 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
     <title>title</title>
-    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
     <style>
         body {
-            width: 100%;
-            height: auto;
+
         }
 
         section {
@@ -17,15 +16,16 @@
             width: 100%;
             height: auto;
             box-sizing: border-box;
-            margin: 0;
-            padding-left: 10px;
-            background-color: #fff;
+            padding: 0 8px;
         }
+
+
 
         .content {
             width: 100%;
             height: 100%;
         }
+
 
         .ware-1 {
             position: relative;
@@ -81,6 +81,8 @@
             color: #e3007f;
         }
 
+
+
         .push-status {
             width: 100%;
             height: 40px;
@@ -93,6 +95,19 @@
 
         .active {
             opacity: 0.7;
+        }
+        #left,
+        #right {
+            background-color: #ffffff;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        #right {
+            background-color: transparent;
+        }
+        .aui-list-item.aui-active {
+            background-color: #b6dffd;
+            color: #fff;
         }
     </style>
 </head>
@@ -153,9 +168,9 @@
         initRefresh();
         // 获取商品列表
         fnGetWareList(false);
-    }
+      }
     var wareTypeList, skip = 0,
-        LIMIT = 20;
+        LIMIT = 5;
 
     function init() {
         // 从缓存中获得商品分类列表
@@ -196,7 +211,7 @@
             pageParam: {
                 'wareId': wareId_
             },
-            reload: true,
+            reload:true,
             animation: {
                 type: "fade"
             }
@@ -224,7 +239,7 @@
         // 根据商品分类获得相应的商品列表
         var params = {
             where: {
-                'ID': api.pageParam.wareTypeId
+                'ID': wareTypeList[api.pageParam.wareTypeIndex].Id
             },
             skip: skip,
             limit: LIMIT

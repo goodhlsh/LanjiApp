@@ -23,9 +23,38 @@
             -webkit-flex-flow: column;
             flex-flow: column;
         }
+        header{
+          height: 80px;
+        }
+        nav {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-orient: horizontal;
+            -webkit-flex-flow: row;
+            flex-flow: row;
+            position: relative;
+            width: 100%;
+            height: 50px;
+        }
 
-        header {
-            height: 80px;
+        nav .menu {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            font-size: 13px;
+            color: #e10100;
+            text-align: center;
+        }
+
+        nav .menu.selected {
+            font-size: 16px;
+            color: #e10100;
+            font-weight: bolder;
+            border-bottom: 3px #e10100 solid;
         }
     </style>
 </head>
@@ -34,7 +63,13 @@
     <header class="aui-bar aui-bar-nav  " id="aui-header">
         <div class="aui-title">分类</div>
     </header>
-
+    <nav id="nav">
+        <div class="menu selected" tapmode="selected" onclick="fnSetNavMenuIndex(0);">海植晶萃</div>
+        <div class="menu" tapmode="selected" onclick="fnSetNavMenuIndex(1);">面膜系列</div>
+        <div class="menu" tapmode="selected" onclick="fnSetNavMenuIndex(2);">清新滋润</div>
+        <div class="menu" tapmode="selected" onclick="fnSetNavMenuIndex(3);">套装系列</div>
+        <div class="menu" tapmode="selected" onclick="fnSetNavMenuIndex(4);">洗护系列</div>
+    </nav>
     <footer class="aui-bar aui-bar-tab aui-border-t" id="aui-footer">
         <div id="tabbar0" class="aui-bar-tab-item open-win" tapmode="highlight" win="../index">
             <i class="aui-iconfont aui-icon-home"></i>
@@ -63,16 +98,17 @@
 <script type="text/javascript">
     apiready = function() {
         var header = $api.byId('aui-header');
-
-        var footer = $api.byId('aui-footer');
+        var nav = $api.byId('nav');
+        var footer=$api.byId('aui-footer');
         // 实现沉浸式状态栏效果
         $api.fixStatusBar(header);
 
         // 计算header和nav元素的高度
         headerH = $api.offset(header).h;
-
-        footerHeight = $api.offset(footer).h;
-
+        navH = $api.offset(nav).h;
+        footerHeight=$api.offset(footer).h;
+        // 获取所有的分类菜单
+        menus = $api.domAll(nav, '.menu');
         //设置我的小红点
         var num = $api.getStorage('newmessage') == null ? 0 : $api.getStorage('newmessage');
 
@@ -80,113 +116,12 @@
             var mydot = $api.byId('mydot');
             $api.addCls(mydot, 'aui-dot');
         }
-        NVNavigationBar = api.require('NVNavigationBar');
         // 初始化商品分类列表
         initWareTypeList();
         fnReady();
-        if ($api.getStorage('NVNavigationBar') != null) {
-            fnClostMenu();
-        }
         //  fnReadyFrame();
-        fnInitMenu();
         openFrames();
     };
-    var headerH, footerHeight;
-    var NVNavigationBar;
-
-    function fnClostMenu() {
-        NVNavigationBar.close({
-            id: 'first'
-        });
-    }
-
-    function fnDeleteMenu(index_) {
-        NVNavigationBar.deleteItem({
-            id: 'first',
-            index: index_
-        }, function(ret) {
-            //  alert(JSON.stringify(ret));
-        });
-    }
-
-    function fnInitMenu() {
-
-        NVNavigationBar.open({
-            rect: {
-                x: 0,
-                y: headerH,
-                w: 90,
-                h: api.frameHeight - headerH - footerHeight
-            },
-            styles: {
-                orientation: 'vertical',
-                bg: '',
-                bgAlpha: 1,
-                font: {
-                    size: 14,
-                    sizeSelected: 18,
-                    color: '#6b6b6b',
-                    colorSelected: '#ff0000',
-                    alpha: 1
-                },
-                itemSize: {
-                    w: 90,
-                    h: 44
-                }
-            },
-            items: [{
-                title: '海植晶萃',
-                bg: '',
-                bgSelected: '#FFFFFF'
-            }, {
-                title: '面膜系列',
-                bg: '',
-                bgSelected: '#FFFFFF'
-            }, {
-                title: '清新滋润',
-                bg: '',
-                bgSelected: '#FFFFFF'
-            }, {
-                title: '套装系列',
-                bg: '',
-                bgSelected: '#FFFFFF'
-            }, {
-                title: '洗护系列',
-                bg: '',
-                bgSelected: '#FFFFFF'
-            }],
-            selectedIndex: 0,
-            fixedOn: api.frameName,
-            id: 'first'
-        }, function(ret, err) {
-            $api.setStorage('NVNavigationBar', ret.id);
-
-            fnSetNavMenuIndex(ret.index);
-            NVNavigationBar.setSelected({
-                id: 'first',
-                index: ret.index,
-                selected: true
-            }, function(ret) {
-
-                //alert(JSON.stringify(ret));
-            });
-        });
-    }
-
-    function fnInsertMenu(title_, index_) {
-        NVNavigationBar.insertItem({
-            id: 'first',
-            index: index_,
-            item: {
-                title: title_,
-                bg: '#eeeeee',
-                bgSelected: '#FFFFFF'
-            }
-        }, function(ret) {
-            //alert(JSON.stringify(ret));
-        });
-
-    }
     var wareTypeList;
     // 初始化商品分类列表
     function initWareTypeList() {
@@ -205,7 +140,7 @@
         var params = {
                 where: {},
                 skip: 0,
-                limit: 20
+                limit: 5
             }
             //params = $api.jsonToStr(params);
         fnGet('spl_ProductCategory/GetList', params, function(ret, err) {
@@ -236,41 +171,45 @@
         });
     }
 
-    var framesOpened;
-
+    var framesOpened = false;
+    var menus, navH, headerH,footerHeight;
 
     // 打开商品列表FrameGroup
     function openFrames() {
+
+        // 判断这些Frame是否已经打开
+        if (framesOpened) {
+            return;
+        }
+
         // 构造FrameGroup中的Frame数组
         var frames = [];
-        for (var i = 0; i < wareTypeList.length; i++) {
+        for (var i = 0; i < menus.length; i++) {
             frames.push({
                 name: 'warelist_frm_' + i,
                 url: './warelist_frm.html',
                 pageParam: {
-                    wareTypeId: wareTypeList[i].Id
+                    wareTypeIndex: i
                 }
             });
-            //fnInsertMenu(wareTypeList[i].Name, i);
         }
-        //fnDeleteMenu(wareTypeList.length);
 
         // 打开FrameGroup
         api.openFrameGroup({
             name: 'mainFrameGroup',
             scrollEnabled: true, // 支持手势滑动切换
             rect: {
-                x: 90,
-                y: headerH,
-                w: api.frameWidth - 90, // 自动填充所在Window的宽度
-                h: api.frameHeight - headerH - footerHeight // 自动填充所在Window的高度
+                x: 0,
+                y: headerH + navH,
+                w: 'auto', // 自动填充所在Window的宽度
+                h: api.frameHeight-headerH-navH-footerHeight // 自动填充所在Window的高度
             },
             index: 0, // 默认显示第一个Frame
             frames: frames,
             preload: 0 //frames.length // 预加载所有Frame
         }, function(ret, err) {
             // Frame切换完成的响应函数，更新分类菜单的选中状态
-            fnSetNavMenuIndex(ret.index);
+            fnSetNavMenuSelected(ret.index);
         });
 
         // 标记为已经打开
@@ -279,6 +218,8 @@
 
     // 分类菜单点击的响应函数，切换Frame
     function fnSetNavMenuIndex(index_) {
+        // 首先更新菜单选中状态
+        fnSetNavMenuSelected(index_);
 
         // 切换FrameGroup中的当前Frame
         api.setFrameGroupIndex({
@@ -286,6 +227,23 @@
             index: index_,
             scroll: true
         });
+    }
+
+
+    // 更新分类菜单的选中状态
+    function fnSetNavMenuSelected(index_) {
+
+        for (var i = 0; i < menus.length; i++) {
+            if (index_ == i) {
+                $api.addCls(menus[i], 'selected');
+            } else {
+                $api.removeCls(menus[i], 'selected');
+            }
+        }
+    }
+
+    function closeWin() {
+        api.closeWin();
     }
 </script>
 

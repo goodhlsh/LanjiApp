@@ -113,7 +113,7 @@
             position: relative;
             width: 100%;
             height: auto;
-            margin-bottom: 16px;
+            margin-bottom: 8px;
         }
 
         .order .title {
@@ -183,9 +183,9 @@
 
         .order .icon-panel .right {
             box-sizing: border-box;
-            width: 40px;
             height: 64px;
             padding-top: 50px;
+            padding-right: 20px;
             font-size: 14px;
             text-align: right;
         }
@@ -255,6 +255,9 @@
         .highlight {
             opacity: 0.7;
         }
+        #yhother{
+          display: none;
+        }
     </style>
 </head>
 
@@ -277,14 +280,15 @@
         <div class="title"><i class="aui-iconfont aui-icon-form"></i>订单信息</div>
         <div id="list"></div>
         <div class="row">
-            <div class="text">数量：</div>
             <div class="value" id="count">0件</div>
         </div>
-        <div class="row" type="display:none;">
-            <div class="text">优惠卷：
-                <div class="tag">0张可用</div>
+    </section>
+    <section class="order">
+        <div class="row" id="yhother">
+            <div class="text">其他优惠：
+                <div id="youhuitype" class="tag">0</div>
             </div>
-            <div class="value value-1">未使用</div>
+            <div id="youhuiother" class="value value-1">0</div>
         </div>
 
         <div class="row">
@@ -310,10 +314,10 @@
         <div><img class="thum" src="{{=value.Thumbnail}}" /></div>
 
         <div class="info">
-            <div class="top">{{=value.Name}}</div>
-            <div class="bottom">￥{{=value.Price}}</div>
+            <div class="top">商品名称：{{=value.Name}}</div>
+            <div class="bottom">小计：￥{{=value.Price}}</div>
         </div>
-        <div class="right">{{=value.WareCount}}</div>
+        <div class="right">数量：{{=value.WareCount}}</div>
     </div>
     {{~}}
 </script>
@@ -326,11 +330,26 @@
 <script type="text/javascript">
     apiready = function() {
         fnReady();
+        fnInitEvent();
         fnInitAddress();
         fnInitOrder();
 
     };
-    var consignee, mobile, type, address, currentFirst;
+    function fnInitEvent() {
+      api.addEventListener({
+          name: 'setyouhuiother'
+      }, function(ret, err){
+          if(ret){
+               fnSetYouOther(ret.value);
+          }else{
+
+          }
+      });
+    }
+    function fnSetYouOther(val) {      
+      $api.html(youhuiother, val);
+    }
+    var consignee, mobile, type, address, currentF;
 
     function fnInitAddress() {
         consignee = $api.byId('consignee');
@@ -399,6 +418,7 @@
         });
     }
 
+    var shifu, youhui, yunfei, jiebie, youhuiother;
     function fnInitOrder() {
         if ($api.getStorage('shoppingcart')) {
             var list = $api.byId('list');
@@ -421,37 +441,54 @@
                 amountValue += parseFloat(data_[i].Price) * parseInt(data_[i].WareCount);
             }
             //amountValue = Math.round(amountValue * 10) / 10;
-            count.innerHTML = countValue + '件';
+            count.innerHTML = '总计：' + countValue + ' 件';
             amount.innerHTML = amountValue;
 
-            var shifu, youhui, yunfei, jiebie;
+
             yunfei = $api.byId('yunfei');
             shifu = $api.byId('shifu');
             youhui = $api.byId('youhui');
             jiebie = $api.getStorage('userInfo').Jibie;
-            currentFirst = $api.getStorage('currentFirst');
+            youhuiother = $api.byId('youhuiother');
+            currentF = $api.getStorage('currentFirst');
 
-            if (jiebie == '8800会员') {
-              if (currentFirst>=8800) {
-                  $api.html(youhui, '0.5');
-              }
-              else {
-                  $api.html(youhui, '1.0');
-              }
-            } else if (jiebie == '1314会员') {
-              if (currentFirst>=1314) {
-                  $api.html(youhui, '0.8');
-              }
-              else {
-                  $api.html(youhui, '1.0');
-              }
+            if (currentF != null) {
+
+                if (jiebie == '8800会员') {
+                    if (currentF.currentFirst >= 8800) {
+                        $api.html(youhui, '0.5');
+                    } else {
+                        $api.html(youhui, '1.0');
+                    }
+                } else if (jiebie == '1314会员') {
+                    if (currentF.currentFirst >= 1314) {
+                        $api.html(youhui, '0.8');
+                    } else {
+                        $api.html(youhui, '1.0');
+                    }
+                } else {
+                    $api.html(youhui, '1.0');
+                    if (currentF.currentFirst == 0 && currentF.updatetime == null) {//判断首单
+                        if ($api.getStorage('YTypeName')) {
+                            var yh = $api.byId('yhother');
+                            yh.style.display = 'block';
+                        } else {
+                            alert('您选购的商品有不符合活动要求的！');
+                        }
+                    }
+                }
             } else {
                 $api.html(youhui, '1.0');
+                if ($api.getStorage('YTypeName')) {
+                    var yh = $api.byId('yhother');
+                    yh.style.display = 'block';
+                } else {
+                    alert('您选购的商品有不符合活动要求的！');
+              }
             }
-
             //优惠根据政策
             //实付=商品金额*优惠折扣+运费-优惠券
-            shifu.innerHTML = parseFloat(amountValue) * parseFloat(youhui.innerText) + parseFloat(yunfei.innerText);
+            shifu.innerHTML = parseFloat(amountValue) * parseFloat(youhui.innerText) + parseFloat(yunfei.innerText) - parseFloat(youhuiother.innerText);
             $api.setStorage('dingdankuan', shifu.innerHTML);
         }
     }

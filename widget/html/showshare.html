@@ -31,6 +31,7 @@
             -webkit-flex: 1;
             flex: 1;
             overflow: auto;
+            text-align: center;
         }
 
         footer {
@@ -68,6 +69,10 @@
         .picCenter {
             margin: 0 auto;
         }
+        .usertext{
+          font-size: 18px;
+          color: #ffffff;
+        }
     </style>
 </head>
 
@@ -80,10 +85,12 @@
 
     </header>
 
+    <section>
+    <div id="username" class="usertext">0</div>
     <div id="extenCode" class="card-extend">
         <img id="qrCore" src="" class="picCenter"></img>
     </div>
-    <section></section>
+  </section>
     <footer>
         <div id="footer_span1" class="col" onclick="fnShareQ()">
             <img src="../image/share_timeline.png" />
@@ -97,6 +104,8 @@
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
         fnReady();
@@ -117,13 +126,21 @@
             });
 
         }
+        fnUpdateStorageUserInfo();
+        var username=$api.byId('username');
+        username.style.paddingTop=350+'px';
+        var tuicount=$api.getStorage('userInfo').TuiCount==null?0:$api.getStorage('userInfo').TuiCount;
+       $api.html(username,'我已推荐：'+tuicount+' 人');
+        var extenCode=$api.byId('extenCode');
+        extenCode.style.paddingTop =30+'px';
+
         var FNScanner = api.require('FNScanner');
         FNScanner.encodeImg({
             type: 'qr_image',
-            content: 'http://154.8.159.50:8080/TuiGuang/Index/' + usid,
+            content: 'tuigu' + usid,
             saveToAlbum: false,
             saveImg: {
-                path: 'fs://album.png',
+                path: 'fs://mytui.png',
                 w: 200,
                 h: 200
             }
@@ -132,12 +149,20 @@
                 var qr_image = $api.byId('qrCore');
                 qr_image.src = ret.imgPath;
                 //$api.attr(qr_image, 'src', ret.imgPath);
-                var extenCode=$api.byId('extenCode');
-                extenCode.style.paddingTop =400+'px';
             }
         });
     };
+    function fnUpdateStorageUserInfo() {
+      var filter={
+        Id:$api.getStorage('userInfo').Id
+      }
+      fnGet('SysUser/GetUserInfoById',filter,function(ret,err){
+        if (ret) {
+          $api.setStorage('userInfo', ret);
+        }
+      });
 
+    }
     function fnShareQ() {
         var wx = api.require('wx');
         wx.shareImage({

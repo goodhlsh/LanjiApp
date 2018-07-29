@@ -31,6 +31,7 @@
             -webkit-flex: 1;
             flex: 1;
             overflow: auto;
+            text-align: center;
         }
 
         .card-extend {
@@ -42,7 +43,10 @@
             margin: 0 auto;
         }
 
-
+.usertext{
+  font-size: 18px;
+  color: #ffffff;
+}
     </style>
 </head>
 
@@ -54,27 +58,27 @@
         <div class="aui-title">我的会员名片</div>
 
     </header>
-    <div id="username"></div>
+    <section>
+    <div id="username" class="usertext">顶</div>
     <div id="extenCode" class="card-extend">
         <img id="qrCore" src="" class="picCenter"></img>
     </div>
-    <section></section>
+  </section>
+
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/common.js"></script>
-<script type="text/javascript" src="../script/SHA1.js"></script>
-<script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
         fnReady();
         api.parseTapmode();
-        var tid;
+
         if ($api.getStorage('userInfo')) {
             tid = $api.getStorage('userInfo').Id;
         } else {
             api.alert({
                 title: '消息',
-                msg: '未登录，二维码生成失败',
+                msg: '未登录，名片不能显示',
             }, function(ret, err) {
                 if (ret) {
                     fnCloseWin();
@@ -84,10 +88,11 @@
             });
 
         }
+        var tid;
         var FNScanner = api.require('FNScanner');
         FNScanner.encodeImg({
             type: 'qr_image',
-            content: tid,
+            content: 'lanji'+tid,
             saveToAlbum: false,
             saveImg: {
                 path: 'fs://mycode.png',
@@ -100,10 +105,10 @@
                 qr_image.src = ret.imgPath;
                 //$api.attr(qr_image, 'src', ret.imgPath);
                 var username=$api.byId('username');
-                username.style.paddingTop=280+'px';
-                username.innerHtml=$api.getStorage('userInfo').UserName;
+                username.style.paddingTop=320+'px';
+               $api.html(username,'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+$api.getStorage('userInfo').UserName);
                 var extenCode=$api.byId('extenCode');
-                extenCode.style.paddingTop =400+'px';
+                extenCode.style.paddingTop =80+'px';
             }
         });
         // inter =   window.setInterval(getDone(tid), 3000);

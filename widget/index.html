@@ -84,7 +84,7 @@
 <script type="text/javascript" src="./script/rmst.js"></script>
 <script type="text/javascript">
     apiready = function() {
-      if(api.winName=='root'){
+        //if(api.winName=='root'){
         /*setTimeout(function() {
               fnOpenWelcome();
             }, 500);
@@ -96,7 +96,7 @@
         initPushGeTui();
         var homeid = $api.byId('tabbar0');
         fnChange(homeid, 0);
-      }
+        //}
     };
 
     /*搜索框--begin*/
@@ -217,12 +217,40 @@
                 }
             });
         } else {
+
             var fnscanner = api.require('FNScanner');
             fnscanner.openScanner({
                 autorotation: true
             }, function(ret, err) {
                 if (ret && 'success' == ret.eventType) {
-                    //ret.content为pid，存入jiapu表中
+                  //推广
+                   if (ret.content.substr(0, 5) == 'tuigu') {
+                     isAuth = $api.getStorage('userInfo').IsAuth; //先验证后扫描
+
+                     if (!isAuth) {
+                       var tid_ = ret.content.substr(5);
+                       var userid_ = $api.getStorage('userInfo').Id;
+                       var data={
+                           body: JSON.stringify({
+                               uid: userid_,
+                               tid: tid_
+                           })
+                       };
+                       fnPost('SysUser/PostTuiGuang', data, 'application/json', false, false, function(ret, err) {
+                           if (ret) {
+                               api.alert({
+                                   title: '消息',
+                                   msg: '推荐成功!'
+                               });                               
+                           }
+                       });
+                     }
+                     else
+                     {
+                       alert('该用户已是认证会员，不再参与推广！')
+                     }
+                   }
+                    //ret.content为pid，应已在jiapu表中
                     //先判断ret.content的用户是否存在jiapu表
                     //如果存在再将推荐用户存入jiapu表
                     if (ret.content.substr(0, 5) == 'lanji') {
@@ -286,7 +314,7 @@
                             }
                         }
                     } else {
-
+                        alert('二维码失效！')
                     }
 
                 }
@@ -341,6 +369,7 @@
                         title: '消息',
                         msg: '推荐成功，等待推荐人批准，批准后才能成为正式会员'
                     });
+                    //加个推送？？？？？
                 }
             });
         }

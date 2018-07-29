@@ -328,6 +328,7 @@
                 fnPost('SysUser/EditJiaPu', data, 'application/json', false, false, function(ret, err) {
                     if (ret) {
                         alert('会员变更成功！')
+                        fnUpdateStorageUserInfo();
                     }
                 });
             } else { //新会员
@@ -341,13 +342,24 @@
                 fnPost('SysUser/PutJiaPu', data, 'application/json', false, false, function(ret, err) {
                         if (ret) {
                             alert('欢迎加入我们！')
+                            fnUpdateStorageUserInfo();
                         }
                     } //
                 );
             }
         });
     }
+    function fnUpdateStorageUserInfo() {
+      var filter={
+        Id:$api.getStorage('userInfo').Id
+      }
+      fnGet('SysUser/GetUserInfoById',filter,function(ret,err){
+        if (ret) {
+          $api.setStorage('userInfo', ret);
+        }
+      });
 
+    }
     function fnUpdateWallet() {
         fnPost('Syswallet/PostWallet', {
             body: JSON.stringify({
