@@ -8,9 +8,9 @@
          return "http://lj.com";
      } else {
         // return "http://172.16.183.14:1693/api/";
-         //return "http://154.8.159.50:1693/api/";
+         return "http://154.8.159.50:1693/api/";
         // return "http://192.168.43.6:1693/api/";
-        return "http://192.168.0.5:1693/api/";
+        //return "http://192.168.0.5:1693/api/";
          //return "http://172.31.244.108:1693/api/";
      }
  };
@@ -192,7 +192,7 @@
          } else {
 
              api.toast({
-                 msg: JSON.stringify(err), //'网络错误post',
+                 msg: JSON.stringify('post'+err), //'网络错误post',
                  duration: 15000,
                  location: 'bottom'
              });

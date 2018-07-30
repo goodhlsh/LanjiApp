@@ -222,6 +222,23 @@
     }
     //微信支付
     function wxPay() {
+        var wx = api.require('wx');
+        wx.isInstalled(function(ret) {
+            if (ret.installed) {
+                api.toast({
+                    msg: '分享中，请稍候',
+                    duration: 2000,
+                    location: "middle"
+                });
+            } else {
+                api.toast({
+                    msg: '没有安装微信，无法进行分享',
+                    duration: 2000,
+                    location: "middle"
+                });
+                return;
+            }
+        });
         if ($api.getStorage('dingdankuan') && $api.getStorage('dingdankuan') > 0) {
             api.confirm({
                 title: '支付提醒',
@@ -242,7 +259,7 @@
                             var wxPay = api.require('wxPay');
                             wxPay.payOrder({
                                 apiKey: ret.app_id,
-                                orderId: order_one.OrderNo,
+                                orderId: ret.prepay_id,
                                 mchId: ret.mch_id,
                                 nonceStr: ret.nonce,
                                 timeStamp: ret.time_stamp,
@@ -264,14 +281,91 @@
                                 }
                             });
                         } else {
+
                             api.toast({
-                                msg: '打赏失败'
-                            });
-                            api.toast({
-                                msg: '传输错误'
+                                msg: '微信数据传输错误'
                             })
                         }
                     });
+                } else {
+                    alert('0');
+                }
+            });
+        }
+    }
+
+    function wxPay0() {
+        var wx = api.require('wx');
+        wx.isInstalled(function(ret) {
+            if (ret.installed) {
+                api.toast({
+                    msg: '分享中，请稍候',
+                    duration: 2000,
+                    location: "middle"
+                });
+            } else {
+                api.toast({
+                    msg: '没有安装微信，无法进行分享',
+                    duration: 2000,
+                    location: "middle"
+                });
+                return;
+            }
+        });
+
+        if ($api.getStorage('dingdankuan') && $api.getStorage('dingdankuan') > 0) {
+            api.confirm({
+                title: '支付提醒',
+                msg: '是否选择微信支付？如继续点击确认',
+                buttons: ['确定', '取消']
+            }, function(ret0, err) {
+                if (ret0.buttonIndex == 1 && order_one != null) {
+
+
+
+                    fnPost('WxPay/GetAppPayInfo', {
+                        body: JSON.stringify({
+                            body: order_one.Description,
+                            total_fee: order_one.DingDanKuan * 100,
+                            out_trade_no: order_one.OrderNo
+                        })
+                    }, 'application/json', false, false, function(ret, err) {
+                        console.log(JSON.stringify(ret));
+                        if (ret.sign != null) {
+
+                            var wxPay = api.require('wxPay');
+                            wxPay.payOrder({
+                                apiKey: ret.app_id,
+                                orderId: ret.prepay_id,
+                                mchId: ret.mch_id,
+                                nonceStr: ret.nonce,
+                                timeStamp: ret.time_stamp,
+                                package: ret.package,
+                                sign: ret.sign
+                            }, function(ret2, err) {
+                                if (ret2.status) {
+                                    fnShowSuccess();
+                                } else {
+                                    if (err.code == '-2') {
+                                        api.toast({
+                                            msg: '用户取消'
+                                        });
+                                    } else {
+                                        api.toast({
+                                            msg: '打赏失败'
+                                        });
+                                    }
+                                }
+                            });
+                        } else {
+
+                            api.toast({
+                                msg: '微信数据传输错误'
+                            })
+                        }
+                    });
+                } else {
+                    alert('0');
                 }
             });
         }

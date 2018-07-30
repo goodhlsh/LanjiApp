@@ -262,6 +262,7 @@
             }, function(ret, err) {
                 if (ret) {
                     ele_.src = ret.url;
+                    console.log(ret.url);
                     $api.attr(ele_, 'data-url', '');
                 }
             });
