@@ -12,81 +12,74 @@
 </head>
 
 <body>
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-header">入会申请</li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-label-icon">
+                    <i class="aui-iconfont aui-icon-home"></i>
+                </div>
+                <div class="aui-list-item-inner" id="uTrueName">
+                    用户：
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-label-icon">
+                    <i class="aui-iconfont aui-icon-edit"></i>
+                </div>
+                <div class="aui-list-item-inner" id="tTrueName">
+                    推荐人：
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-label-icon">
+                    <i class="aui-iconfont aui-icon-camera"></i>
+                </div>
+                <div class="aui-list-item-inner">
+                    选择级别：
+                </div>
+
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-label-icon">
+                    <i class="aui-iconfont aui-icon-camera"></i>
+                </div>
+                <div class="aui-list-item-inner aui-list-item-center">
+                    <div class="aui-btn aui-btn-primary  aui-btn-outlined" onclick="fnOK()">提交</div>
+                    <div class="aui-btn aui-btn-primary  aui-btn-outlined" onclick="fnCancel()">返回</div>
+                </div>
+            </li>
+        </ul>
+    </div>
 
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
-        var NVNavigationBar = api.require('NVNavigationBar');
-        NVNavigationBar.open({
-            rect: {
-                x: 0,
-                y: 0,
-                w: 90,
-                h: 220
-            },
-            styles: {
-                orientation: 'vertical',
-                bg: '#eeeeee',
-                bgAlpha: 1,
-                font: {
-                    size: 14,
-                    sizeSelected: 18,
-                    color: '#000000',
-                    colorSelected: '#ff0000',
-                    alpha: 1
-                },
-                itemSize: {
-                    w: 90,
-                    h: 44
-                }
-            },
-            items: [{
-                title: '海植晶萃',
-                bg: '#eeeeee',
-                bgSelected: '#FFFFFF'
-            }, {
-                title: '面膜系列',
-                bg: '#eeeeee',
-                bgSelected: '#FFFFFF'
-            }, {
-                title: '清新滋润',
-                bg: '#eeeeee',
-                bgSelected: '#FFFFFF'
-            }, {
-                title: '套装系列',
-                bg: '#eeeeee',
-                bgSelected: '#FFFFFF'
-            }, {
-                title: '洗护系列',
-                bg: '#eeeeee',
-                bgSelected: '#FFFFFF'
-            }],
-            selectedIndex: 1,
-            fixedOn: api.frameName,
-            id: 'first'
-        }, function(ret, err) {
-          //  fnSetNavMenuIndex(ret.index);
-          api.openFrame({
-              name: 'page2',
-              url: './help_frm.html',
-              rect: {
-                  x: 90,
-                  y: 200,
-                  w: 320,
-                  h: 480
-              },
-              pageParam: {
-                  name: 'test'
-              },
-              bounces: true,
-              bgColor: 'rgba(0,0,0,0)',
-              vScrollBarEnabled: true,
-              hScrollBarEnabled: true
-          });
 
-        });
+
     };
+function fnOK() {
+  api.openFrame({
+      name: 'inClub_frm',
+      url: './inClub_frm.html',
+      rect: {
+          x: api.winWidth*0.1,
+          y: api.winWidth*0.1,
+          w: api.winWidth*0.8,
+          h: api.winWidth*0.5 
+      },
+      pageParam: {
+          tid: ''
+      },
+      bounces: true,
+      bgColor: 'rgba(0,0,0,0)',
+      vScrollBarEnabled: true,
+      hScrollBarEnabled: true
+  });
+}
 </script>
 
 </html>

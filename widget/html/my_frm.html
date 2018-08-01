@@ -80,7 +80,7 @@
         .splite {
             width: 100%;
             height: 5px;
-            background-color: #ccc;
+            background-color: #eeeeee;
         }
     </style>
 </head>
@@ -114,12 +114,12 @@
                     </div>
                     <div class="aui-col-xs-3">
                         <i class="aui-iconfont aui-icon-deliver"></i>
-                        <div class="aui-grid-label">待发货</div>
+                        <div class="aui-grid-label">待收货</div>
                     </div>
                     <div class="aui-col-xs-3">
                         <!--<div class="aui-badge">新</div>-->
                         <i class="aui-iconfont aui-icon-present"></i>
-                        <div class="aui-grid-label">待收货</div>
+                        <div class="aui-grid-label">已完成</div>
                     </div>
                     <div class="aui-col-xs-3">
                         <i class="aui-iconfont aui-icon-refund"></i>
@@ -128,9 +128,9 @@
                 </div>
             </div>
             <div class="splite"></div>
-            <div class="aui-list-item open-win" win="mywallet" login="true">
+            <div class="aui-list-item open-win" win="mytichong" login="true">
                 <div class="aui-list-item-inner aui-list-item-arrow">
-                    <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-sponsor"></i>我要充值</div>
+                    <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-sponsor"></i>我的余额</div>
                     <div class="aui-list-item-right"></div>
                 </div>
             </div>
@@ -235,7 +235,7 @@
 
         userAvatar.src = $api.getStorage('avatar') || '../image/my/default_square.png';
 
-        
+
 
     };
 
@@ -254,6 +254,8 @@
         $api.rmStorage('currentQu');
         $api.rmStorage('newmessage');
         $api.rmStorage('AddressId');
+        $api.rmStorage('avatar');
+
 
         api.openWin({
             name: 'login',

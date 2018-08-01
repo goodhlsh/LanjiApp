@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            background: #f0f0f0;
+        }
+
+        section {
+            position: relative;
+            height: auto;
+            margin-top: 8px;
+            overflow: hidden;
+            background-color: #fff;
+        }
+
+        .input {
+            height: 40px;
+            width: auto;
+            font-size: 18px;
+            line-height: 20px;
+            color: #8E8C8C;
+            padding-top: 10px;
+        }
+
+        .input::-webkit-input-placeholder {
+            color: #ccc;
+        }
+
+        .highlight {
+            opacity: 0.7;
+        }
+
+        .r20 {
+            margin-right: 20px;
+            width: 90px;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="aui-content">
+        <div class="aui-list aui-list-noborder">
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-ticket">我的余额</i></div>
+                    <div class="aui-list-item-right">余额:￥<span id="YuE">0.0</span></div>
+                </div>
+            </div>
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner  open-win" win="mychongzhi" login="true">
+                    <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-barcode">使用支付宝充值</i></div>
+                </div>
+            </div>
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner open-win" win="mytixian" login="true">
+                    <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-barcode">提现到支付宝</i></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+      fnReady();
+        fnInitYuE();
+    };
+    var userYuE;
+
+
+
+    function fnInitYuE() {
+
+        userYuE = $api.byId('YuE');
+        if ($api.getStorage('currentwallet')) {
+            userYuE.innerHTML = $api.getStorage('currentwallet') == null ? '0.0' : $api.getStorage('currentwallet').JieYu;
+        } else {
+            var filter = {
+                where: {
+                    userid: $api.getStorage('userInfo').Id
+                },
+                //order: "createAt DESC",
+                limit: 1,
+                skip: 0
+            };
+            fnGet('Syswallet/GetWallet', filter, function(ret, err) {
+                if (ret) {
+                    userYuE.innerHTML = ret.JieYu;
+                    $api.setStorage('currentwallet', ret);
+                } else {
+                    api.alert({
+                        title: '消息',
+                        msg: '查不到余额',
+                    });
+                }
+            });
+        }
+    }
+</script>
+
+</html>

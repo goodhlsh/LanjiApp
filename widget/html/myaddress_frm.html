@@ -6,7 +6,8 @@
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>收货地址Frame</title>
-    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
     <style>
         html {
             height: 100%;
@@ -35,20 +36,14 @@
 
         .list .address .icon {
             position: absolute;
-            top: 21px;
+            top: 10px;
             left: 16px;
-            width: 19px;
-            height: 24px;
-            background-image: url(../image/icon_address.png);
-            background-repeat: no-repeat;
-            background-size: auto 20px;
-            background-position: center center;
         }
 
         .list .address .sign {
             display: none;
             position: absolute;
-            top: 45px;
+            top: 42px;
             left: 8px;
             width: 35px;
             height: 14px;
@@ -129,7 +124,7 @@
             display: none;
             position: absolute;
             width: 100%;
-            height: 100%;            
+            height: 100%;
         }
 
         .highlight {
@@ -161,7 +156,7 @@
 <script type="text/template" id="template">
     {{~it:value:index}}
     <div class="address">
-        <div class="icon"></div>
+        <div class="icon"><i class="aui-iconfont aui-icon-like"></i></div>
         {{?value.IsDefault == true}}
         <div class="sign sign-1">[默认]</div>
         {{??}}
@@ -169,7 +164,7 @@
         {{?}}
         <div class="info"  tapmode onclick="fnSelectAddress('{{=value.Id}}');">
             <div class="top">
-                <div class="consignee">地址别名：{{=value.Name}}</div>
+                <div class="consignee"><i class="aui-iconfont aui-icon-location"></i>地址别名：{{=value.Name}}</div>
                 <div class="mobile">{{=value.Mobile}}</div>
             </div>
             <div class="bottom">

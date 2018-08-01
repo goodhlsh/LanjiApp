@@ -20,6 +20,10 @@
             -webkit-box-orient: vertical;
             -webkit-flex-flow: column;
             flex-flow: column;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url('../image/my/tuiguang.png');
+            background-size: contain;
         }
 
         section {
@@ -27,6 +31,7 @@
             -webkit-flex: 1;
             flex: 1;
             overflow: auto;
+            text-align: center;
         }
 
         footer {
@@ -38,26 +43,9 @@
             display: flex;
         }
 
-                .col {
-                    -webkit-box-flex: 1;
-                    -webkit-flex: 1;
-                    flex: 1;
-                    text-align: center;
-                    height: 100px;
-                }
-
-                .col img {
-                    width: 50px;
-                    margin-top: 20px;
-                }
-
-                .col p {
-                    margin-top: 2px;
-                    color: #7d7d7d;
-                    font-size: 14px;
-                }
         .card-extend {
-            text-align: center;
+          position: absolute;
+
         }
 
         .picCenter {
@@ -67,51 +55,156 @@
 </head>
 
 <body>
-    <header class="aui-bar aui-bar-nav  " id="aui-header">
+    <header class="aui-bar aui-bar-nav" id="aui-header">
         <a class="aui-btn aui-pull-left" tapmode onclick="fnCloseWin()">
             <span class="aui-iconfont aui-icon-left"></span>
         </a>
         <div class="aui-title">扫码下载app</div>
-
     </header>
 
-    <div id="extenCode" class="card-extend aui-margin-15">
-        <img id="qrCore" src="http://154.8.159.50:1693/iis-85.png" class="picCenter"></img>
-    </div>
-    <section></section>
-    <footer>
-        <div id="footer_span1" class="col" onclick="fnShareQ()">
-            <img src="../image/share_timeline.png" />
-            <p>微信朋友圈</p>
+    <section>
+        <div id="extenCode" class="card-extend">
+            <img id="qrCore" src="" width="200" height="200" srcs="http://154.8.159.50:1693/iis-85.png" class="imgCache" ontouchstart="gtouchstart(this)" ontouchmove="gtouchmove()" ontouchend="gtouchend()"></img>
         </div>
-        <div id="footer_span2" class="col" onclick="fnShareY()">
-            <img src="../image/share_friend.png" />
-            <p>微信好友</p>
-        </div>
-    </footer>
+    </section>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/common.js"></script>
 <script type="text/javascript">
     apiready = function() {
         fnReady();
+        fnLoadImage() ;
+        extenCode = $api.byId('extenCode');
+        extenCode.style.position='absolute';
+
+        extenCode.style.paddingTop = api.winHeight*0.4 + 'px';
+        extenCode.style.paddingLeft= api.winWidth*0.3+'px';
+        qrCore=$api.byId('qrCore');
+    }
+    var extenCode,qrCore;
+    //下载
+    function IMGcache() {
+        var imgDir = "fs://images/";
+
+
+        var srcs = $api.domAll(qrCore, 'img.imgCache');
+        if (srcs.length > 0) {
+            var imgObj = srcs.first();
+            var imgUrl = imgObj.attr("srcs");
+            var imgSha1 = hex_sha1(imgUrl);
+            if ($api.getStorage("imgcache" + imgSha1) == undefined) {
+                api.download({
+                    url: imgUrl,
+                    savePath: imgDir + imgSha1 + '.png',
+                    cache: false,
+                    allowResume: true
+                }, function(ret, err) {
+                    if (ret.state == 1) {
+                        var trans = api.require('trans');
+                        trans.decodeImgToBase64({
+                            imgPath: ret.savePath
+                        }, function(ret1, err1) {
+                            if (ret1.status) {
+                                imgObj.attr("src", "data:image/png;base64," + ret1.base64Str);
+                                imgObj.removeClass("imgCache");
+                                $api.setStorage("imgcache" + imgSha1, "data:image/png;base64," + ret1.base64Str);
+                                IMGcache();
+                            } else {
+                                api.alert({
+                                    msg: err1.msg
+                                });
+                            }
+                        });
+                    } else {
+                        IMGcache();
+                    }
+                });
+            } else {
+                imgObj.attr("src", $api.getStorage("imgcache" + imgSha1));
+                imgObj.removeClass("imgCache");
+                IMGcache();
+            }
+        }
+    }
+
+    function fnLoadImage() {
+        api.download({
+            url: 'http://154.8.159.50:1693/iis-85.png',
+            savePath: 'fs://images/soft.png',
+            report: true,
+            cache: true,
+            allowResume: true
+        }, function(ret, err) {
+            if (ret.state == 1) {
+              //  alert('下载成功！')
+                qrCore.src=ret.savePath
+            } else {
+
+            }
+        });
 
     }
 
+var Htmls = "";
+var timeOutEvent = 0;
+
+function gtouchstart(obj) {
+    Htmls = obj.src;
+    timeOutEvent = setTimeout(function() {
+        //alert("清除了");//因为页面弹动会导致元素一直处于按住的状态，所以超过700毫秒自动清空变量，避免点击其他元素触发事件
+        //Htmls = "";
+        api.openFrame({
+            name: 'share',
+            url: './share.html',
+            pageParam: {
+                height: 0,
+                src:'fs://images/soft.png'
+            },
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            }
+        });
+    }, 700);
+    return false;
+};
+
+//手释放，取消长按事件
+function gtouchend() {
+    clearTimeout(timeOutEvent);
+    Htmls = "";
+};
+
+//如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按
+function gtouchmove() {
+    clearTimeout(timeOutEvent);
+    Htmls = "";
+};
+
     function fnShareQ() {
         var wx = api.require('wx');
-        wx.isInstalled(function(ret){
-           if(ret.installed) {
-               api.toast({msg:'分享中，请稍候',duration:2000,location:"middle"});
-           } else {
-               api.toast({msg:'没有安装微信，无法进行分享',duration:2000,location:"middle"});
-           }
-       });
+        wx.isInstalled(function(ret) {
+            if (ret.installed) {
+                api.toast({
+                    msg: '分享中，请稍候',
+                    duration: 2000,
+                    location: "middle"
+                });
+            } else {
+                api.toast({
+                    msg: '没有安装微信，无法进行分享',
+                    duration: 2000,
+                    location: "middle"
+                });
+            }
+        });
         wx.shareImage({
             apiKey: 'wxbf083887994f7d4d',
             scene: 'timeline',
-            thumb: 'http://154.8.159.50:1693/iis-85.png',
-            contentUrl: 'http://154.8.159.50:1693/iis-85.png'
+            thumb: 'fs://images/soft.png',
+            contentUrl: 'fs://images/soft.png'
         }, function(ret, err) {
             if (ret.status) {
                 alert('分享成功');
@@ -123,13 +216,21 @@
 
     function fnShareY() {
         var wx = api.require('wx');
-        wx.isInstalled(function(ret){
-           if(ret.installed) {
-               api.toast({msg:'分享中，请稍候',duration:2000,location:"middle"});
-           } else {
-               api.toast({msg:'没有安装微信，无法进行分享',duration:2000,location:"middle"});
-           }
-       });
+        wx.isInstalled(function(ret) {
+            if (ret.installed) {
+                api.toast({
+                    msg: '分享中，请稍候',
+                    duration: 2000,
+                    location: "middle"
+                });
+            } else {
+                api.toast({
+                    msg: '没有安装微信，无法进行分享',
+                    duration: 2000,
+                    location: "middle"
+                });
+            }
+        });
         wx.shareImage({
             apiKey: 'wxbf083887994f7d4d',
             scene: 'session',
@@ -139,7 +240,7 @@
             if (ret.status) {
                 alert('分享成功');
             } else {
-              //  alert(err.code);
+                //  alert(err.code);
             }
         });
     }

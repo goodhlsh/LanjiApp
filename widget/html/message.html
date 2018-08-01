@@ -58,7 +58,7 @@
             mark {
                 position: absolute;
                 bottom: 0px;
-                left: 70px;
+                left: 40px;
                 text-align: center;
                 background: transparent;
                 -webkit-transition: 300ms;
@@ -78,9 +78,15 @@
           <div class="aui-title">消息</div>
       </header>
         <nav id="nav">
-            <div class="nav-act" tapmode="nav-hov" onclick="fnChange(0);">用户消息</div>
-            <div tapmode="nav-hov" onclick="fnChange(1);">系统消息</div>
-            <div tapmode="nav-hov" onclick="fnChange(2);">广播消息</div>
+            <div class="nav-act" tapmode="nav-hov" onclick="fnChange(0);">
+              <div class="aui-list-item-label-icon">
+                  <i class="aui-iconfont aui-icon-profile"></i>
+              用户消息</div>
+              </div>
+            <div tapmode="nav-hov" onclick="fnChange(1);"><div class="aui-list-item-label-icon">
+                <i class="aui-iconfont aui-icon-group"></i>系统消息</div></div>
+            <div tapmode="nav-hov" onclick="fnChange(2);"><div class="aui-list-item-label-icon">
+                <i class="aui-iconfont aui-icon-we"></i>广播消息</div></div>
             <mark><img src="../image/header/arrow_up.png"></mark>
         </nav>
     </body>

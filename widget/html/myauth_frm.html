@@ -67,7 +67,7 @@
                             </div>
                             <div class="aui-list-item-input">
                                 <div class="aui-title">请上传身份证正面照片
-                                    <input id="sfzbtn" class="aui-btn-warning" type="button" value=" 上传 " onclick="fnSetshfzh('shfzh')" />
+                                    <input id="sfzbtn" class="aui-btn  aui-btn-primary  aui-btn-outlined" type="button" value=" 上传 " onclick="fnSetshfzh('shfzh')" />
                                 </div>
                             </div>
                         </div>
@@ -79,7 +79,7 @@
                             </div>
                             <div class="aui-list-item-input">
                                 <div class="aui-title">请上传本人手持身份证照片
-                                    <input class="aui-btn-warning" type="button" value=" 上传 " onclick="fnSetshfzh('shfzhbei')" /></div>
+                                    <input class="aui-btn  aui-btn-primary  aui-btn-outlined" type="button" value=" 上传 " onclick="fnSetshfzh('shfzhbei')" /></div>
                             </div>
 
                         </div>
@@ -99,8 +99,8 @@
                 </div>
                 <div class="aui-list-item">
                     <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
-                        <div id="okbtn" class="aui-btn aui-btn-danger" tapmode="highlight" onclick="fnGotoAuth();">提交</div>
-                        <div id="cancelbtn" class="aui-btn aui-btn-danger aui-margin-l-10" tapmode="highlight" onclick="fnCloseWin();">取消</div>
+                        <div id="okbtn" class="aui-btn aui-btn-primary  aui-btn-outlined" tapmode="highlight" onclick="fnGotoAuth();">提交</div>
+                        <div id="cancelbtn" class="aui-btn  aui-btn-primary  aui-btn-outlined aui-margin-l-10" tapmode="highlight" onclick="fnCloseWin();">取消</div>
                     </div>
                 </div>
             </div>
@@ -446,7 +446,7 @@
                     }, function(ret, err) {
 
                     });
-                    $api.setStorage('userInfo', ret); 
+                    $api.setStorage('userInfo', ret);
                     api.closeWin();
                 }
             });

@@ -6,63 +6,10 @@
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>设置Frame</title>
-    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
     <style>
-        .option {
-            position: relative;
-            box-sizing: border-box;
-            height: 61px;
-            border-bottom: 1px solid #ddd;
-        }
-
-        .option .title {
-            position: relative;
-            width: 100%;
-            height: 60px;
-            box-sizing: border-box;
-            padding-left: 16px;
-            line-height: 60px;
-            font-size: 14px;
-            color: #444;
-            text-align: left;
-        }
-
-        .option .arrow-panel {
-            position: absolute;
-            top: 0;
-            right: 12px;
-            width: auto;
-            height: 60px;
-            background-image: url(../image/arrow_right.png);
-            background-repeat: no-repeat;
-            background-size: 16px 24px;
-            background-position: right center;
-        }
-
-        .option .arrow-panel .text {
-            box-sizing: border-box;
-            width: auto;
-            height: 60px;
-            padding-right: 20px;
-            line-height: 60px;
-            font-size: 13px;
-            color: #888;
-            text-align: left;
-        }
-
-        .button {
-            width: auto;
-            height: 50px;
-            margin-left: 32px;
-            margin-right: 32px;
-            margin-top: 16px;
-            background-color: #f00;
-            line-height: 50px;
-            color: #fff;
-            font-size: 20px;
-            text-align: center;
-            border-radius: 8px;
-        }
+        
 
         .highlight {
             opacity: 0.7;
@@ -71,21 +18,30 @@
 </head>
 
 <body>
-    <section>
-        <div class="option" tapmode onclick="fnClearCache();">
-            <div class="title">清除缓存</div>
-            <div class="arrow-panel">
-                <div id="cacheSize" class="text"></div>
-            </div>
-        </div>
-        <div class="option" tapmode onclick="fnOpenAboutWin();">
-            <div class="title">关于</div>
-            <div class="arrow-panel">
-                <div class="text"></div>
-            </div>
-        </div>
-        <div class="button" tapmode onclick="fnLogout();">退出登录</div>
-    </section>
+    <div class="aui-content">
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-item" tapmode onclick="fnClearCache();">
+                <div class="aui-list-item-label-icon">
+                    <i class="aui-iconfont aui-icon-delete"></i>
+                </div>
+                <div class="aui-list-item-inner">
+                    清除缓存
+                </div>
+                <div id="cacheSize" class="aui-list-item-inner aui-list-item-arrow"></div>
+            </li>
+            <li class="aui-list-item" tapmode onclick="fnOpenAboutWin();">
+                <div class="aui-list-item-label-icon">
+                    <i class="aui-iconfont aui-icon-info"></i>
+                </div>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    关于
+                </div>
+            </li>
+            <li class="aui-list-item  aui-list-item-center  aui-margin-t-10">
+                <div class="aui-btn  aui-btn-primary  aui-btn-outlined" tapmode onclick="fnLogout();">退出登录</div>
+            </li>
+        </ul>
+    </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript">

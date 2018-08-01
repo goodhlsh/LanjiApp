@@ -6,14 +6,13 @@
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>登录Frame</title>
-    <link rel="stylesheet" type="text/css" href="./css/aui.css" />
-    <link rel="stylesheet" type="text/css" href="./css/aui-iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
     <style>
-        html,
-        body {
-            height: 100%;
-        }
-
+    html,
+    body {
+        height: 100%;
+    }
         .input {
             height: 40px;
             width: 80%;
@@ -70,9 +69,9 @@
 
             <div class="aui-list-item">
                 <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
-                    <div class="aui-btn  aui-btn-primary  aui-btn-outlined " tapmode="highlight" onclick="fnLogin();">登录</div>
-                    <div class="aui-btn  aui-btn-primary  aui-btn-outlined  aui-margin-l-10" tapmode="highlight" onclick="fnCancel();">取消</div>
-                </div>
+                    <div class="aui-btn aui-btn-primary  aui-btn-outlined " tapmode="highlight" onclick="fnLogin();">登录</div>
+                    <div class="aui-btn aui-btn-primary  aui-btn-outlined  aui-margin-l-10" tapmode="highlight" onclick="fnCancel();">取消</div>
+                  </div>
             </div>
         </div>
     </div>
@@ -83,10 +82,10 @@
 
 
 </body>
-<script type="text/javascript" src="./script/api.js"></script>
-<script type="text/javascript" src="./script/common.js"></script>
-<script type="text/javascript" src="./script/SHA1.js"></script>
-<script type="text/javascript" src="./script/remotedb.js"></script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
         fnInitUIInput();
@@ -195,7 +194,6 @@
             name: 'login'
         });
     }
-
     // 登录
     function fnLogin() {
         if (!usernameValue) {
@@ -262,25 +260,26 @@
 */
 
         fnGet('account/login', {
-            userName: usernameValue,
-            password: passwordValue
-        }, function(ret, err) {
-          console.log(JSON.stringify(ret));
-            if (ret.Id!=null) {
+                userName: usernameValue,
+                password: passwordValue
+            },function(ret, err) {
+              if (ret.Id!=null) {
                 $api.setStorage('userInfo', ret);
                 api.toast({
-                    msg: ret.UserName + '登录成功！',
+                    msg: ret.UserName+'登录成功！',
                     duration: 2000,
                     location: 'bottom'
                 });
                 api.closeWin();
-            } else {
+              }
+              else {
                 api.alert({
                     title: '消息',
                     msg: '登录失败：'+ret.message
                 });
+              }
             }
-        });
+          );
     }
 
 
