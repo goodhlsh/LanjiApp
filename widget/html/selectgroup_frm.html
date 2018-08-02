@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+        <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
+    <style>
+        body {
+            background: transparent;
+        }
+        .splite{
+          height: 150px;
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="splite"></div>
+    <div class="aui-content aui-margin-b-15">
+        <ul class="aui-list aui-list-in">
+            <li class="aui-bar aui-bar-nav">选择分组位置</li>
+            <li class="aui-list-item aui-list-item-inner">目前分组情况如下：</li>
+            <li id="list" class="aui-list-item"></li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-label-icon">
+                    <i class="aui-iconfont aui-icon-star"></i>安排位置：
+                </div>
+                <div class="aui-list-item-inner">
+                    <select id="jbSelectgroup">
+                          <option value="A">A组</option>
+                          <option value="B">B组</option>
+                          <option value="C">C组</option>
+                          <option value="D">D组</option>
+                          <option value="E">E组</option>
+                          <option value="F">F组</option>
+                          <option value="G">G组</option>
+                          <option value="H">H组</option>
+                          <option value="I">I组</option>
+                          <option value="J">J组</option>
+                          <option value="K">K组</option>
+                        </select>
+                        <select id="jbSelectLR">
+                          <option value="0">左边</option>
+                          <option value="1">右边</option>
+                        </select>
+                </div>
+            </li>
+            <li class="aui-list-item aui-list-item-inner"><i>注：已占用的位置不可安排，如果需要跨级安排位置请联系我们</i></li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner aui-list-item-center">
+                    <div class="aui-btn aui-btn-primary  aui-btn-outlined" onclick="fnOK()">提交</div>
+                    <div class="aui-btn aui-btn-primary  aui-btn-outlined aui-margin-l-10" onclick="fnCancel()">返回</div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+</body>
+<script type="text/template" id="template">
+    {{~it:value:index}}
+      <div class="aui-list-item-label-icon">
+          <i class="aui-iconfont aui-icon-location"></i>{{=value.zuname}}组：
+      </div>
+      <div  class="aui-list-item-inner">
+        左:{{?value.leftTrueName}}{{=value.leftTrueName}}{{??}}空{{?}} - 右:{{?value.rightTrueName}} {{=value.rightTrueName}}{{??}}空{{?}}
+    </div>
+    {{~}}
+</script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        userid=api.pageParam.userid;
+        tid = api.pageParam.tid;
+        fJE=api.pageParam.fJE;
+        fnInit();
+        zuname=$api.byId('jbSelectgroup');
+        zlr=$api.byId('jbSelectLR');
+    };
+
+    var userid, tid, fJE, zmp15,zuname,zlr,zwei;
+
+//分组图初始化
+    function fnInit() {
+        var filter = {
+            where: {
+                'Id': tid
+            },
+            skip: 0,
+            limit: 16
+        };
+        fnGet('SysUser/GetSons', filter, function(ret, err) {
+            if (ret) {
+              fnGetList(ret);
+            } else {
+                //alert('没有推荐人，请查看问题');
+                //  fnCancel();
+            }
+        });
+    }
+    function fnGetList(data_) {
+        var list = $api.byId('list');
+        // 编译模板函数
+        var tempFn = doT.template($api.byId('template').innerHTML);
+        // 使用模板函数生成HTML文本
+        var resultHTML = tempFn(data_);
+
+        $api.html(list, resultHTML);
+
+        // 由于是动态的将元素添加到Dom树上，所以需要手动触发tapmode检查，列表中的元素才能实现点击加速的效果
+        api.parseTapmode();
+    }
+
+    function fnOK() {
+        zwei=zlr.value==0?"左边":"右边";
+        api.confirm({
+            title: '确认提醒',
+            msg: '新会员分在第' + zuname.value + '组 '+zwei+'，继续请单击确定？',
+            buttons: ['确定', '取消']
+        }, function(ret, err) {
+            if (ret.buttonIndex == 1) {
+              inClub(userid, tid, fJE,zmp15);
+            }
+        });
+    }
+
+    function inClub(userid_, tid_, fJE_,zmp15_) {
+        if (tid_.length > 28) { //判定扫描内容是合法的推荐人
+            var data = {
+                body: JSON.stringify({
+                    uid: userid_,
+                    tid: tid_,
+                    fje: fJE_,
+                    zmp15:zmp15_
+                })
+            };
+            fnPost('SysUser/PutJiaPuBefore', data, 'application/json', false, false, function(ret, err) {
+                if (ret.ret) {
+                    api.alert({
+                        title: '消息',
+                        msg: '推荐成功，等待推荐人批准，批准后才能成为正式会员'
+                    });
+                    fnCancelAll();
+                    //加个推送？？？？？
+                } else {
+                    alert('操作失败！');
+                }
+            });
+        }
+    }
+    //取消
+    function fnCancel() {
+      api.closeFrame({
+          name: 'selectgroup_frm'
+      });
+
+    }
+    function fnCancelAll() {
+      api.closeFrame({
+          name: 'selectgroup_frm'
+      });
+      api.closeFrame({
+          name: 'inClub_frm'
+      });
+
+    }
+</script>
+
+</html>

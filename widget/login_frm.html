@@ -265,9 +265,9 @@
             userName: usernameValue,
             password: passwordValue
         }, function(ret, err) {
-          console.log(JSON.stringify(ret));
             if (ret.Id!=null) {
                 $api.setStorage('userInfo', ret);
+                fnInitYuE();
                 api.toast({
                     msg: ret.UserName + '登录成功！',
                     duration: 2000,
@@ -282,7 +282,26 @@
             }
         });
     }
-
+    function fnInitYuE() {
+        var filter = {
+            where: {
+                userid: $api.getStorage('userInfo').Id
+            },
+            //order: "createAt DESC",
+            limit: 1,
+            skip: 0
+        };
+        fnGet('Syswallet/GetWallet', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('currentwallet', ret);
+            } else {
+                api.alert({
+                    title: '消息',
+                    msg: '查不到余额',
+                });
+            }
+        });
+    }
 
     // 被注册页面调用，用于从注册页面传递用户名
     function fnSetUsername(username_) {

@@ -9,10 +9,11 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
     <style>
-    html,
-    body {
-        height: 100%;
-    }
+        html,
+        body {
+            height: 100%;
+        }
+
         .input {
             height: 40px;
             width: 80%;
@@ -71,7 +72,7 @@
                 <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
                     <div class="aui-btn aui-btn-primary  aui-btn-outlined " tapmode="highlight" onclick="fnLogin();">登录</div>
                     <div class="aui-btn aui-btn-primary  aui-btn-outlined  aui-margin-l-10" tapmode="highlight" onclick="fnCancel();">取消</div>
-                  </div>
+                </div>
             </div>
         </div>
     </div>
@@ -260,28 +261,47 @@
 */
 
         fnGet('account/login', {
-                userName: usernameValue,
-                password: passwordValue
-            },function(ret, err) {
-              if (ret.Id!=null) {
+            userName: usernameValue,
+            password: passwordValue
+        }, function(ret, err) {
+            if (ret.Id != null) {
                 $api.setStorage('userInfo', ret);
+                fnInitYuE();
                 api.toast({
-                    msg: ret.UserName+'登录成功！',
+                    msg: ret.UserName + '登录成功！',
                     duration: 2000,
                     location: 'bottom'
                 });
                 api.closeWin();
-              }
-              else {
+            } else {
                 api.alert({
                     title: '消息',
-                    msg: '登录失败：'+ret.message
+                    msg: '登录失败：' + ret.message
                 });
-              }
             }
-          );
+        });
     }
 
+    function fnInitYuE() {
+        var filter = {
+            where: {
+                userid: $api.getStorage('userInfo').Id
+            },
+            //order: "createAt DESC",
+            limit: 1,
+            skip: 0
+        };
+        fnGet('Syswallet/GetWallet', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('currentwallet', ret);
+            } else {
+                api.alert({
+                    title: '消息',
+                    msg: '查不到余额',
+                });
+            }
+        });
+    }
 
     // 被注册页面调用，用于从注册页面传递用户名
     function fnSetUsername(username_) {

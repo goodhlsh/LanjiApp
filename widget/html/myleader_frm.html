@@ -16,12 +16,17 @@
         <ul class="aui-list aui-list-in">
             <li class="aui-list-item">
                 <div class="aui-list-item-inner">
-                    <span id="name">姓名：</span>
+                    <span id="pname">上级姓名：</span>
                 </div>
             </li>
             <li class="aui-list-item">
                 <div class="aui-list-item-inner">
-                    <span id="jibie">级别：</span>
+                    <span id="tname">推荐人姓名：</span>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <span id="jibie">上级级别：</span>
                 </div>
             </li>
             <li class="aui-list-item">
@@ -42,25 +47,30 @@
 
     function fnInit() {
 
-        var recommenderID = $api.getStorage('userInfo').RecommendID;
+        var PID = $api.getStorage('userInfo').PId;
         var filter = {
-            userId: recommenderID
+            where: {
+                userId: PID
+            },
+            skip: 0;
+            limit: 1;
         }
-        fnGet('SysUser/GetById', filter, function(ret, err) {
+        fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
             if (ret) {
-                var recommender = $api.byId('name');
-                recommender.innerHTML = "姓名： " + ret.TrueName; //推荐人真实姓名
+                var pname = $api.byId('pname');
+                pname.innerHTML = "上级姓名： " + ret.TrueName;
+                var recommender = $api.byId('tname');
+                recommender.innerHTML = "推荐人姓名： " + $api.getStorage('userInfo').TName; //推荐人真实姓名
                 var jibie = $api.byId('jibie');
-                jibie.innerHTML = "级别： " + ret.Jibie; //推荐人级别
+                jibie.innerHTML = "上级级别： " + ret.Jibie; //推荐人级别
                 var tel = $api.byId('tel');
                 tel.innerHTML = "联系方式： " + ret.MobileNumber; //推荐人用户名
-            }
-            else {
-              api.toast({
-                  msg: '亲，您就是领导，不需要什么上级',
-                  duration: 2000,
-                  location: 'bottom'
-              });
+            } else {
+                api.toast({
+                    msg: '亲，您就是领导，不需要什么上级',
+                    duration: 2000,
+                    location: 'bottom'
+                });
 
             }
         });

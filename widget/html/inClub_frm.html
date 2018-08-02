@@ -6,17 +6,23 @@
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
     <title>title</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+        <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
     <style>
-    body{
-    background: transparent;
-}
+        body {
+            background: transparent;
+        }
+        .splite{
+          height: 150px;
+
+        }
     </style>
 </head>
 
 <body>
+    <div class="splite"></div>
     <div class="aui-content aui-margin-b-15">
         <ul class="aui-list aui-list-in">
-            <li class="aui-list-header">入会申请</li>
+            <li class="aui-bar aui-bar-nav">入会申请</li>
             <li class="aui-list-item">
                 <div class="aui-list-item-label-icon">
                     <i class="aui-iconfont aui-icon-home"></i>
@@ -41,7 +47,7 @@
                     选择级别：
                 </div>
                 <div class="aui-list-item-input aui-list-item-arrow">
-                    <select id="jbSelect" onchange="fnIsWalletOK()">
+                    <select id="jbSelect" onchange="fnChangeLevel()">
                           <option value="398">398会员</option>
                           <option value="1314">1314会员</option>
                           <option value="8800">8800会员</option>
@@ -49,12 +55,10 @@
                 </div>
             </li>
             <li class="aui-list-item">
-                <div class="aui-list-item-label-icon">
-                    <i class="aui-iconfont aui-icon-camera"></i>
-                </div>
+
                 <div class="aui-list-item-inner aui-list-item-center">
                     <div class="aui-btn aui-btn-primary  aui-btn-outlined" onclick="fnOK()">提交</div>
-                    <div class="aui-btn aui-btn-primary  aui-btn-outlined" onclick="fnCancel()">返回</div>
+                    <div class="aui-btn aui-btn-primary  aui-btn-outlined aui-margin-l-10" onclick="fnCancel()">返回</div>
                 </div>
             </li>
         </ul>
@@ -66,79 +70,75 @@
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
-        var uTrueName=$api.byId('uTrueName');
-        tTrueName=$api.byId('tTrueName');
-        console.log('begin');
-
-        uTrueName.innerHTML='用户：'+$api.getStorage('userInfo').TrueName;
+        var uTrueName = $api.byId('uTrueName');
+        tTrueName = $api.byId('tTrueName');
+        uTrueName.innerHTML = '用户：' + $api.getStorage('userInfo').TrueName;
         yue = $api.getStorage('currentwallet') != null ? $api.getStorage('currentwallet').JieYu : 0;
-        fnIsWalletOK();
-        tid=api.pageParam.tid;
+        fnChangeLevel();
+        tid = api.pageParam.tid;
         fnInit();
-
     };
 
-    var level, yue, tid,fJE,tTrueName,flag=0;
-    function fnInit() {
-        var filter={
-          where: {
-              'Id': tid
-          },
+    var level, yue, tid, fJE, tTrueName, flag = 0;
 
-          skip: 0,
-          limit: 1
+    function fnInit() {
+        var filter = {
+            where: {
+                'Id': tid
+            },
+            skip: 0,
+            limit: 1
         };
-        fnGet('SysUser/GetUserInfoById',filter,function(ret,err){
-          if (ret) {
-            tTrueName.innerHTML='推荐人：'+ret.TrueName;
-          }
-          else {
-            alert('没有推荐人，请查看问题');
-            fnCancel();
-          }
+        fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
+            if (ret) {
+                tTrueName.innerHTML = '推荐人：' + ret.TrueName;
+            } else {
+                //alert('没有推荐人，请查看问题');
+                //  fnCancel();
+            }
         });
     }
-    function fnIsWalletOK() {
-      console.log(yue);
+
+    function fnChangeLevel() {
         var sel = $api.byId('jbSelect');
         level = sel.value;
-        if (flag>0) {
-        if (yue >= level) {
-            api.confirm({
-                title: '确认提醒',
-                msg: '您当前余额为' + yue + ',满足入会要求,是否确认选择？',
-                buttons: ['确定', '取消']
-            }, function(ret, err) {
-                if (ret.buttonIndex == 1) {
-                    fnOK();
-                } else {}
-            });
+        if (flag > 0) {
+            if (yue >= level) {
+                api.confirm({
+                    title: '确认提醒',
+                    msg: '您当前余额为' + yue + ',满足入会要求,是否确认选择？',
+                    buttons: ['确定', '取消']
+                }, function(ret, err) {
+                    if (ret.buttonIndex == 1) {
+                      //  fnOK();
+                    } else {
+                    }
+                });
+            } else {
+                //支付入会金额充值
+                api.confirm({
+                    title: '确认提醒',
+                    msg: '请按级别预存相应金额',
+                    buttons: ['确定', '取消']
+                }, function(ret, err) {
+                    if (ret.buttonIndex == 1) {
+                        //打开充值窗口
+                        api.openWin({
+                            name: 'mychongzhi',
+                            url: './mychongzhi.html',
+                            pageParam: {
+                                userid: $api.getStorage('userInfo').Id
+                            }
+                        });
+                    } else {
+                        alert("余额不足无法成为会员！");
+                        return;
+                    }
+                });
+            }
         } else {
-            //支付入会金额充值
-            api.confirm({
-                title: '确认提醒',
-                msg: '请按级别预存相应金额',
-                buttons: ['确定', '取消']
-            }, function(ret, err) {
-                if (ret.buttonIndex == 1) {
-                    //打开充值窗口
-                    api.openWin({
-                        name: 'mychongzhi',
-                        url: './mychongzhi.html',
-                        pageParam: {
-                            userid: $api.getStorage('userInfo').Id
-                        }
-                    });
-                } else {
-                    alert("余额不足无法成为会员！");
-                    return;
-                }
-            });
+            flag += 1;
         }
-      }
-      else {
-        flag+=1;
-      }
     }
 
     function fnOK() {
@@ -146,38 +146,36 @@
         fJE = level;
         api.confirm({
             title: '确认提醒',
-            msg: '您选择的会员等级为' + level + '会员，继续请确定？',
+            msg: '新会员等级为' + level + '会员，继续请单击确定？',
             buttons: ['确定', '取消']
         }, function(ret, err) {
             if (ret.buttonIndex == 1) {
-                inClub(userid, tid, fJE);
+              //打开分组选择frame
+              api.openFrame({
+                  name: 'selectgroup_frm',
+                  url: './selectgroup_frm.html',
+                  rect: {
+                    x: 0,
+                    y: 0,
+                    w: api.winWidth,
+                    h: api.winHeight
+                  },
+                  pageParam: {
+                      userid: userid,
+                      tid:tid,
+                      fJE:fJE
+                  },
+                  bounces: true,
+                  bgColor: 'rgba(0, 0, 0, 0.6)',
+                  vScrollBarEnabled: true,
+                  hScrollBarEnabled: true
+              });
+
+                //inClub(userid, tid, fJE);
             }
         });
     }
 
-    function inClub(userid_, tid_, fJE_) {
-        if (tid_.length >28) { //判定扫描内容是合法的推荐人
-            var data = {
-                body: JSON.stringify({
-                    uid: userid_,
-                    tid: tid_,
-                    fje: fJE_
-                })
-            };
-            fnPost('SysUser/PutJiaPuBefore', data, 'application/json', false, false, function(ret, err) {
-                if (ret.ret) {
-                    api.alert({
-                        title: '消息',
-                        msg: '推荐成功，等待推荐人批准，批准后才能成为正式会员'
-                    });
-                    fnCancel();
-                    //加个推送？？？？？
-                } else {
-                    alert('加入失败！');
-                }
-            });
-        }
-    }
     //取消
     function fnCancel() {
         api.closeFrame({
