@@ -90,11 +90,11 @@
             limit: 1
         };
         fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
-            if (ret) {
-                tTrueName.innerHTML = '推荐人：' + ret.TrueName;
+            if (ret&&ret.Jibie!='普通会员') {
+                tTrueName.innerHTML = '引荐人：' + ret.TrueName;
             } else {
-                //alert('没有推荐人，请查看问题');
-                //  fnCancel();
+                alert('该引荐人不是会员，无法引荐别人');
+                fnCancel();
             }
         });
     }
