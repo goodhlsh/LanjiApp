@@ -317,7 +317,7 @@
     }
 
     //方法一  如果使用APICloud数据云，可以使用APICloud数据云前端框架来简化网络通信  完成注册
-    function fnRegisterByAPICloudMCM() {
+    /*function fnRegisterByAPICloudMCM() {
         //判断用户名是否为空
         if (!usernameValue) {
             if (api.systemType == 'android') {
@@ -568,7 +568,7 @@
                 phone: usernameValue,
                 code: codeValue,
             }, function(ret, err) {
-                if (!ret.status) {
+                if (ret.status) {
                     api.showProgress({
                         title: '注册中...',
                         modal: false

@@ -314,7 +314,7 @@
     }
 
     function inClub(userid_, tid_, fJE_) {
-        if (tid_.length == 31) {//判定扫描内容是合法的推荐人
+        if (tid_.length >28) {//判定扫描内容是合法的推荐人
             var data = {
                 body: JSON.stringify({
                     uid: userid_,

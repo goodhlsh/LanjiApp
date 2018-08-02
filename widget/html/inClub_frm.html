@@ -7,7 +7,9 @@
     <title>title</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <style>
-        body {}
+    body{
+    background: transparent;
+}
     </style>
 </head>
 
@@ -66,28 +68,38 @@
     apiready = function() {
         var uTrueName=$api.byId('uTrueName');
         tTrueName=$api.byId('tTrueName');
-        fnInit();
+        console.log('begin');
+
         uTrueName.innerHTML='用户：'+$api.getStorage('userInfo').TrueName;
         yue = $api.getStorage('currentwallet') != null ? $api.getStorage('currentwallet').JieYu : 0;
         fnIsWalletOK();
         tid=api.pageParam.tid;
+        fnInit();
 
     };
 
     var level, yue, tid,fJE,tTrueName,flag=0;
     function fnInit() {
         var filter={
-          where:{
-            Id:tid
-          }
+          where: {
+              'Id': tid
+          },
+
+          skip: 0,
+          limit: 1
         };
         fnGet('SysUser/GetUserInfoById',filter,function(ret,err){
           if (ret) {
             tTrueName.innerHTML='推荐人：'+ret.TrueName;
           }
+          else {
+            alert('没有推荐人，请查看问题');
+            fnCancel();
+          }
         });
     }
     function fnIsWalletOK() {
+      console.log(yue);
         var sel = $api.byId('jbSelect');
         level = sel.value;
         if (flag>0) {
@@ -144,7 +156,7 @@
     }
 
     function inClub(userid_, tid_, fJE_) {
-        if (tid_.length == 31) { //判定扫描内容是合法的推荐人
+        if (tid_.length >28) { //判定扫描内容是合法的推荐人
             var data = {
                 body: JSON.stringify({
                     uid: userid_,
@@ -158,6 +170,7 @@
                         title: '消息',
                         msg: '推荐成功，等待推荐人批准，批准后才能成为正式会员'
                     });
+                    fnCancel();
                     //加个推送？？？？？
                 } else {
                     alert('加入失败！');

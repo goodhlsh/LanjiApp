@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
     <style>
-        
+
 
         .highlight {
             opacity: 0.7;
@@ -90,7 +90,19 @@
                             msg: '退出成功'
                         }
                     });
-
+                    $api.rmStorage('userInfo');
+                    $api.rmStorage('currentwallet');
+                    $api.rmStorage('shoppingcart');
+                    $api.rmStorage('dingdankuan');
+                    $api.rmStorage('currentFirst');
+                    $api.rmStorage('shfzh');
+                    $api.rmStorage('shfzhbei');
+                    $api.rmStorage('currentProvice');
+                    $api.rmStorage('currentCity');
+                    $api.rmStorage('currentQu');
+                    $api.rmStorage('newmessage');
+                    $api.rmStorage('AddressId');
+                    $api.rmStorage('avatar');
                     setTimeout("api.closeWin({})", 2000);
                 }
             }
