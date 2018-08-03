@@ -184,48 +184,28 @@
             msg: '确认后将不能更改上下级关系，是否继续？',
         }, function(ret, err) {
             if (ret) {
-                //调用putzi存储加入jiapu表
-                var data = {
-                    body: JSON.stringify({
-                        Id:id_,
-                        uid: uid_,
-                        tid: $api.getStorage('userInfo').Id,
-                        fje: fJE_
-                    })
-                };
-                fnPost('SysUser/PutJiaPu', data, 'application/json', false, false, function(ret, err) {
-                        if (ret.ret==0) {
-                            //sysjiapubefore表中isdone改为true
-                          /*  var params = {
-                                body: JSON.stringify({
-                                    Id: id_,
-                                    uid: uid_,
-                                    tid: $api.getStorage('userInfo').Id,
-                                    fje: fJE_,
-                                    isdone: true
-                                })
-                            };*/
-                          //后台更改，不再发送请求数据
-                          //  fnPost('SysUser/UpdateJiaPuBefore', params, 'application/json', false, false, function(ret, err) {
-                          //    if (ret.ret) {
-                                    fnGetUserList(false);
-                          //      }
-                          //  });
-                            api.toast({
-                                msg: '确认成功！',
-                                duration: 2000,
-                                location: 'bottom'
-                            });
+              //打开分组选择frame
+              api.openFrame({
+                  name: 'selectgroup_frm',
+                  url: './selectgroup_frm.html',
+                  rect: {
+                    x: 0,
+                    y: 0,
+                    w: api.winWidth,
+                    h: api.winHeight
+                  },
+                  pageParam: {
+                      id:id_,
+                      userid: uid_,                     
+                      fJE:fJE_
+                  },
+                  bounces: true,
+                  bgColor: 'rgba(0, 0, 0, 0.6)',
+                  vScrollBarEnabled: true,
+                  hScrollBarEnabled: true
+              });
 
-                        }
-                        else {
-                          api.toast({
-                              msg: '确认失败！',
-                              duration: 2000,
-                              location: 'bottom'
-                          });
-                        }
-                    });
+
             } ////
         }); //
     }

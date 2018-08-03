@@ -268,6 +268,9 @@
             if (ret.Id!=null) {
                 $api.setStorage('userInfo', ret);
                 fnInitYuE();
+                api.sendEvent({
+                    name: 'setuserinfo'
+                });
                 api.toast({
                     msg: ret.UserName + '登录成功！',
                     duration: 2000,

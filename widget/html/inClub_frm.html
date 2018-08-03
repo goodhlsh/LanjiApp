@@ -73,6 +73,7 @@
         var uTrueName = $api.byId('uTrueName');
         tTrueName = $api.byId('tTrueName');
         uTrueName.innerHTML = '用户：' + $api.getStorage('userInfo').TrueName;
+        fnInitYuE();
         yue = $api.getStorage('currentwallet') != null ? $api.getStorage('currentwallet').JieYu : 0;
         fnChangeLevel();
         tid = api.pageParam.tid;
@@ -80,7 +81,26 @@
     };
 
     var level, yue, tid, fJE, tTrueName, flag = 0;
-
+    function fnInitYuE() {
+        var filter = {
+            where: {
+                userid: $api.getStorage('userInfo').Id
+            },
+            //order: "createAt DESC",
+            limit: 1,
+            skip: 0
+        };
+        fnGet('Syswallet/GetWallet', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('currentwallet', ret);
+            } else {
+                api.alert({
+                    title: '消息',
+                    msg: '查不到余额',
+                });
+            }
+        });
+    }
     function fnInit() {
         var filter = {
             where: {
@@ -146,36 +166,38 @@
         fJE = level;
         api.confirm({
             title: '确认提醒',
-            msg: '新会员等级为' + level + '会员，继续请单击确定？',
+            msg: '您选择的等级为' + level + '会员，继续请单击确定？',
             buttons: ['确定', '取消']
         }, function(ret, err) {
             if (ret.buttonIndex == 1) {
-              //打开分组选择frame
-              api.openFrame({
-                  name: 'selectgroup_frm',
-                  url: './selectgroup_frm.html',
-                  rect: {
-                    x: 0,
-                    y: 0,
-                    w: api.winWidth,
-                    h: api.winHeight
-                  },
-                  pageParam: {
-                      userid: userid,
-                      tid:tid,
-                      fJE:fJE
-                  },
-                  bounces: true,
-                  bgColor: 'rgba(0, 0, 0, 0.6)',
-                  vScrollBarEnabled: true,
-                  hScrollBarEnabled: true
-              });
-
-                //inClub(userid, tid, fJE);
+                inClub(userid, tid, fJE,'Z0');
             }
         });
     }
-
+    function inClub(userid_, tid_, fJE_,zmp15_) {
+        if (tid_.length > 28) { //判定扫描内容是合法的推荐人
+            var data = {
+                body: JSON.stringify({
+                    uid: userid_,
+                    tid: tid_,
+                    fje: fJE_,
+                    zmp15:zmp15_
+                })
+            };
+            fnPost('SysUser/PutJiaPuBefore', data, 'application/json', false, false, function(ret, err) {
+                if (ret.ret) {
+                    api.alert({
+                        title: '消息',
+                        msg: '推荐成功，等待推荐人批准，批准后才能成为正式会员'
+                    });
+                    fnCancel();
+                    //加个推送？？？？？
+                } else {
+                    alert('操作失败！');
+                }
+            });
+        }
+    }
     //取消
     function fnCancel() {
         api.closeFrame({
