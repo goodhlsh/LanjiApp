@@ -7,6 +7,7 @@
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>我的订单Frame</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+      <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
     <style>
         html {
             height: 100%;
@@ -104,6 +105,13 @@
 </head>
 
 <body>
+  <header class="aui-bar aui-bar-nav  " id="aui-header">
+      <a class="aui-btn aui-pull-left" tapmode onclick="fnCancel()">
+          <span class="aui-iconfont aui-icon-left"></span>
+      </a>
+      <div id="headerName" class="aui-title">订单列表</div>
+
+  </header>
     <section id="list" class="list"></section>
     <section id="empty" class="empty"></section>
     <div class="push-status" id="pushStatus">上拉显示更多</div>
@@ -133,6 +141,17 @@
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
+      statusIndex=api.pageParam.statusIndex;
+      headerName=$api.byId('headerName');
+      if (statusIndex==0) {
+        headerName.innerHTML='订单列表-待付款';
+      }else if (statusIndex==1) {
+        headerName.innerHTML='订单列表-待收货';
+      }else if (statusIndex==2) {
+        headerName.innerHTML='订单列表-已完成';
+      }else {
+        headerName.innerHTML='订单列表';
+      }
         // 初始化事件监听
         initEventListenter();
         // 初始化下拉刷新
@@ -140,7 +159,7 @@
         // 获取订单列表
         fnGetOrderList(false);
     };
-    var skip = 0,
+    var statusIndex, skip = 0,headerName,
         LIMIT = 8;
 
     function initEventListenter() {
@@ -283,6 +302,12 @@
         }, function(ret, err) {
             //  var msg = JSON.stringify(ret);
         });
+    }
+    function fnCancel() {
+      api.closeFrame({
+          name: 'myorderD_frm_' + statusIndex
+      });
+
     }
 </script>
 
