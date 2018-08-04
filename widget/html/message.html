@@ -79,14 +79,20 @@
       </header>
         <nav id="nav">
             <div class="nav-act" tapmode="nav-hov" onclick="fnChange(0);">
-              <div class="aui-list-item-label-icon">
+              <span class="aui-list-item-label-icon">
                   <i class="aui-iconfont aui-icon-profile"></i>
-              用户消息</div>
+              用户消息</span>
               </div>
-            <div tapmode="nav-hov" onclick="fnChange(1);"><div class="aui-list-item-label-icon">
-                <i class="aui-iconfont aui-icon-group"></i>系统消息</div></div>
-            <div tapmode="nav-hov" onclick="fnChange(2);"><div class="aui-list-item-label-icon">
-                <i class="aui-iconfont aui-icon-we"></i>广播消息</div></div>
+            <div tapmode="nav-hov" onclick="fnChange(1);">
+              <span class="aui-list-item-label-icon">
+                <i class="aui-iconfont aui-icon-group"></i>
+                系统消息</span>
+              </div>
+            <div tapmode="nav-hov" onclick="fnChange(2);">
+              <span class="aui-list-item-label-icon">
+                <i class="aui-iconfont aui-icon-we"></i>
+                广播消息</span>
+              </div>
             <mark><img src="../image/header/arrow_up.png"></mark>
         </nav>
     </body>
@@ -147,6 +153,7 @@
         };
 
         function fnChangeStyle(index) {
+
             for (var i = 0; i < navs.length; i++) {
                 if (i == index) {
                     $api.addCls(navs[i], 'nav-act');

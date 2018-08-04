@@ -8,9 +8,6 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
     <style>
-        header {
-            height: 90px;
-        }
 
         .login {
             display: -webkit-box;
@@ -19,13 +16,13 @@
             -webkit-box-orient: horizontal;
             -webkit-flex-flow: row;
             flex-flow: row;
-            width: 50%;
+            width: 100%;
             height: 100%;
         }
 
         .login div {
             width: 100%;
-            height: 20px;
+
             -webkit-box-flex: 1;
             -webkit-flex: 1;
             flex: 1;
@@ -44,18 +41,14 @@
 
         .login .icon-panel .icon {
             display: inline-block;
-            box-sizing: border-box;
             width: 80px;
             height: 80px;
-
             border-radius: 80px;
-            background-image: url(../image/my/default_square.png);
-            background-size: 100% 100%;
-            background-position: center center;
-            background-repeat: no-repeat;
         }
 
         .login .usern {
+          position: absolute;
+          left: 150px;
             text-align: left;
             font-size: 14px;
         }
@@ -79,15 +72,14 @@
 
         .splite {
             width: 100%;
-            height: 5px;
+            height: 12px;
             background-color: #eeeeee;
         }
     </style>
 </head>
 
 <body>
-    <header class="aui-bar aui-bar-nav  " id="aui-header">
-        <div class="login open-win" win="person_info" login="true">
+        <div class="aui-bar aui-bar-nav login open-win" win="person_info" login="true">
             <div class="icon-panel">
                 <img id="userAvatar" class="icon"></img>
             </div>
@@ -97,7 +89,7 @@
             </div>
             <!--<div class="account-info">余额:￥<span id="currentamout">0.0</span></div>-->
         </div>
-    </header>
+
     <section class="aui-content">
         <div class="aui-list aui-list-noborder">
             <div class="aui-list-item open-win" win="myorder" login="true">
@@ -192,7 +184,6 @@
         userAvatar = $api.byId('userAvatar');
         trueName = $api.byId('truename');
         userName = $api.byId('username');
-        userYuE = $api.byId('currentamout');
         fnReadyOpenWin();
 
         fnInit();
@@ -200,13 +191,12 @@
 
         //  fnUpdateUserInfo();
     };
-    var userAvatar, userName, trueName, userYuE;
+    var userAvatar, userName, trueName;
 
     function fnInit() {
         trueName.innerHTML = $api.getStorage('userInfo') == null ? '点击登录' : ($api.getStorage('userInfo').TrueName == null ? '没有填写' : $api.getStorage('userInfo').TrueName);
         userName.innerHTML = $api.getStorage('userInfo').UserName == null ? '' : $api.getStorage('userInfo').UserName;
         userAvatar.src = $api.getStorage('avatar') || '../image/my/default_square.png';
-        //userYuE.innerHTML = $api.getStorage('currentwallet') == null ? '0.0' : ($api.getStorage('currentwallet').JieYu==null?'0.0':$api.getStorage('currentwallet').JieYu);
 
         if ($api.getStorage('newmessage') > 0) {
             //设置我的小红点
@@ -232,11 +222,7 @@
     function fnUpdateUserInfo() {
         trueName.innerHTML = $api.getStorage('userInfo') == null ? '点击登录' : ($api.getStorage('userInfo').TrueName == null ? '没有填写' : $api.getStorage('userInfo').TrueName);
         userName.innerHTML = $api.getStorage('userInfo').UserName == null ? '' : $api.getStorage('userInfo').UserName;
-
         userAvatar.src = $api.getStorage('avatar') || '../image/my/default_square.png';
-
-
-
     };
 
     function fnResetUserInfo() {
@@ -259,12 +245,11 @@
 
         api.openWin({
             name: 'login',
-            url: '../html/login.html',
+            url: './login.html',
             pageParam: {
                 name: 'test'
             }
         });
-
     };
 </script>
 

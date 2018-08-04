@@ -52,8 +52,8 @@
             where: {
                 userId: PID
             },
-            skip: 0;
-            limit: 1;
+            skip: 0,
+            limit: 1
         }
         fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
             if (ret) {

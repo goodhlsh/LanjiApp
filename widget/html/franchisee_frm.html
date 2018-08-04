@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>我的订单Frame</title>
+    <title>加盟店Frame</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <style>
         html {
@@ -104,6 +104,18 @@
 </head>
 
 <body>
+  <div class="aui-title" style="left:1.5rem; right: 1.5rem;">
+      <div class="aui-searchbar" id="search">
+          <div class="aui-searchbar-input aui-border-radius">
+              <i class="aui-iconfont aui-icon-search"></i>
+              <input type="search" placeholder="请输入搜索内容" id="search-input">
+              <div class="aui-searchbar-clear-btn">
+                  <i class="aui-iconfont aui-icon-close"></i>
+              </div>
+          </div>
+          <div class="aui-searchbar-btn aui-text-warning" tapmode>取消</div>
+      </div>
+  </div>
     <section id="list" class="list"></section>
     <section id="empty" class="empty"></section>
     <div class="push-status" id="pushStatus">上拉显示更多</div>
@@ -112,16 +124,11 @@
     {{~it:value:index}}
     <div class="ware ware-1">
         <div class="content">
-            {{?value.Status==="待付款"}}
-            <div class="right" tapmode onclick="fnOpenPayWin('{{=value.Id}}');">继续支付</div>
-            {{?}}
             <div class="info">
-                <div class="orderNo" tapmode onclick="fnOpenOrderWin('{{=value.Id}}');">订单号：{{=value.OrderNo}} </div>
-                {{? !(value.Status==="待付款")}}
-                <div class="createDate" tapmode onclick='openApp("{{?value.WuliuLink===null}}n{{??}}{{=value.WuliuLink}}{{?}}")'>快递单号：{{?value.OrderWuliu===null}}空{{??}}{{=value.OrderWuliu}}{{?}}</div>
-                {{?}}
-                <div class="createDate">下单日期：{{=value.CreateTime}}</div>
-                <div class="orderNo">金额：{{=value.DingDanKuan}}</div>
+                <div class="orderNo"><i class="aui-iconfont aui-icon-my"></i>{{=value.FranchiseeName}} </div>
+                <div class="createDate"><i class="aui-iconfont aui-icon-my"></i>{{=value.Tel}}</div>
+                <div class="createDate">{{=value.FranchiseeType}}</div>
+                <div class="orderNo">{{=value.Addr}}</div>
             </div>
         </div>
     </div>
@@ -137,10 +144,10 @@
         initEventListenter();
         // 初始化下拉刷新
         initRefresh();
-        // 获取订单列表
-        fnGetOrderList(false);
+        // 获取列表
+        fnGetFranchiseeList(false);
     };
-    var wareTypeList, skip = 0,
+    var skip = 0,
         LIMIT = 8;
 
     function initEventListenter() {
@@ -151,8 +158,8 @@
                 threshold: 300 // 距离底部还有多少触发scrolltobottom事件
             }
         }, function(ret, err) {
-            // 获取更多的商品
-            fnGetOrderList(true);
+            // 获取更多的
+            fnGetFranchiseeList(true);
         });
     }
     // 实现下拉刷新功能
@@ -164,38 +171,13 @@
             textColor: '#e1017e',
             showTime: true
         }, function(ret, err) {
-            // 刷新商品列表
-            fnGetOrderList(false);
-        });
-    }
-    // 打开订单详情Window，指定订单Id
-    function fnOpenOrderWin(orderId_) {
-        api.openWin({
-            name: 'myorderdetail',
-            url: './myorderdetail.html',
-            pageParam: {
-                orderId: orderId_
-            },
-            animation: {
-                type: "fade"
-            }
-        });
-    }
-    // 打开订单详情Window，指定订单Id
-    function fnOpenPayWin(orderId_) {
-        api.openWin({
-            name: 'mypay',
-            url: './mypay.html',
-            pageParam: {
-                orderId: orderId_
-            },
-            animation: {
-                type: "fade"
-            }
+            // 刷新列表
+            fnGetFranchiseeList(false);
         });
     }
 
-    function fnGetOrderList(loadMore_) {
+
+    function fnGetFranchiseeList(loadMore_) {
         if (!loadMore_) {
             // 显示加载状态对话框
             api.hideProgress({
@@ -215,31 +197,29 @@
         // 根据状态分类获得相应的订单列表
         var params = {
                 where: {
-                    'status': api.pageParam.statusIndex,
-                    'userId': $api.getStorage('userInfo').Id
+
                 },
                 skip: skip,
                 limit: LIMIT
             }
             //console.log(wareTypeList[api.pageParam.wareTypeIndex].Name);
             //params = $api.jsonToStr(params);
-        fnGet('Spl_Orders/GetOrderListByStatus', params, function(ret, err) {
+        fnGet('Spl_Franchisee/GetFranchiseeList', params, function(ret, err) {
             if (ret) {
-
                 // 恢复下拉刷新的状态
                 api.refreshHeaderLoadDone();
 
                 // 在界面中更新订单列表显示
-                fnUpdateOrderList(ret, loadMore_);
+                fnUpdateFranchiseeList(ret, loadMore_);
             } else {
-                fnShowWareList(false);
+                fnShowFranchiseeList(false);
             }
             // 隐藏加载状态对话框
             api.hideProgress();
         });
     }
     // 更新订单列表显示
-    function fnUpdateOrderList(data_, loadMore_) {
+    function fnUpdateFranchiseeList(data_, loadMore_) {
         var list = $api.byId('list');
         // 编译模板函数
         var tempFn = doT.template($api.byId('template').innerHTML);
@@ -261,7 +241,7 @@
         api.parseTapmode();
     }
 
-    function fnShowWareList(show_) {
+    function fnShowFranchiseeList(show_) {
         var empty = $api.byId('empty');
         var list = $api.byId('list');
         if (show_) {
@@ -272,19 +252,57 @@
             list.style.display = 'none';
         }
     }
-
-    function openApp(url_) {
-        if (url_ == 'n') {
-            return;
+    /*搜索框--begin*/
+    var searchBar = document.querySelector(".aui-searchbar");
+    var searchBarInput = document.querySelector(".aui-searchbar input");
+    var searchBarBtn = document.querySelector(".aui-searchbar .aui-searchbar-btn");
+    var searchBarClearBtn = document.querySelector(".aui-searchbar .aui-searchbar-clear-btn");
+    if (searchBar) {
+        searchBarInput.onclick = function() {
+            searchBarBtn.style.marginRight = 0;
         }
-        api.openApp({
-            androidPkg: 'android.intent.action.VIEW',
-            mimeType: 'text/html',
-            uri: url_ //'http://www.baidu.com'
-        }, function(ret, err) {
-            //  var msg = JSON.stringify(ret);
-        });
+        searchBarInput.oninput = function() {
+            if (this.value.length) {
+                searchBarClearBtn.style.display = 'block';
+                searchBarBtn.classList.add("aui-text-warning");
+                searchBarBtn.textContent = "搜索";
+            } else {
+                searchBarClearBtn.style.display = 'none';
+                searchBarBtn.classList.remove("aui-text-info");
+                searchBarBtn.textContent = "取消";
+            }
+        }
     }
+    searchBarClearBtn.onclick = function() {
+        this.style.display = 'none';
+        searchBarInput.value = '';
+        searchBarBtn.classList.remove("aui-text-info");
+        searchBarBtn.textContent = "取消";
+    }
+    searchBarBtn.onclick = function() {
+            var keywords = searchBarInput.value;
+            if (keywords.length) {
+                searchBarInput.blur();
+
+
+                //添加搜索结果代码
+                //打开搜索窗口
+                api.openWin({
+                    name: 'searchF_result',
+                    url: './searchF_result.html',
+                    pageParam: {
+                        keyword: keywords
+                    }
+                });
+
+
+            } else {
+                this.style.marginRight = "-" + this.offsetWidth + "px";
+                searchBarInput.value = '';
+                searchBarInput.blur();
+            }
+        }
+        /*搜索框--end*/
 </script>
 
 </html>

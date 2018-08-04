@@ -7,7 +7,8 @@
     <title>等级情况</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <style>
-        body {}
+
+
     </style>
 </head>
 
@@ -34,7 +35,7 @@
                         注意：
                     </div>
                     <div class="aui-list-item-title">
-                        更改级别后余额中需要消费相应级别的费用，不得提现。
+                        <i>级别增加后用户余额中会冻结相应级别的额度不得提现，但可以购物。</i>
                     </div>
             </li>
             <li class="aui-list-item">
@@ -193,6 +194,9 @@
       fnGet('SysUser/GetUserInfoById',filter,function(ret,err){
         if (ret) {
           $api.setStorage('userInfo', ret);
+          api.sendEvent({
+              name: 'setuserinfo'
+          });
         }
       });
 

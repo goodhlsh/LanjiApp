@@ -20,11 +20,8 @@
             -webkit-box-orient: vertical;
             -webkit-flex-flow: column;
             flex-flow: column;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-image: url('../image/my/tuiguang.png');
-            background-size: contain;
-        }
+
+          }
 
         section {
             -webkit-box-flex: 1;
@@ -34,46 +31,32 @@
             text-align: center;
         }
 
-        footer {
-            width: 100%;
-            height: 100px;
-            background-color: #fff;
-            display: -webkit-box;
-            display: -webkit-flex;
-            display: flex;
-        }
-
-        .col {
-            -webkit-box-flex: 1;
-            -webkit-flex: 1;
-            flex: 1;
-            text-align: center;
-            height: 100px;
-        }
-
-        .col img {
-            width: 50px;
-            margin-top: 20px;
-        }
-
-        .col p {
-            margin-top: 2px;
-            color: #7d7d7d;
-            font-size: 14px;
-        }
-
-        .card-extend {
-            text-align: center;
-        }
-
         .picCenter {
             margin: 0 auto;
         }
 
         .usertext {
+          position: absolute;
+          left:160px;
+          top:405px;
             font-size: 18px;
             color: #ffffff;
+            z-index: 3;
         }
+        .bgpic{
+          position: absolute;
+          left:0px;
+          top:0px;
+          z-index: 0;
+        }
+        .card-extend {
+          position: absolute;
+          left:140px;
+          top:500px;
+          text-align: center;
+          z-index: 3;
+        }
+
     </style>
 </head>
 
@@ -87,7 +70,10 @@
     </header>
 
     <section>
-        <div id="username" class="usertext">0</div>
+        <div id="username" class="usertext">顶</div>
+        <div id="bgpic" class="bgpic">
+          <img id="qrbg" src="../image/my/mingpian.png" class="qrbg"</img>
+        </div>
         <div id="extenCode" class="card-extend">
             <img id="qrCore" src="" class="picCenter" ontouchstart="gtouchstart(this)" ontouchmove="gtouchmove()" ontouchend="gtouchend()"></img>
         </div>
@@ -129,11 +115,10 @@
         });
         fnUpdateStorageUserInfo();
         var username = $api.byId('username');
-        username.style.paddingTop = 350 + 'px';
+
         var tuicount = $api.getStorage('userInfo').TuiCount == null ? 0 : $api.getStorage('userInfo').TuiCount;
         $api.html(username, '我已推荐：' + tuicount + ' 人');
-        var extenCode = $api.byId('extenCode');
-        extenCode.style.paddingTop = 30 + 'px';
+        
 
         var FNScanner = api.require('FNScanner');
         FNScanner.encodeImg({

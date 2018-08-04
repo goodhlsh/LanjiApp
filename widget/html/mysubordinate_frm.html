@@ -26,31 +26,62 @@
     {{for(var i=0;i
     <it[it.length-1].levelMan;i++){}} <li class="aui-list-header">
             <div class="aui-list-item-title">{{=i+1}}级下属</div>
-
         </li>
-
+        {{?i===0}}
             {{for(var j=0;j
             <it.length;j++){}} {{?it[j].levelMan===i+1}}
-             <li class="aui-list-item">
+             <li class="aui-list-item" onclick="fnShowList()">
                 <div class="aui-list-item-inner">
                     <div class="aui-list-item-title">{{=it[j].trueName}}</div>
                     <div class="aui-list-item-right">{{=it[j].levelName}}</div>
                 </div>
                 </li>
-
-                {{?}} {{}}} {{}}}
+                {{?}} {{}}}
+       {{??}}
+                {{for(var j=0;j
+                <it.length;j++){}} {{?it[j].levelMan===i+1}}
+                 <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-title">{{=it[j].trueName}}</div>
+                        <div class="aui-list-item-right">{{=it[j].levelName}}</div>
+                    </div>
+                    </li>
+                    {{?}} {{}}}
+      {{?}}
+   {{}}}
 </script>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
 <script type="text/javascript" src="../script/aui-collapse.js"></script>
 <script type="text/javascript" src="../script/doT.min.js"></script>
 <script type="text/javascript" src="../script/SHA1.js"></script>
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
+      fnReady();
       api.parseTapmode();
       list = $api.byId('list');
-        fnGetChildren($api.getStorage('userInfo').Id);  
+        fnGetChildren($api.getStorage('userInfo').Id);
 };
+function fnShowList() {
+  api.openFrame({
+      name: 'sonlist_frm',
+      url: './sonlist_frm.html',
+      rect: {
+        x: 0,
+        y: 0,
+        w: api.winWidth,
+        h: api.winHeight
+      },
+      pageParam: {
+      },
+      bounces: true,
+      bgColor: 'rgba(0, 0, 0, 0.6)',
+      vScrollBarEnabled: true,
+      hScrollBarEnabled: true
+  });
+
+}
     function fnGetChildren(uid_) {
         var params = {
             where: {

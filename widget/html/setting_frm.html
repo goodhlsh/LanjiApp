@@ -9,7 +9,10 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
     <style>
-
+        .splite {
+            height: 12px;
+            background: #eeeeee;
+        }
 
         .highlight {
             opacity: 0.7;
@@ -29,14 +32,21 @@
                 </div>
                 <div id="cacheSize" class="aui-list-item-inner aui-list-item-arrow"></div>
             </li>
-            <li class="aui-list-item" tapmode onclick="fnOpenAboutWin();">
-                <div class="aui-list-item-label-icon">
-                    <i class="aui-iconfont aui-icon-info"></i>
+            <li class="splite"></li>
+            <li class="aui-list-item" tapmode onclick="checkUpdate();">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">
+                        检查版本
+                    </div>
+                    <div id="copyright" class="aui-list-item-right">1.0.0</div>
                 </div>
+            </li>
+            <li class="aui-list-item" tapmode onclick="fnOpenAboutWin();">
                 <div class="aui-list-item-inner aui-list-item-arrow">
                     关于
                 </div>
             </li>
+            <li class="splite"></li>
             <li class="aui-list-item  aui-list-item-center  aui-margin-t-10">
                 <div class="aui-btn  aui-btn-primary  aui-btn-outlined" tapmode onclick="fnLogout();">退出登录</div>
             </li>
@@ -47,7 +57,29 @@
 <script type="text/javascript">
     apiready = function() {
         getCacheSize();
+        cr = $api.byId('copyright');
+        fnInit();
     };
+    var cr, mam;
+
+    function fnInit() {
+        mam = api.require('mam');
+        mam.checkUpdate(function(ret, err) {
+            if (ret) {
+                if (!ret.status) {
+                    api.toast({
+                        msg: '服务器繁忙，请稍后再试',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (ret.result.version) {
+                    cr.innerHTML = ret.result.version;
+                }
+            }
+        });
+    }
 
     function getCacheSize() {
         api.getCacheSize(function(ret) {
@@ -66,6 +98,73 @@
             setTimeout(function() {
                 getCacheSize();
             }, 300);
+        });
+    }
+
+    // 检查更新
+    function checkUpdate() {
+        mam = api.require('mam');
+        mam.checkUpdate(function(ret, err) {
+            if (ret) {
+                if (!ret.status) {
+                    api.toast({
+                        msg: '服务器繁忙，请稍后再试',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+                if (ret.result.update && !ret.result.closed) {
+                    var updateTip;
+                    updateTip = ret.result.updateTip.replace(/\r\n/g, "<BR>");
+                    updateTip = updateTip.replace(/\n/g, "<BR>");
+                    layer.confirm('有新版本啦！<br/>最新版本:' + ret.result.version + '<br/>更新描述:<br/>' + updateTip + '<br/>发布时间:' + ret.result.time, {
+                        title: '更新提示',
+                        btn: ['立即更新', '取消'] //按钮
+                    }, function() {
+                        if (api.systemType == "android") {
+                            api.download({
+                                url: ret.result.source,
+                                report: true
+                            }, function(retdownload, err) {
+                                if (retdownload && 0 == retdownload.state) { /* 下载进度 */
+                                    api.toast({
+                                        msg: "正在下载应用" + retdownload.percent + "%",
+                                        duration: 2000
+                                    });
+                                }
+                                if (retdownload && 1 == retdownload.state) { /* 下载完成 */
+                                    var savePath = retdownload.savePath;
+                                    api.installApp({
+                                        appUri: savePath
+                                    });
+                                }
+                            });
+                        }
+                        if (api.systemType == "ios") {
+                            api.installApp({
+                                appUri: ret.result.source
+                            });
+                        }
+                    }, function() {});
+                    return;
+                } else {
+
+                    api.toast({
+                        msg: '当前已是最新版本',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return;
+                }
+            } else {
+                api.toast({
+                    msg: '服务器繁忙，请稍后再试',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+                return;
+            }
         });
     }
 

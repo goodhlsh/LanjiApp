@@ -81,6 +81,20 @@
 <script type="text/javascript">
     apiready = function() {
         fnInit();
+        fnInitEvent();
+    };
+    function fnInitEvent() {
+        api.addEventListener({
+            name: 'setuserinfo'
+        }, function(ret, err) {
+            fnUpdateUserInfo();
+        });
+      }
+      function fnUpdateUserInfo() {
+        realname.innerHTML=$api.getStorage('userInfo').TrueName || '没有登记';
+        sfz.innerHTML=$api.getStorage('userInfo').Card || '没有登记';
+        mobile.innerHTML=$api.getStorage('userInfo').MobileNumber || '没有登记';
+        jibie.innerHTML=$api.getStorage('userInfo').Jibie || '普通会员';
     };
     var realname,sfz,mobile,jibie;
 

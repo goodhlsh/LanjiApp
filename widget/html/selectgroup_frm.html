@@ -49,7 +49,9 @@
                         </select>
                 </div>
             </li>
-            <li class="aui-list-item aui-list-item-inner"><i>注：已占用的位置不可安排，如果需要跨级安排位置请联系我们</i></li>
+            <li class="aui-list-item aui-list-item-inner">
+              <i>注：已占用的位置不可再安排，用户可以安排下级分组位置，
+                如果需要跨级(如下下级或及其下级)安排位置请联系我们</i></li>
             <li class="aui-list-item">
                 <div class="aui-list-item-inner aui-list-item-center">
                     <div class="aui-btn aui-btn-primary  aui-btn-outlined" onclick="fnOK()">提交</div>
@@ -67,7 +69,7 @@
         <i class="aui-iconfont aui-icon-location"></i>{{=value.zuname}}组：
     </div>
     <div class="aui-list-item-inner">
-        左:{{?value.leftTrueName}}{{=value.leftTrueName}}{{??}}空{{?}} - 右:{{?value.rightTrueName}} {{=value.rightTrueName}}{{??}}空{{?}}
+      【左】{{?value.leftTrueName}}{{=value.leftTrueName}}{{??}}空{{?}} —— 【右】{{?value.rightTrueName}} {{=value.rightTrueName}}{{??}}空{{?}}
     </div>
     {{??}}
     <div class="aui-list-item-inner">
