@@ -39,6 +39,7 @@
                         检查版本
                     </div>
                     <div id="copyright" class="aui-list-item-right">1.0.0</div>
+                    <div id="mydot" class="right"></div>
                 </div>
             </li>
             <li class="aui-list-item" tapmode onclick="fnOpenAboutWin();">
@@ -76,6 +77,11 @@
                 }
                 if (ret.result.version) {
                     cr.innerHTML = ret.result.version;
+
+                    //设置我的小红点
+                    var mydot = $api.byId('mydot');
+                    $api.addCls(mydot, 'aui-dot');
+
                 }
             }
         });
@@ -146,6 +152,9 @@
                                 appUri: ret.result.source
                             });
                         }
+                        //设置我的小红点
+                        var mydot = $api.byId('mydot');
+                        $api.removeCls(mydot, 'aui-dot');
                     }, function() {});
                     return;
                 } else {
