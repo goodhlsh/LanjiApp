@@ -347,7 +347,7 @@
             skip = 0;
         }
         // 根据状态分类获得相应的订单列表
-        var params = {
+        var filter = {
                 where: {
                       orderId: api.pageParam.orderId
                 },
@@ -356,7 +356,7 @@
             }
             //console.log(wareTypeList[api.pageParam.wareTypeIndex].Name);
             //params = $api.jsonToStr(params);
-        fnGet('Spl_Orders/GetOrderWaresById', params, function(ret, err) {
+        fnGet('Spl_Orders/GetOrderWaresById', filter, function(ret, err) {
 
             if (ret) {
 

@@ -222,7 +222,7 @@
             skip = 0;
         }
         // 根据商品分类获得相应的商品列表
-        var params = {
+        var filter = {
             where: {
                 'ID': api.pageParam.wareTypeId
             },
@@ -233,7 +233,7 @@
         //console.log(api.pageParam.wareTypeIndex);
         //console.log(wareTypeList[api.pageParam.wareTypeIndex].Name);
         //params = $api.jsonToStr(params);
-        fnGet('Spl_Ware/GetListByCategoryID', params, function(ret, err) {
+        fnGet('Spl_Ware/GetListByCategoryID', filter, function(ret, err) {
             if (ret) {
                 // 恢复下拉刷新的状态
                 api.refreshHeaderLoadDone();

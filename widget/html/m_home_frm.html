@@ -464,7 +464,7 @@
     function fnInitLikeList(keyword, skip, likeLIMIT) {
         fnGet('Spl_Ware/GetAllLike', {
             'where': {
-                'like': keyword != '' ? keyword : ''
+                'likes': keyword != '' ? keyword : ''
             },
             'skip': skip,
             'limit': likeLIMIT

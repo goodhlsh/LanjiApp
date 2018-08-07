@@ -83,14 +83,14 @@ function fnShowList() {
 
 }
     function fnGetChildren(uid_) {
-        var params = {
+        var filter = {
             where: {
                 'uid': uid_
             },
             skip: 0,
             limit: 200
         }
-        fnGet('SysUser/GetAllChildren', params, function(ret, err) {
+        fnGet('SysUser/GetAllChildren', filter, function(ret, err) {
             if (ret) {
                 fnUpdateList(ret);
             } else {

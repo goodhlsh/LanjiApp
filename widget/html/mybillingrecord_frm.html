@@ -29,7 +29,7 @@
             display: none;
             position: absolute;
             width: 100%;
-            height: 100%;            
+            height: 100%;
         }
 
         .content {
@@ -180,7 +180,7 @@
             skip = 0;
         }
         // 根据状态分类获得相应的订单列表
-        var params = {
+        var filter = {
                 where: {
                     'userId': $api.getStorage('userInfo').Id
                 },
@@ -189,7 +189,7 @@
             }
             //console.log(wareTypeList[api.pageParam.wareTypeIndex].Name);
             //params = $api.jsonToStr(params);
-        fnGet('Syswallet/GetList', params, function(ret, err) {
+        fnGet('Syswallet/GetList', filter, function(ret, err) {
             if (ret) {
 
                 // 恢复下拉刷新的状态

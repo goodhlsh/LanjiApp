@@ -118,7 +118,7 @@
 
         var tuicount = $api.getStorage('userInfo').TuiCount == null ? 0 : $api.getStorage('userInfo').TuiCount;
         $api.html(username, '我已推荐：' + tuicount + ' 人');
-        
+
 
         var FNScanner = api.require('FNScanner');
         FNScanner.encodeImg({
@@ -142,7 +142,11 @@
 
     function fnUpdateStorageUserInfo() {
         var filter = {
-            Id: $api.getStorage('userInfo').Id
+          where: {
+              Id: $api.getStorage('userInfo').Id
+          },
+          skip: 0,
+          limit: 1
         }
         fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
             if (ret) {

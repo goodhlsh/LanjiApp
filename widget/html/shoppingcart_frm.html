@@ -465,14 +465,14 @@
             }
         }
 
-        var params = {
+        var filter = {
             where: {
                 'id': JSON.stringify(wares) //多个商品id
             },
             skip: 0,
             limit: wares.length
         }
-        fnGet('Spl_Ware/GetAllByShopCart', params, function(ret, err) {
+        fnGet('Spl_Ware/GetAllByShopCart', filter, function(ret, err) {
             if (ret) {
                 for (var i = 0; i < ret.length; i++) {
                     for (var j = 0; j < wareList_.length; j++) {

@@ -273,14 +273,14 @@
             text: '请稍候...',
             modal: false
         });
-        var params = {
+        var filter = {
             where: {
-                'ID': wareId_
+                'Id': wareId_
             },
             skip: 0,
             limit: 1
         }
-        fnGet('Spl_Ware/GetByID', params, function(ret, err) {
+        fnGet('Spl_Ware/GetByID', filter, function(ret, err) {
             api.hideProgress();
             // 更新商品详情展示
             fnUpdateWareInfo(ret);

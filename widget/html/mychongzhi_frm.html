@@ -281,9 +281,9 @@
                 fnEditOrder('已完成');
                 fnUpdateWallet();
                 //升级会员转过来的需判定余额是否够
-              //  if (api.pageParam.mustwall && $api.getStorage('currentwallet').JieYu >= api.pageParam.mustwall) {
-              //      fnUpdateJiapu();
-              //  }
+                //  if (api.pageParam.mustwall && $api.getStorage('currentwallet').JieYu >= api.pageParam.mustwall) {
+                //      fnUpdateJiapu();
+                //  }
             }
         });
     }
@@ -349,16 +349,22 @@
             }
         });
     }
+
     function fnUpdateStorageUserInfo() {
-      var filter={
-        Id:$api.getStorage('userInfo').Id
-      }
-      fnGet('SysUser/GetUserInfoById',filter,function(ret,err){
-        if (ret) {
-          $api.setStorage('userInfo', ret);
+        var filter = {
+            where: {
+                Id: $api.getStorage('userInfo').Id
+            },
+            skip: 0,
+            limit: 1
         }
-      });
+        fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('userInfo', ret);
+            }
+        });
     }
+
     function fnUpdateWallet() {
         fnPost('Syswallet/PostWallet', {
             body: JSON.stringify({
@@ -373,7 +379,7 @@
         }, 'application/json', false, false, function(ret, err) {
             if (ret) {
                 api.toast({
-                    msg: '充值成功！本次充值：'+JinEValue,
+                    msg: '充值成功！本次充值：' + JinEValue,
                     duration: 2000,
                     location: 'bottom'
                 });

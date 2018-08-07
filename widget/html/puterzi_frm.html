@@ -196,7 +196,7 @@
                   },
                   pageParam: {
                       id:id_,
-                      userid: uid_,                     
+                      userid: uid_,
                       fJE:fJE_
                   },
                   bounces: true,
@@ -228,14 +228,14 @@
             skip = 0;
         }
         // 根据推荐人获得相应的用户列表
-        var params = {
+        var filter = {
             where: {
                 'tid': $api.getStorage('userInfo').Id
             },
             skip: skip,
             limit: LIMIT
         }
-        fnGet('SysUser/GetListByTID', params, function(ret, err) {
+        fnGet('SysUser/GetListByTID', filter, function(ret, err) {
             if (ret!=null) {
                 // 恢复下拉刷新的状态
                 api.refreshHeaderLoadDone();

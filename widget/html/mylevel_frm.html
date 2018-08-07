@@ -189,7 +189,11 @@
 
     function fnUpdateStorageUserInfo() {
       var filter={
-        Id:$api.getStorage('userInfo').Id
+        where: {
+            Id: $api.getStorage('userInfo').Id
+        },
+        skip: 0,
+        limit: 1
       }
       fnGet('SysUser/GetUserInfoById',filter,function(ret,err){
         if (ret) {

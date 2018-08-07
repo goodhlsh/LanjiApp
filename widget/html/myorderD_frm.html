@@ -232,7 +232,7 @@
             skip = 0;
         }
         // 根据状态分类获得相应的订单列表
-        var params = {
+        var filter = {
                 where: {
                     'status': api.pageParam.statusIndex,
                     'userId': $api.getStorage('userInfo').Id
@@ -241,7 +241,7 @@
                 limit: LIMIT
             }
 
-        fnGet('Spl_Orders/GetOrderListByStatus', params, function(ret, err) {
+        fnGet('Spl_Orders/GetOrderListByStatus', filter, function(ret, err) {
             if (ret) {
 
                 // 恢复下拉刷新的状态
