@@ -24,12 +24,13 @@
         <ul class="aui-list aui-list-in">
           <li class="aui-bar aui-bar-nav" tapmode onclick="fnCancel()"><span class=" aui-pull-left aui-iconfont aui-icon-left"></span>下级分组</li>
             <li class="aui-list-item aui-list-item-inner">下级分组情况如下：</li>
-            <li id="list" class="aui-list-item"></li>
+            <div id="list"></div>
         </ul>
     </div>
 </body>
 <script type="text/template" id="template">
     {{~it:value:index}}
+    <li  class="aui-list-item">
     {{? value.zuname}}
     <div class="aui-list-item-label-icon">
         <i class="aui-iconfont aui-icon-location"></i>{{=value.zuname}}组：
@@ -41,7 +42,9 @@
     <div class="aui-list-item-inner">
         名下没有分组
     </div>
-    {{?}} {{~}}
+    {{?}}
+  </li>
+  {{~}}
 </script>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/common.js"></script>

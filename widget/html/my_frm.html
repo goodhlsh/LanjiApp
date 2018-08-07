@@ -262,8 +262,16 @@
         });
     }
     function  fnOpenOrderFrame(index_) {
+      api.openWin({
+          name: 'myorderD',
+          url: 'myorderD.html',
+          pageParam: {
+              statusIndex: index_
+          }
+      });
+/*
       api.openFrame({
-          name: 'myorderD_frm_' + index_,
+          name: 'myorderD_' + index_,
           url: 'myorderD_frm.html',
           rect: {
               x: 0,
@@ -279,7 +287,7 @@
           vScrollBarEnabled: true,
           hScrollBarEnabled: true
       });
-
+*/
     }
 </script>
 
