@@ -195,6 +195,7 @@
         $api.fixStatusBar(header);
         headerHeight = $api.offset(header).h;
         footerHeight = $api.offset(footer).h;
+        fnInitUserInfo();
         //设置我的小红点
         var num = $api.getStorage('newmessage') == null ? 0 : $api.getStorage('newmessage');
 
@@ -202,6 +203,21 @@
             var mydot = $api.byId('mydot');
             $api.addCls(mydot, 'aui-dot');
         }
+    }
+  //从后台更新本地存储
+    function fnInitUserInfo() {
+      var filter = {
+          where: {
+              Id: $api.getStorage('userInfo').Id
+          },
+          skip: 0,
+          limit: 1
+      }
+      fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
+          if (ret) {
+              $api.setStorage('userInfo', ret);
+          }
+      });
     }
 
     var isAuth;

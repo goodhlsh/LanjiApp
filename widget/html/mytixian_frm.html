@@ -88,6 +88,7 @@
     //若未验证，继续打开本页面
     apiready = function() {
         //console.log($api.getStorage('userInfo').Id.length);
+        fnInitYuE();
         wallet = $api.getStorage('currentwallet');
         //  console.log(isAuth);
         if (!wallet) {
@@ -104,6 +105,28 @@
             });
         }
     };
+    function fnInitYuE() {
+
+
+        var filter = {
+            where: {
+                userid: $api.getStorage('userInfo').Id
+            },
+            //order: "createAt DESC",
+            limit: 1,
+            skip: 0
+        };
+        fnGet('Syswallet/GetWallet', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('currentwallet', ret);
+            } else {
+                api.alert({
+                    title: '消息',
+                    msg: '查不到余额',
+                });
+            }
+        });
+    }
     var UIInput;
     var moneycoutUIInputId;
     var moneycoutValue;

@@ -37,11 +37,11 @@
 
         .usertext {
           position: absolute;
-          left:160px;
-          top:405px;
+          left:100px;
+          top:205px;
             font-size: 18px;
             color: #ffffff;
-            z-index: 3;
+            z-index: 2;
         }
         .bgpic{
           position: absolute;
@@ -51,8 +51,8 @@
         }
         .card-extend {
           position: absolute;
-          left:140px;
-          top:500px;
+          left:70px;
+          top:300px;
           text-align: center;
           z-index: 3;
         }
@@ -83,8 +83,24 @@
 <script type="text/javascript" src="../script/common.js"></script>
 <script type="text/javascript">
   var tid;
+  //从后台更新本地存储
+    function fnInitUserInfo() {
+      var filter = {
+          where: {
+              Id: $api.getStorage('userInfo').Id
+          },
+          skip: 0,
+          limit: 1
+      }
+      fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
+          if (ret) {
+              $api.setStorage('userInfo', ret);
+          }
+      });
+    }
     apiready = function() {
         fnReady();
+        fnInitUserInfo();
         api.parseTapmode();
 
         if ($api.getStorage('userInfo')) {

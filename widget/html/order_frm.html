@@ -330,11 +330,27 @@
 <script type="text/javascript">
     apiready = function() {
         fnReady();
+        fnInitUserInfo();
         fnInitEvent();
         fnInitAddress();
         fnInitOrder();
 
     };
+    //从后台更新本地存储
+      function fnInitUserInfo() {
+        var filter = {
+            where: {
+                Id: $api.getStorage('userInfo').Id
+            },
+            skip: 0,
+            limit: 1
+        }
+        fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('userInfo', ret);
+            }
+        });
+      }
     function fnInitEvent() {
       api.addEventListener({
           name: 'setyouhuiother'
@@ -346,7 +362,7 @@
           }
       });
     }
-    function fnSetYouOther(val) {      
+    function fnSetYouOther(val) {
       $api.html(youhuiother, val);
     }
     var consignee, mobile, type, address, currentF;

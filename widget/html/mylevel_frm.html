@@ -52,6 +52,7 @@
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
+        fnInitUserInfo();
         var isAuth = $api.getStorage('userInfo').IsAuth; //先验证后扫描
 
         if (!isAuth) {
@@ -74,7 +75,21 @@
         }
         fnInitYuE();
     };
-
+    //从后台更新本地存储
+      function fnInitUserInfo() {
+        var filter = {
+            where: {
+                Id: $api.getStorage('userInfo').Id
+            },
+            skip: 0,
+            limit: 1
+        }
+        fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('userInfo', ret);
+            }
+        });
+      }
     function fnInitYuE() {
 
 
