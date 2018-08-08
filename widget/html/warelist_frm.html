@@ -153,13 +153,13 @@
         initRefresh();
         // 获取商品列表
         fnGetWareList(false);
+      
     }
-    var wareTypeList, skip = 0,
+    var  skip = 0,
         LIMIT = 20;
 
     function init() {
-        // 从缓存中获得商品分类列表
-        wareTypeList = $api.getStorage('wareTypeList');
+
     }
 
     function initEventListenter() {
@@ -229,10 +229,6 @@
             skip: skip,
             limit: LIMIT
         }
-
-        //console.log(api.pageParam.wareTypeIndex);
-        //console.log(wareTypeList[api.pageParam.wareTypeIndex].Name);
-        //params = $api.jsonToStr(params);
         fnGet('Spl_Ware/GetListByCategoryID', filter, function(ret, err) {
             if (ret) {
                 // 恢复下拉刷新的状态
@@ -262,7 +258,6 @@
             }, function(ret, err) {
                 if (ret) {
                     ele_.src = ret.url;
-                    console.log(ret.url);
                     $api.attr(ele_, 'data-url', '');
                 }
             });

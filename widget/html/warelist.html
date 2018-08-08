@@ -62,6 +62,7 @@
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
+      fnReady();
         var header = $api.byId('aui-header');
 
         var footer = $api.byId('aui-footer');
@@ -72,7 +73,22 @@
         headerH = $api.offset(header).h;
 
         footerHeight = $api.offset(footer).h;
-
+        wareTypeList = [{
+            "Id": "56D2EB459D90451584B853A5728C6A15",
+            "SonTypeName": "海植晶萃"
+        }, {
+            "Id": "3CFCDFBAE5C549B189FCEACFBE9BDA0A",
+            "SonTypeName": "面膜系列"
+        }, {
+            "Id": "284BF942C7C642C6B0BA8CEC7FDA46AC",
+            "SonTypeName": "清新滋润"
+        }, {
+            "Id": "46F18CE5F95A430DBB0E4502D52C3C16",
+            "SonTypeName": "套装系列"
+        }, {
+            "Id": "A48C196AE379499C9491092908BBE8F8",
+            "SonTypeName": "洗护系列"
+        }];
         //设置我的小红点
         var num = $api.getStorage('newmessage') == null ? 0 : $api.getStorage('newmessage');
 
@@ -83,7 +99,7 @@
         NVNavigationBar = api.require('NVNavigationBar');
         // 初始化商品分类列表
         initWareTypeList();
-        fnReady();
+
         if ($api.getStorage('NVNavigationBar') != null) {
             fnClostMenu();
         }
@@ -187,17 +203,12 @@
         });
 
     }
+
     var wareTypeList;
     // 初始化商品分类列表
     function initWareTypeList() {
-        // 获取上一次的商品分类列表
-        wareTypeList = $api.getStorage('wareTypeList') == null ? null : $api.getStorage('wareTypeList');
-
-        // 如果没有商品分类列表，则使用默认的商品分类列表
-        if (!wareTypeList) {
-            // 从服务器端更新商品分类列表
-            fnGetWareTypeList();
-        }
+        // 从服务器端更新商品分类列表
+        fnGetWareTypeList();
     }
 
     // 从服务器端更新商品分类列表
@@ -209,36 +220,14 @@
             }
             //params = $api.jsonToStr(params);
         fnGet('spl_ProductCategory/GetList', filter, function(ret, err) {
-            //console.log(JSON.stringify(ret));
             if (ret) {
-                // 存储商品分类列表到本地
-                $api.setStorage('wareTypeList', ret);
                 wareTypeList = ret;
             } else {
-                wareTypeList = [{
-                    "Id": "56D2EB459D90451584B853A5728C6A15",
-                    "Name": "海植晶萃"
-                }, {
-                    "Id": "3CFCDFBAE5C549B189FCEACFBE9BDA0A",
-                    "Name": "面膜系列"
-                }, {
-                    "Id": "284BF942C7C642C6B0BA8CEC7FDA46AC",
-                    "Name": "清新滋润"
-                }, {
-                    "Id": "46F18CE5F95A430DBB0E4502D52C3C16",
-                    "Name": "套装系列"
-                }, {
-                    "Id": "A48C196AE379499C9491092908BBE8F8",
-                    "Name": "洗护系列"
-                }];
-                $api.setStorage('wareTypeList', wareTypeList);
+
             }
         });
     }
-
     var framesOpened;
-
-
     // 打开商品列表FrameGroup
     function openFrames() {
         // 构造FrameGroup中的Frame数组
@@ -251,9 +240,7 @@
                     wareTypeId: wareTypeList[i].Id
                 }
             });
-            //fnInsertMenu(wareTypeList[i].Name, i);
         }
-        //fnDeleteMenu(wareTypeList.length);
 
         // 打开FrameGroup
         api.openFrameGroup({
@@ -284,7 +271,7 @@
         api.setFrameGroupIndex({
             name: 'mainFrameGroup',
             index: index_,
-            scroll: true
+            scroll: false
         });
     }
 </script>
