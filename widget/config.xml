@@ -40,6 +40,7 @@
 
     <preference name="debug" value="true"/>
 
+    <preference name="iOS7StatusBarAppearance" value="true"/>
     <preference name="statusBarAppearance" value="true"/>
 
     <permission name="readPhoneState"/>
@@ -70,24 +71,24 @@
     </feature>
     <!--个推配置-->
     <feature name="pushGeTui">
-        <param name="android_appkey" value="hDIy04Y1Ue5LUEqy0mFFX" />
-        <param name="android_appid" value="mj6uyvHt1C6XYWi6kRZn68" />
-        <param name="android_appsecret" value="jueq9PghMN7qaNyi27yF01" />
-        <param name="android_groupid" value="" />
+        <param name="android_appkey" value="hDIy04Y1Ue5LUEqy0mFFX"/>
+        <param name="android_appid" value="mj6uyvHt1C6XYWi6kRZn68"/>
+        <param name="android_appsecret" value="jueq9PghMN7qaNyi27yF01"/>
+        <param name="android_groupid" value=""/>
     </feature>
     <!--微信支付-->
     <feature name="wxPay">
-    <param name="urlScheme" value="wxbf083887994f7d4d"/>
-    <param name="apiKey" value="wxbf083887994f7d4d"/>
-    <param name="apiSecret" value="f479f43fb848b0a3d13284fbd1fec6e4"/>
-  </feature>
-  <feature name="wx">
-   <param name="urlScheme" value="wxbf083887994f7d4d"/>
-   <param name="apiKey" value="wxbf083887994f7d4d"/>
-   <param name="apiSecret" value="f479f43fb848b0a3d13284fbd1fec6e4"/>
- </feature>
-  <!--支付宝支付-->
-  <feature name="aliPayPlus">
-     <param name="urlScheme" value="AliPayPlusA6069365614406" />
- </feature>
+        <param name="urlScheme" value="wxbf083887994f7d4d"/>
+        <param name="apiKey" value="wxbf083887994f7d4d"/>
+        <param name="apiSecret" value="f479f43fb848b0a3d13284fbd1fec6e4"/>
+    </feature>
+    <feature name="wx">
+        <param name="urlScheme" value="wxbf083887994f7d4d"/>
+        <param name="apiKey" value="wxbf083887994f7d4d"/>
+        <param name="apiSecret" value="f479f43fb848b0a3d13284fbd1fec6e4"/>
+    </feature>
+    <!--支付宝支付-->
+    <feature name="aliPayPlus">
+        <param name="urlScheme" value="AliPayPlusA6069365614406"/>
+    </feature>
 </widget>

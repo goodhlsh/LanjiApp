@@ -198,19 +198,7 @@
                             msg: '退出成功'
                         }
                     });
-                    $api.rmStorage('userInfo');
-                    $api.rmStorage('currentwallet');
-                    $api.rmStorage('shoppingcart');
-                    $api.rmStorage('dingdankuan');
-                    $api.rmStorage('currentFirst');
-                    $api.rmStorage('shfzh');
-                    $api.rmStorage('shfzhbei');
-                    $api.rmStorage('currentProvice');
-                    $api.rmStorage('currentCity');
-                    $api.rmStorage('currentQu');
-                    $api.rmStorage('newmessage');
-                    $api.rmStorage('AddressId');
-                    $api.rmStorage('avatar');
+                    fnRmAllStorage();
                     setTimeout("api.closeWin({})", 2000);
                 }
             }

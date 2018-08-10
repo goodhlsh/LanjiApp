@@ -14,23 +14,11 @@
         body {
             height: 100%;
         }
-
-        .aui-searchbar {
-            background: transparent;
-        }
-
-        .aui-bar-nav .aui-searchbar-input {
-            background-color: #ffffff;
-        }
-
-        .aui-bar-light .aui-searchbar-input {
-            background-color: #f5f5f5;
-        }
     </style>
 </head>
 
 <body>
-    <header class="aui-bar aui-bar-nav" id="aui-header">
+  <!--  <header class="aui-bar aui-bar-nav" id="aui-header">
         <div class="aui-pull-left aui-btn" onclick="fnOpenScanner()">
             <i class="aui-iconfont aui-icon-scan"></i>
         </div>
@@ -43,13 +31,14 @@
                         <i class="aui-iconfont aui-icon-close"></i>
                     </div>
                 </div>
+
                 <div class="aui-searchbar-btn aui-text-warning" tapmode>取消</div>
             </div>
         </div>
         <div class="aui-btn aui-pull-right open-win" tapmode="highlight" win="html/extension">
             <span class="aui-iconfont aui-icon-qrcode"></span>
         </div>
-    </header>
+    </header>  -->
     <div id="main">
         <div id="nowip" style="display:none"></div>
     </div>
@@ -99,60 +88,7 @@
         //}
     };
 
-    /*搜索框--begin*/
-    var searchBar = document.querySelector(".aui-searchbar");
-    var searchBarInput = document.querySelector(".aui-searchbar input");
-    var searchBarBtn = document.querySelector(".aui-searchbar .aui-searchbar-btn");
-    var searchBarClearBtn = document.querySelector(".aui-searchbar .aui-searchbar-clear-btn");
-    if (searchBar) {
-        searchBarInput.onclick = function() {
-            searchBarBtn.style.marginRight = 0;
-        }
-        searchBarInput.oninput = function() {
-            if (this.value.length) {
-                searchBarClearBtn.style.display = 'block';
-                searchBarBtn.classList.add("aui-text-warning");
-                searchBarBtn.textContent = "搜索";
-            } else {
-                searchBarClearBtn.style.display = 'none';
-                searchBarBtn.classList.remove("aui-text-info");
-                searchBarBtn.textContent = "取消";
-            }
-        }
-    }
-    searchBarClearBtn.onclick = function() {
-        this.style.display = 'none';
-        searchBarInput.value = '';
-        searchBarBtn.classList.remove("aui-text-info");
-        searchBarBtn.textContent = "取消";
-    }
-    searchBarBtn.onclick = function() {
-            var keywords = searchBarInput.value;
-            if (keywords.length) {
-                searchBarInput.blur();
-                //将搜索的关键词存入本地
-                //?????改进保存多个关键词
-                $api.setStorage('keyword', keywords);
-
-                //添加搜索结果代码
-                //打开搜索窗口
-                api.openWin({
-                    name: 'search_result',
-                    url: './html/search_result.html',
-                    pageParam: {
-                        keyword: keywords
-                    }
-                });
-
-
-            } else {
-                this.style.marginRight = "-" + this.offsetWidth + "px";
-                searchBarInput.value = '';
-                searchBarInput.blur();
-            }
-        }
-        /*搜索框--end*/
-        //返回及退出程序
+    //返回及退出程序
     function fnInitListener() {
         var flag = false;
         api.addEventListener({
@@ -186,14 +122,13 @@
         });
     }
 
-    var header, footer, headerHeight, footerHeight;
-
-    //求首部和底部高
+    //求首部和底部高 用户信息
+    var footer, footerHeight;
     function fnInit() {
-        header = $api.byId('aui-header');
+      //  header = $api.byId('aui-header');
         footer = $api.byId('aui-footer');
-        $api.fixStatusBar(header);
-        headerHeight = $api.offset(header).h;
+      //  $api.fixStatusBar(header);
+      //  headerHeight = $api.offset(header).h;
         footerHeight = $api.offset(footer).h;
         fnInitUserInfo();
         //设置我的小红点
@@ -204,7 +139,7 @@
             $api.addCls(mydot, 'aui-dot');
         }
     }
-  //从后台更新本地存储
+    //从后台更新本地存储
     function fnInitUserInfo() {
       var filter = {
           where: {
@@ -219,103 +154,9 @@
           }
       });
     }
-
-    var isAuth;
-    //打开默认的二维码扫描
-    function fnOpenScanner() {
-
-        if (!$api.getStorage('userInfo')) {
-            api.openWin({
-                name: 'login',
-                url: 'login.html',
-                pageParam: {
-                    name: ''
-                }
-            });
-        } else {
-            var fnscanner = api.require('FNScanner');
-            fnscanner.open({
-                autorotation: true
-            }, function(ret, err) {
-                console.log(JSON.stringify(ret));
-                if (ret && 'success' == ret.eventType) {
-                    //推广
-                    if (ret.content.substr(0, 5) == 'tuigu') {
-                        isAuth = $api.getStorage('userInfo').IsAuth; //先验证后扫描
-
-                        if (!isAuth) {
-                            var tid_ = ret.content.substr(5);
-                            var userid_ = $api.getStorage('userInfo').Id;
-                            var data = {
-                                body: JSON.stringify({
-                                    uid: userid_,
-                                    tid: tid_
-                                })
-                            };
-                            fnPost('SysUser/PostTuiGuang', data, 'application/json', false, false, function(ret, err) {
-                                if (ret) {
-                                    api.alert({
-                                        title: '消息',
-                                        msg: '推荐成功!'
-                                    });
-                                }
-                            });
-                        } else {
-                            alert('该用户已是认证会员，不再参与推广！')
-                        }
-                    }
-                    //ret.content为pid，应已在jiapu表中
-                    //先判断ret.content的用户是否存在jiapu表
-                    //如果存在再将推荐用户存入jiapubefore表
-                    if (ret.content.substr(0, 5) == 'lanji') {
-                        isAuth = $api.getStorage('userInfo').IsAuth; //先验证后扫描
-
-                        if (!isAuth) {
-                            api.alert({
-                                title: '帮助',
-                                msg: '请先实名验证，验证后再扫描推荐人二维码',
-                            }, function(ret, err) {
-                                if (ret) {
-                                    //alert( JSON.stringify( ret ) );
-                                    //打开验证窗口
-                                    api.openWin({
-                                        name: 'myauth',
-                                        url: './html/myauth.html',
-                                        pageParam: {
-                                            userid: $api.getStorage('userInfo').Id
-                                        }
-                                    });
-                                }
-                            });
-                        } else {
-                            //打开提交窗口
-                            api.openFrame({
-                                name: 'inClub_frm',
-                                url: './html/inClub_frm.html',
-                                rect: {
-                                  x: 0,
-                                  y: 0,
-                                  w: api.winWidth,
-                                  h: api.winHeight
-                                },
-                                pageParam: {
-                                    tid: ret.content.substr(5)
-                                },
-                                bounces: true,
-                                bgColor: 'rgba(0, 0, 0, 0.6)',
-                                vScrollBarEnabled: false,
-                                hScrollBarEnabled: false
-                            });
-                        }
-                    }
-                }
-            });
-        }
-    }
-
+    //初始化首页
     var frames = ['m_home_frm'];
     var currindex = 0;
-
     function fnChange(obj, index) {
         var footerAct = $api.dom(footer, 'div.aui-active');
         $api.removeCls(footerAct, 'aui-active');
@@ -324,15 +165,14 @@
         });
         $api.addCls(obj, 'aui-active');
         currindex = index;
-
         api.openFrame({
             name: frames[currindex],
             url: './html/' + frames[currindex] + '.html',
             rect: {
                 x: 0,
-                y: headerHeight,
+                y: 0,//
                 w: 'auto',
-                h: api.frameHeight - headerHeight - footerHeight
+                h: api.frameHeight - footerHeight
             },
             pageParam: {
                 name: ''

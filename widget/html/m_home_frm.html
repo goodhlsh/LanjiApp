@@ -11,20 +11,51 @@
     <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
     <style>
         body {}
+        /*顶部begin*/
 
-        .banner {
+        .bgtran {
+            background: rgba(255, 255, 255, 0.6) none repeat scroll 0 0 !important;
+            /*实现FF背景透明，文字不透明*/
+            filter: Alpha(opacity=90);
+            background: #FFF;
+            /*实现IE背景透明*/
             width: 100%;
-            height: 82px;
+            box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
+            /*投影*/
+            -webkit-box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
+            -moz-box-shadow: 0px 1px 1px 1px 1gba(0, 0, 0, 0.1);
+            -o-box-shadow: 0px 1px 1px 1px 1gba(0, 0, 0, 0.1);
         }
 
-        .banner img {
-            width: 100%;
-            height: 100%;
+        header {
+            height: 114px;
         }
+
+        .fixed {
+            position: fixed;
+            /* 随着鼠标滚动固定位置*/
+        }
+
+        .tran {
+            background: transparent;
+        }
+
+        .aui-searchbar {
+            background: transparent;
+        }
+
+        .aui-bar-nav .aui-searchbar-input {
+            background-color: #ffffff;
+        }
+
+        .aui-bar-light .aui-searchbar-input {
+            background-color: #f5f5f5;
+        }
+        /*顶部end*/
 
         .splite {
-            height: 12px;
-            background-color: #eee;
+            height: 10px;
+            background-color: #e0e0e0;
         }
 
         .hightitem {
@@ -34,12 +65,12 @@
 
         .aui-slide-node {
             width: auto;
-            height: 160px;
+            height: 604px;
         }
 
         .aui-slide-node img {
-            width: auto;
-            height: auto;
+            width: 100%;
+            height: 100%;
             /*宽度 自适应*/
             max-width: 100%;
             /*高度 百分百*/
@@ -54,26 +85,79 @@
         }
         /* 2X2样式 */
 
+        .activebg {
+            background-color: #eee;
+        }
+
         .matrix {
             display: table;
+            width: 100%;
             height: inherit;
+            border: solid 3px #eee;
+            box-shadow: #e6e6e6 4px 4px 20px 5px; //边框阴影
+            /*  box-shadow：color  h-shadow  v-shadow blur spread  inset；
+                color：阴影颜色 ------------ 可选
+                h-shadow ：水平偏移量 ----必选
+                v-shadow：垂直偏移量-----必选
+                 blur：模糊距离 -------------可选
+                 spread：阴影尺寸---------- 可选
+                 inset：内阴影 --------------可选
+               */
+            border-radius: 30px;
+            -webkit-border-radius: 30px;
+            background-color: #fff;
         }
 
         .matrix .matrixcell {
-            padding-left: 8px;
+
+            width: 100%;
+            height: 100%;
+            text-align: center;
         }
 
         .matrix .matrixcell .info {
             font-size: 14px;
             line-height: 14px;
-            padding-top: 8px;
             padding-left: 8px;
+            color: #f26384;
+        }
+        .matrix .matrixcell .info .rmb{
+            font-size: 10px;
+            line-height: 10px;
+
+            color: #f26384;
         }
 
-        .fl {
-            margin-left: 2px;
-            margin-right: 2px;
+        .matrix .matrixcell img {
+            padding: 2px;
+            width: 80%;
+            height: 70%;
+            margin: 0 auto;
+        }
 
+        .remaiheaddiv{
+          width: 100%;
+          height: 45px;
+          margin: 0 auto;
+          background-color: #eee;
+          
+        }
+        .remaiheaddiv .remailogo{
+          width: auto;
+          height: auto;
+          max-width: 100%;
+          max-height: 100%;
+        }
+        .ljgmdiv{
+          width: 150px;
+          height: 45px;
+          margin: 4px auto;
+        }
+        .ljgmdiv .btn {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
         }
         /* 猜你喜欢 */
 
@@ -83,7 +167,9 @@
             padding-left: 10px;
             vertical-align: top;
             font-size: 14px;
-            color: #999;
+            color: #222;
+            background-color: #eee;
+            border-bottom: 1px solid #e0e0e0;
         }
 
         .home-like-list .item {
@@ -239,23 +325,176 @@
             height: 0;
             clear: both;
         }
+        /*九宫格---begin*/
+
+        .tools {
+            width: 100%;
+            max-width: 750px;
+            height: 280px;
+            margin: 0 auto;
+            background-color: #eee;
+        }
+
+        .con {
+            width: 100%;
+            position: relative;
+            left: 0;
+            top: 0px;
+        }
+
+        table {
+            margin: 0 auto;
+            box-sizing: border-box;
+            padding: 15px 15px 0 0;
+        }
+
+        table tr td {
+            display: inline-block;
+            float: left;
+            padding: 0 0 15px 15px;
+        }
+
+        table tr td .box {
+            width: 75px;
+            height: 60px;
+            line-height: 60px;
+            display: inline-block;
+            background: #e5e5e5;
+            color: #000;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+        /*九宫格---end*/
+        /*优惠logo*/
+        .youhuidiv{
+          width: 100%;
+          height: 70px;
+          margin: 0 auto;
+          padding: 0px;
+          background-color: #eee;
+        }
+        .youhuidiv .youhuilogo{
+          width: auto;
+          height: auto;
+          max-width: 100%;
+          max-height: 100%;
+        }
+
+        .post {
+            position: relative;
+            top: 10px;
+        }
     </style>
 </head>
 
 <body>
-    <div id="banner" class="banner">
-        <img src="../image/header/banner.png" />
-    </div>
-    <div id="aui-slide">
-        <div id="swiplist" class="aui-slide-wrap">
+    <header class="aui-bar aui-bar-nav bgtran fixed" id="aui-header">
+        <div class="aui-pull-left aui-btn" onclick="fnOpenScanner()">
+            <i class="aui-iconfont aui-icon-scan"></i>
+        </div>
+        <div class="aui-title" style="left:1.5rem; right: 1.5rem;">
+            <div class="aui-searchbar" id="search">
+                <div class="aui-searchbar-input aui-border-radius">
+                    <i class="aui-iconfont aui-icon-search"></i>
+                    <input type="search" placeholder="请输入搜索内容" id="search-input">
+                    <div class="aui-searchbar-clear-btn">
+                        <i class="aui-iconfont aui-icon-close"></i>
+                    </div>
+                </div>
+
+                <div class="aui-searchbar-btn aui-text-warning" tapmode>取消</div>
+            </div>
+        </div>
+        <div class="aui-btn aui-pull-right open-win" tapmode="highlight" win="extension">
+            <span class="aui-iconfont aui-icon-qrcode"></span>
+        </div>
+    </header>
+
+    <div id="aui-slide" class="post">
+        <div id="swiplist0" class="aui-slide-wrap">
+            <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center  open-win" win="ware">
+                <div class="aui-content aui-text-center">
+                    <img src="../image/home/banner1.jpg" class="" /></div>
+            </div>
         </div>
         <div class="aui-slide-page-wrap">
             <!--分页容器-->
         </div>
     </div>
 
-    <div class="splite"></div>
-    <section class="aui-grid">
+
+    <div id="cont" class="tools  post">
+        <div class="con">
+            <table>
+                <tr>
+                    <td>
+                        <div class="box">
+                            <img src="../image/home/tuiguang.png"></img>
+                            <div class="aui-grid-label">推广</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="box">
+                            <img src="../image/home/fenxiao.png"></img>
+                            <div class="aui-grid-label">分销</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="box">
+                            <img src="../image/home/chongzhi.png"></img>
+                            <div class="aui-grid-label">充值</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="box">
+                            <img src="../image/home/tixian.png"></img>
+                            <div class="aui-grid-label">提现</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="box open-win" win="franchisee">
+                            <img src="../image/home/mendian.png"></img>
+                            <div class="aui-grid-label">门店</div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="box">
+                            <img src="../image/home/xiaoxi.png"></img>
+                            <div class="aui-grid-label">消息</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="box">
+                            <img src="../image/home/zhangdan.png"></img>
+                            <div class="aui-grid-label">账单</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="box">
+                            <img src="../image/home/faxian.png"></img>
+                            <div class="aui-grid-label">发现</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="box">
+                            <img src="../image/home/dingdan.png"></img>
+                            <div class="aui-grid-label">订单</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="box">
+                            <img src="../image/home/wuliu.png"></img>
+                            <div class="aui-grid-label">物流</div>
+                        </div>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+    <!--bootstrap 九宫格  <section class="aui-grid">
         <div class="aui-row">
             <div class="aui-col-xs-3">
                 <i class="aui-iconfont aui-icon-favor"></i>
@@ -290,67 +529,89 @@
                 <div class="aui-grid-label">订单</div>
             </div>
         </div>
-        <div class="splite"></div>
-    <section class="aui-grid">
+        -->
+    <section class="aui-grid  post">
+      <div class="youhuidiv"><img class="youhuilogo" src="../image/home/youhui.png"/></div>
+
         <div class="aui-row">
-            <div id="activelist">
-              <div class="aui-col-xs-6  aui-padded-5">
-                  <div class="fl open-win" win="active" param=''>
-                      <div class="matrix">
-                          <div class="matrixcell">
-                              <div class="aui-grid-label"></div>
-                          </div>
-                      </div>
+            <div class="remaiheaddiv"><img src="../image/home/remailogo.png" class="remailogo" /></div>
+            <div id="activelist" class="activebg">
+                <div class="aui-col-xs-6 aui-padded-l-5 aui-padded-0 activebg">
+                    <div class="activebg open-win" win="active" param=''>
+                        <div class="matrix">
+                            <div class="matrixcell">
+                                <div class="aui-grid-label">
+                                    <img src="../image/home/remaitu_01.png">
+                                    <div class="aui-text-warning">商品名称</div>
+                                    <div class="info"><span class="rmb"><i>RMB</i></span> 330<span class="rmb"><i>原价￥390</i></span></div>
+                                    <div class="ljgmdiv"><img class="btn" src="../image/home/ljgm.png" /></div>
+                                </div>
+                            </div>
+                        </div>
 
-                      <img  src="../image/active/0.png" class="" />
-                  </div>
-              </div>
-              <div class="aui-col-xs-6  aui-padded-5">
-                  <div class="fl open-win" win="" param=''>
-                      <div class="matrix">
-                          <div class="matrixcell">
-                              <div class="aui-grid-label"></div>
-                          </div>
-                      </div>
 
-                      <img  src="../image/active/1.png" class="fl" />
-                  </div>
-              </div>
-              <div class="aui-col-xs-6  aui-padded-5">
-                  <div class="fl open-win" win="" param=''>
-                      <div class="matrix">
-                          <div class="matrixcell">
-                              <div class="aui-grid-label"></div>
-                          </div>
-                      </div>
+                    </div>
+                </div>
+                <div class="aui-col-xs-6 aui-padded-r-5 aui-padded-0 activebg">
+                    <div class="activebg open-win" win="active" param=''>
+                        <div class="matrix">
+                            <div class="matrixcell">
+                              <div class="aui-grid-label">
+                                  <img src="../image/home/remaitu_01.png">
+                                  <div class="aui-text-warning">商品名称</div>
+                                  <div class="info"><span class="rmb"><i>RMB</i></span> 330<span class="rmb"><i>原价￥390</i></span></div>
+                                  <div class="ljgmdiv"><img class="btn" src="../image/home/ljgm.png" /></div>
+                              </div>
+                            </div>
+                        </div>
 
-                      <img  src="../image/active/2.png" class="fl" />
-                  </div>
-              </div>
-              <div class="aui-col-xs-6  aui-padded-5">
-                  <div class="fl open-win" win="" param=''>
-                      <div class="matrix">
-                          <div class="matrixcell">
-                              <div class="aui-grid-label"></div>
-                          </div>
-                      </div>
 
-                      <img  src="../image/active/3.png" class="fl" />
-                  </div>
-              </div>
+                    </div>
+                </div>
+                <div class="aui-col-xs-6 aui-padded-b-5 aui-padded-0 activebg">
+                    <div class="activebg open-win" win="active" param=''>
+                        <div class="matrix">
+                            <div class="matrixcell">
+                              <div class="aui-grid-label">
+                                  <img src="../image/home/remaitu_01.png">
+                                  <div class="aui-text-warning">商品名称</div>
+                                  <div class="info"><span class="rmb"><i>RMB</i></span> 330<span class="rmb"><i>原价￥390</i></span></div>
+                                  <div class="ljgmdiv"><img class="btn" src="../image/home/ljgm.png" /></div>
+                              </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="aui-col-xs-6 aui-padded-b-5 aui-padded-0 activebg">
+                    <div class="activebg open-win" win="active" param=''>
+                        <div class="matrix">
+                            <div class="matrixcell">
+                              <div class="aui-grid-label">
+                                  <img src="../image/home/remaitu_01.png">
+                                  <div class="aui-text-warning">商品名称</div>
+                                  <div class="info"><span class="rmb"><i>RMB</i></span> 330<span class="rmb"><i>原价￥390</i></span></div>
+                                  <div class="ljgmdiv"><img class="btn" src="../image/home/ljgm.png" /></div>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
-<div class="splite"></div>
-    <div class="guesstitle">猜你喜欢</div>
-    <div id="list" class="home-like-list">
 
+    <div class="guesstitle  post">猜你喜欢</div>
+    <div id="list" class="home-like-list  post">
     </div>
 </body>
 <script type="text/template" id="swiptemplate">
     {{~it:swipdata }}
     <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center  open-win" win="ware" param='{"wareId":"{{= swipdata.Id }}"}'>
-        <img id="thumbnail_{{= swipdata.Id }}" src="{{= swipdata.Thumbnail}}" /></div>
+        <div class="aui-content aui-padded-15 aui-text-center">
+            <img id="thumbnail_{{= swipdata.Id }}" src="{{= swipdata.Thumbnail}}" class="" /></div>
+    </div>
     {{~}}
 </script>
 
@@ -384,13 +645,20 @@
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript" src="../script/list.js"></script>
 <script type="text/javascript">
+    var header, cont;
     apiready = function() {
+        fnReady();
+        header = $api.byId('aui-header');
+        cont = $api.byId('cont');
+        header_t = $api.offset(header).t;
+        cont_t = $api.offset(cont).t;
+        $api.fixStatusBar(header);
 
         fnInitSwipList(0, 6); //首页滚动图片
 
         fnInitActiveList(0, 4); //首页活动内容
-
-        keyword = $api.getStorage('keyword');
+        index_ = $api.getStorage('index_') != null ? $api.getStorage('index_') : 0;
+        keyword = $api.getStorage('keyword') != null ? $api.getStorage('keyword') : "";
         //按最近一次搜索的商品给出喜欢的商品
         fnInitLikeList(keyword, 0, 20);
         // 初始化事件监听
@@ -399,7 +667,61 @@
         initRefresh();
         //api.refreshHeaderLoading();
     };
+    /*搜索框--begin*/
+    var searchBar = document.querySelector(".aui-searchbar");
+    var searchBarInput = document.querySelector(".aui-searchbar input");
+    var searchBarBtn = document.querySelector(".aui-searchbar .aui-searchbar-btn");
+    var searchBarClearBtn = document.querySelector(".aui-searchbar .aui-searchbar-clear-btn");
+    if (searchBar) {
+        searchBarInput.onclick = function() {
+            searchBarBtn.style.marginRight = 0;
+        }
+        searchBarInput.oninput = function() {
+            if (this.value.length) {
+                searchBarClearBtn.style.display = 'block';
+                searchBarBtn.classList.add("aui-text-warning");
+                searchBarBtn.textContent = "搜索";
+            } else {
+                searchBarClearBtn.style.display = 'none';
+                searchBarBtn.classList.remove("aui-text-info");
+                searchBarBtn.textContent = "取消";
+            }
+        }
+    }
+    searchBarClearBtn.onclick = function() {
+        this.style.display = 'none';
+        searchBarInput.value = '';
+        searchBarBtn.classList.remove("aui-text-info");
+        searchBarBtn.textContent = "取消";
+    }
+    searchBarBtn.onclick = function() {
+            keywords = searchBarInput.value;
+            if (keywords.length) {
+                searchBarInput.blur();
+                //将搜索的关键词存入本地
+                //?????改进保存多个关键词
+                $api.setStorage('keyword', keywords);
 
+                //添加搜索结果代码
+                //打开搜索窗口
+                api.openWin({
+                    name: 'search_result',
+                    url: './search_result.html',
+                    pageParam: {
+                        keyword: keywords
+                    }
+                });
+
+
+            } else {
+                this.style.marginRight = "-" + this.offsetWidth + "px";
+                searchBarInput.value = '';
+                searchBarInput.blur();
+            }
+        }
+        /*搜索框--end*/
+
+    /*幻灯片begin*/
     function fnInitSwipList(skip, swipLIMIT) {
         fnGet('Spl_Ware/GetAllTop', {
             'where': {
@@ -413,26 +735,78 @@
                 api.hideProgress();
                 api.refreshHeaderLoadDone();
                 fnShowSwipList(ret);
-                fnCacheImage(ret, 0);
+                fnCacheImage(ret, index_);
             } else {
                 console.log(JSON.stringify(err));
             }
         });
 
     }
+
     var swiplist;
 
     function fnShowSwipList(datas) {
-        swiplist = $api.byId('swiplist');
+        //swiplist = $api.byId('swiplist');
         var swiptemplate = $api.byId('swiptemplate');
         if (swiptemplate) {
             dotswip = doT.template(swiptemplate.innerHTML);
         }
-        swiplist.innerHTML = dotswip(datas);
+        //  swiplist.innerHTML = dotswip(datas);
         fnReadyOpenWin();
         fnAuiSlide();
     };
 
+    function fnAuiSlide() {
+        var slide = new auiSlide({
+            //      指定 获取当前页的函数  必须实现
+            //  currentPage:currentFun,
+            //      获取最外层div元素
+            "container": document.getElementById("aui-slide"),
+            //      高度
+            "height": 260,
+            //      速度
+            "speed": 300,
+            //自动播放
+            "autoPlay": 3000,
+            //      是否显示
+            "pageShow": true,
+            //      点风格显示
+            "pageStyle": 'dot',
+            //      是否循环 滚动
+            "loop": true,
+            //      点的位置
+            "dotPosition": 'center',
+        });
+
+        //  获取总页数
+        var pageCount = slide.pageCount();
+    }
+    //获取当前页数的函数  aui会自动调用这个函数
+    function currentFun(index) {
+        //查询.aui-slide-node类的dom数组对象
+        var slideList = document.querySelectorAll(".aui-slide-node");
+        //  document.write('对象：'+slide+'页数'+pageCount + '列表' + slideList + '当前页数' + index)
+        //循环遍历
+        for (var i = 0; i < slideList.length; i++) {
+            //判断当前页数
+            if (index == i) {
+                //获取子dom对象中的div数组
+                var thisDiv = slideList[i].querySelector("div");
+                //延时执行函数，0.3秒后调用function()函数
+                setTimeout(function() {
+                    if (thisDiv.classList.contains("aui-hide")) {
+                        thisDiv.classList.remove("aui-hide");
+                    }
+                    thisDiv.querySelector("img").classList.add("fadeInTop");
+                    thisDiv.querySelector(".desc").classList.add("fadeInBottom");
+                }, 300)
+            }
+        }
+    }
+
+    /*幻灯片end*/
+    /*热卖begin*/
+    var activelist;
 
     function fnInitActiveList(skip, activeLIMIT) {
         fnGet('Spl_Ware/GetAllActive', {
@@ -445,10 +819,9 @@
             api.hideProgress();
             api.refreshHeaderLoadDone();
 
-            fnCacheImage(ret, 0);
+            fnCacheImage(ret, index_);
         });
     };
-    var activelist;
 
     function fnShowActiveList(datas) {
         activelist = $api.byId('activelist');
@@ -459,6 +832,8 @@
         activelist.innerHTML = dotactive(datas);
         fnReadyOpenWin();
     };
+    /*热卖end*/
+    /*猜我喜欢begin*/
     var keyword;
 
     function fnInitLikeList(keyword, skip, likeLIMIT) {
@@ -490,24 +865,27 @@
         list.innerHTML = dotlike(datas);
         fnReadyOpenWin();
     };
-
+    /*猜我喜欢end*/
+    //图片缓存本地
+    var index_;
 
     function fnCacheImage(datas, index) {
         if (datas.length <= index) {
             return;
         }
         api.imageCache({
-            url: datas[index].Thumbnail
+            url: datas[index].Thumbnail //???????????????????
         }, function(ret, err) {
             var thumbnail = $api.byId("thumbnail_" + datas[index].Id);
             if (thumbnail) {
                 thumbnail.src = datas[index].Thumbnail;
             }
-
-            fnCacheImage(datas, index + 1);
+            index_ = index + 1;
+            fnCacheImage(datas, index_);
         });
+        $api.setStorage('index_', index_);
     };
-
+    /*初始化事件*/
     function initEventListenter() {
         // 监听滚动到Frame底部的事件
         api.addEventListener({
@@ -517,18 +895,35 @@
             }
         }, function(ret, err) {
             // 获取更多的商品
-            if (skip < 10) {
+            if (skip > 10) {
                 skip = skip + limit;
                 limit += 10;
             }
+            fnInitLikeList(keyword, skip, limit);
+        });
 
-            //  fnInitLikeList(keyword, skip, limit);
+        //监听窗口向下滑动
+        api.addEventListener({
+            name: 'swipedown'
+        }, function(ret, err) {
+            if (cont.getBoundingClientRect().top <= $api.offset(header).h) {
+                $api.addCls(header, 'bgtran');
+            }
+        });
+        //监听窗口向上滑动
+        api.addEventListener({
+            name: 'swipeup'
+        }, function(ret, err) {
+            if (cont.getBoundingClientRect().top > $api.offset(header).h) {
+                $api.removeCls(header, 'bgtran');
+            }
         });
     }
 
+    // 实现下拉刷新功能
     var skip = 0,
         limit = 10;
-    // 实现下拉刷新功能
+
     function initRefresh() {
         api.setRefreshHeaderInfo({
             visible: true,
@@ -537,39 +932,129 @@
             textColor: '#e1017e',
             showTime: true
         }, function(ret, err) {
-            // 刷新商品列表
-            // 获取更多的商品
-            if (skip < 0) {
-                skip = skip + limit;
-                limit += 10;
+            // 首页内容刷新
+            fnInitSwipList(0, 6); //首页滚动图片
+
+            fnInitActiveList(0, 4); //首页活动内容
+            index_ = $api.getStorage('index_') != null ? $api.getStorage('index_') : 0;
+            keyword = $api.getStorage('keyword') != null ? $api.getStorage('keyword') : "";
+            //按最近一次搜索的商品给出喜欢的商品
+            fnInitLikeList(keyword, 0, 20);
+            //用户信息更新
+            fnInitUserInfo();
+        });
+    }
+    //从后台更新本地存储
+    function fnInitUserInfo() {
+        var filter = {
+            where: {
+                Id: $api.getStorage('userInfo').Id
+            },
+            skip: 0,
+            limit: 1
+        }
+        fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('userInfo', ret);
             }
-
-            fnInitLikeList(keyword, skip, limit);
         });
     }
+    /*扫描推荐begin*/
+    //打开默认的二维码扫描
+    var isAuth;
 
-    function fnAuiSlide() {
-        var slide = new auiSlide({
-            //      指定 获取当前页的函数  必须实现
-            //  currentPage:currentFun,
-            //      获取最外层div元素
-            "container": document.getElementById("aui-slide"),
-            //      高度
-            "height": 260,
-            //      速度
-            "speed": 300,
-            //自动播放
-            "autoPlay": 3000,
-            //      是否显示
-            "pageShow": true,
-            //      点风格显示
-            "pageStyle": 'line',
-            //      是否循环 滚动
-            "loop": true,
-            //      点的位置
-            "dotPosition": 'center',
-        });
+    function fnOpenScanner() {
+
+        if (!$api.getStorage('userInfo')) {
+            api.openWin({
+                name: 'login',
+                url: 'login.html',
+                pageParam: {
+                    name: ''
+                }
+            });
+        } else {
+            var fnscanner = api.require('FNScanner');
+            fnscanner.open({
+                autorotation: true
+            }, function(ret, err) {
+                console.log(JSON.stringify(ret));
+                if (ret && 'success' == ret.eventType) {
+                    //推广
+                    if (ret.content.substr(0, 5) == 'tuigu') {
+                        isAuth = $api.getStorage('userInfo').IsAuth; //先验证后扫描
+
+                        if (!isAuth) {
+                            var tid_ = ret.content.substr(5);
+                            var userid_ = $api.getStorage('userInfo').Id;
+                            var data = {
+                                body: JSON.stringify({
+                                    uid: userid_,
+                                    tid: tid_
+                                })
+                            };
+                            fnPost('SysUser/PostTuiGuang', data, 'application/json', false, false, function(ret, err) {
+                                if (ret) {
+                                    api.alert({
+                                        title: '消息',
+                                        msg: '推荐成功!'
+                                    });
+                                }
+                            });
+                        } else {
+                            alert('该用户已是认证会员，不再参与推广！')
+                        }
+                    }
+                    //ret.content为pid，应已在jiapu表中
+                    //先判断ret.content的用户是否存在jiapu表
+                    //如果存在再将推荐用户存入jiapubefore表
+                    if (ret.content.substr(0, 5) == 'lanji') {
+                        isAuth = $api.getStorage('userInfo').IsAuth; //先验证后扫描
+
+                        if (!isAuth) {
+                            api.alert({
+                                title: '帮助',
+                                msg: '请先实名验证，验证后再扫描推荐人二维码',
+                            }, function(ret, err) {
+                                if (ret) {
+                                    //alert( JSON.stringify( ret ) );
+                                    //打开验证窗口
+                                    api.openWin({
+                                        name: 'myauth',
+                                        url: './html/myauth.html',
+                                        pageParam: {
+                                            userid: $api.getStorage('userInfo').Id
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            //打开提交窗口
+                            api.openFrame({
+                                name: 'inClub_frm',
+                                url: './html/inClub_frm.html',
+                                rect: {
+                                    x: 0,
+                                    y: 0,
+                                    w: api.winWidth,
+                                    h: api.winHeight
+                                },
+                                pageParam: {
+                                    tid: ret.content.substr(5)
+                                },
+                                bounces: true,
+                                bgColor: 'rgba(0, 0, 0, 0.6)',
+                                vScrollBarEnabled: false,
+                                hScrollBarEnabled: false
+                            });
+                        }
+                    }
+                }
+            });
+        }
     }
+
+    /*扫描推荐end*/
 </script>
 
 </html>

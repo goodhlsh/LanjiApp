@@ -27,7 +27,24 @@
   <script type="text/javascript">
       apiready = function(){
         fnReady();
-        fnReadyFrame();
+        api.openFrame({
+            name: 'active_frm',
+            url: './active_frm.html',
+            rect: {
+                x: 0,
+                y: 0,
+                w: 'auto',
+                h: 'auto'
+            },
+            pageParam: {
+                name: 'test'
+            },
+            bounces: true,
+            bgColor: 'rgba(0,0,0,0)',
+            vScrollBarEnabled: false,
+            hScrollBarEnabled: true
+        });
+
       };
   </script>
   </html>

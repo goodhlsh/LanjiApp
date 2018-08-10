@@ -189,6 +189,7 @@
 <script type="text/javascript" src="../script/common.js"></script>
 <script type="text/javascript" src="../script/SHA1.js"></script>
 <script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript" src="../script/rmst.js"></script>
 <script type="text/javascript">
     apiready = function() {
         userAvatar = $api.byId('userAvatar');
@@ -253,19 +254,7 @@
     function fnResetUserInfo() {
 
         //清除本地存储
-        $api.rmStorage('userInfo');
-        $api.rmStorage('currentwallet');
-        $api.rmStorage('shoppingcart');
-        $api.rmStorage('dingdankuan');
-        $api.rmStorage('currentFirst');
-        $api.rmStorage('shfzh');
-        $api.rmStorage('shfzhbei');
-        $api.rmStorage('currentProvice');
-        $api.rmStorage('currentCity');
-        $api.rmStorage('currentQu');
-        $api.rmStorage('newmessage');
-        $api.rmStorage('AddressId');
-        $api.rmStorage('avatar');
+        fnRmAllStorage();
 
 
         api.openWin({

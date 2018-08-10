@@ -7,6 +7,12 @@ function fnRmAllStorage() {
     $api.rmStorage('dingdankuan');
     $api.rmStorage('shfzh');
     $api.rmStorage('shfzhbei');
+    $api.rmStorage('currentFirst');
+    $api.rmStorage('currentProvice');
+    $api.rmStorage('currentCity');
+    $api.rmStorage('currentQu');
+    $api.rmStorage('newmessage');
+    $api.rmStorage('avatar');
 };
 //清除所有本地存储记录
 function fnRmStorage() {
@@ -15,4 +21,10 @@ function fnRmStorage() {
     $api.rmStorage('shfzhbei');
     $api.rmStorage('shoppingcart');
     $api.rmStorage('dingdankuan');
+    $api.rmStorage('currentProvice');
+    $api.rmStorage('currentCity');
+    $api.rmStorage('currentQu');
+    $api.rmStorage('newmessage');
+    $api.rmStorage('avatar');
+    $api.rmStorage('currentwallet');
 };

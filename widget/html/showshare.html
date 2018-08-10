@@ -48,6 +48,8 @@
           left:0px;
           top:0px;
           z-index: 0;
+          width: 100%;
+          height: 100%;
         }
         .card-extend {
           position: absolute;
@@ -88,7 +90,7 @@
 
     apiready = function() {
         fnReady();
-        
+
         api.parseTapmode();
         var usid;
         if ($api.getStorage('userInfo')) {
