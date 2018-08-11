@@ -124,10 +124,13 @@
 
             color: #f26384;
         }
+          .matrix .matrixcell .info .yuanjia{
+            text-decoration:line-through;
+          }
 
         .matrix .matrixcell img {
             padding: 2px;
-            width: 80%;
+            width: 130px;
             height: 70%;
             margin: 0 auto;
         }
@@ -146,9 +149,9 @@
           max-height: 100%;
         }
         .ljgmdiv{
-          width: 150px;
-          height: 45px;
-          margin: 4px auto;
+          width: 75px;
+
+          margin: 2px auto;
         }
         .ljgmdiv .btn {
             width: auto;
@@ -157,16 +160,28 @@
             max-height: 100%;
         }
         /* 猜你喜欢 */
+        .ljgmdiv2{
 
+          width: 75px;
+
+          margin: 20px auto;
+        }
+        .ljgmdiv2 .btn {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+        }
         .guesstitle {
-            height: 40px;
-            line-height: 40px;
+            height: 45px;
+            line-height: 45px;
             padding-left: 10px;
             vertical-align: top;
-            font-size: 14px;
+            font-size: 16px;
             color: #222;
             background-color: #eee;
             border-bottom: 1px solid #e0e0e0;
+            text-align: center;
         }
 
         .home-like-list .item {
@@ -190,10 +205,11 @@
         }
 
         .home-like-list img {
-            width: 90px;
+            width: 70px;
             height: 66px;
             margin-top: 7px;
             margin-bottom: 5px;
+            border: #eee 1px solid;
             border-radius: 3px;
         }
 
@@ -217,7 +233,7 @@
         .home-like-list .warename {
             color: #333;
             /*line-height: 16px;*/
-            font-size: 17px;
+            font-size: 14px;
             max-width: 11em;
             white-space: nowrap;
             word-wrap: normal;
@@ -231,8 +247,8 @@
 
         .home-like-list .title {
             color: #666;
-            line-height: 16px;
-            font-size: 13px;
+            line-height: 12px;
+            font-size: 12px;
             max-height: 30px;
             overflow: hidden;
             padding-top: 3px;
@@ -259,13 +275,15 @@
             display: box;
             display: -webkit-box;
             height: 15px;
+            font-style: italic;
         }
 
         .home-like-list .symbol {
-            font-size: 14px;
+            font-size: 12px;
             color: #f60;
             display: block;
             margin-top: 1px;
+            font-style: italic;
         }
 
         .home-like-list .price {
@@ -274,6 +292,7 @@
             line-height: 15px;
             margin-right: 5px;
             margin-top: 1px;
+            font-style: italic;
         }
 
         .home-like-list .o-price {
@@ -332,7 +351,7 @@
 }
         .tools {
             width: 100%;
-            max-width: 100%;
+            max-width: 480px;
             height:auto;
             margin: 0 auto;
             background-color: #eee;
@@ -362,9 +381,9 @@
         }
 
         table tr td .box {
-            width:60px;
-            height: 60px;
-            line-height: 60px;
+            width:48px;
+            height: 48px;
+            line-height: 48px;
             display: inline-block;
             background: #eee;
             color: #000;
@@ -389,7 +408,7 @@
 
         .post {
             position: relative;
-            top: 0px;
+            top: 20px;
         }
     </style>
 </head>
@@ -418,7 +437,7 @@
     </header>
 
     <div id="aui-slide" class="post">
-        <div id="swiplist0" class="aui-slide-wrap">
+        <div id="swiplist" class="aui-slide-wrap">
             <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center  open-win" win="ware">
                 <div class="aui-content aui-text-center">
                     <img src="../image/home/banner1.jpg" class="" /></div>
@@ -550,7 +569,7 @@
                                 <div class="aui-grid-label">
                                     <img src="../image/home/remaitu_01.png">
                                     <div class="aui-text-warning">商品名称</div>
-                                    <div class="info"><span class="rmb"><i>RMB</i></span> 330<span class="rmb"><i>原价￥390</i></span></div>
+                                    <div class="info"><span class="rmb"><i>RMB</i></span> 330<i><span class="rmb">原价</span><span class="yuanjia">￥390</span></i></div>
                                     <div class="ljgmdiv"><img class="btn" src="../image/home/ljgm.png" /></div>
                                 </div>
                             </div>
@@ -566,7 +585,7 @@
                               <div class="aui-grid-label">
                                   <img src="../image/home/remaitu_01.png">
                                   <div class="aui-text-warning">商品名称</div>
-                                  <div class="info"><span class="rmb"><i>RMB</i></span> 330<span class="rmb"><i>原价￥390</i></span></div>
+                                  <div class="info"><span class="rmb"><i>RMB</i></span> 330<i><span class="rmb">原价</span><span class="yuanjia">￥390</span></i></div>
                                   <div class="ljgmdiv"><img class="btn" src="../image/home/ljgm.png" /></div>
                               </div>
                             </div>
@@ -582,7 +601,7 @@
                               <div class="aui-grid-label">
                                   <img src="../image/home/remaitu_01.png">
                                   <div class="aui-text-warning">商品名称</div>
-                                  <div class="info"><span class="rmb"><i>RMB</i></span> 330<span class="rmb"><i>原价￥390</i></span></div>
+                                  <div class="info"><span class="rmb"><i>RMB</i></span> 330<i><span class="rmb">原价</span><span class="yuanjia">￥390</span></i></div>
                                   <div class="ljgmdiv"><img class="btn" src="../image/home/ljgm.png" /></div>
                               </div>
                             </div>
@@ -598,28 +617,41 @@
                               <div class="aui-grid-label">
                                   <img src="../image/home/remaitu_01.png">
                                   <div class="aui-text-warning">商品名称</div>
-                                  <div class="info"><span class="rmb"><i>RMB</i></span> 330<span class="rmb"><i>原价￥390</i></span></div>
+                                  <div class="info"><span class="rmb"><i>RMB</i></span> 330<i><span class="rmb">原价</span><span class="yuanjia">￥390</span></i></div>
                                   <div class="ljgmdiv"><img class="btn" src="../image/home/ljgm.png" /></div>
                               </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            
+
             </div>
         </div>
     </section>
 
-    <div class="guesstitle  post">猜你喜欢</div>
+    <div class="guesstitle  post">— 猜你喜欢 —</div>
+
     <div id="list" class="home-like-list  post">
     </div>
 </body>
 <script type="text/template" id="swiptemplate">
     {{~it:swipdata }}
-    <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center  open-win" win="ware" param='{"wareId":"{{= swipdata.Id }}"}'>
+    {{?swipdata.ttype==='0'}}
+    <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center  open-win" win="active" param='{"Id":"{{= swipdata.Id }}"}'>
         <div class="aui-content aui-padded-15 aui-text-center">
-            <img id="thumbnail_{{= swipdata.Id }}" src="{{= swipdata.Thumbnail}}" class="" /></div>
+            <img id="picshow_{{= swipdata.Id }}" src="{{= swipdata.PicShow}}" class="" /></div>
     </div>
+    {{??swipdata.ttype==='1'}}
+    <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center  open-win" win="active" param='{"Id":"{{= swipdata.Id }}"}'>
+        <div class="aui-content aui-padded-15 aui-text-center">
+            <img id="picshow_{{= swipdata.Id }}" src="{{= swipdata.PicShow}}" class="" /></div>
+    </div>
+    {{??}}
+    <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center  open-win" win="warelist" param='{"Id":"{{= swipdata.Id }}"}'>
+        <div class="aui-content aui-padded-15 aui-text-center">
+            <img id="picshow_{{= swipdata.Id }}" src="{{= swipdata.PicShow}}" class="" /></div>
+    </div>
+    {{?}}
     {{~}}
 </script>
 <script type="text/template" id="remaitemplate">
@@ -631,7 +663,7 @@
                     <div class="aui-grid-label">
                         <img src="{{= data.Thumbnail}}">
                         <div class="aui-text-warning">{{= data.Name}}</div>
-                        <div class="info"><span class="rmb"><i>RMB</i></span> {{= data.PromotionPrice }}<span class="rmb"><i>原价￥{{= data.Price }}</i></span></div>
+                        <div class="info"><span class="rmb"><i>RMB</i></span> {{= data.PromotionPrice }}<i><span class="rmb">原价</span><span class="yuanjia">￥{{= data.Price }}</span></i></div>
                         <div class="ljgmdiv"><img class="btn open-win" win="ware"  param='{"wareId":"{{= data.WareId }}"}' src="../image/home/ljgm.png" /></div>
                     </div>
                 </div>
@@ -656,6 +688,7 @@
                             <span class="price">{{= data.Price }}</span>
                         </div>
                     </div>
+                    <div class="ljgmdiv2"><img class="btn" src="../image/home/ljgm.png" /></div>
                 </div>
             </div>
         </div>
@@ -771,12 +804,12 @@
     var swiplist;
 
     function fnShowSwipList(datas) {
-        //swiplist = $api.byId('swiplist');
+        swiplist = $api.byId('swiplist');
         var swiptemplate = $api.byId('swiptemplate');
         if (swiptemplate) {
             dotswip = doT.template(swiptemplate.innerHTML);
         }
-        //  swiplist.innerHTML = dotswip(datas);
+        swiplist.innerHTML = dotswip(datas);
         fnReadyOpenWin();
         fnAuiSlide();
     };
@@ -841,10 +874,12 @@
             'skip': skip,
             'limit': remaiLIMIT
         }, function(ret, err) {
+          if(ret){
             api.hideProgress();
             api.refreshHeaderLoadDone();
-
+            fnShowRemaiList(ret);
             fnCacheImage(ret, index_);
+          }
         });
     };
 
