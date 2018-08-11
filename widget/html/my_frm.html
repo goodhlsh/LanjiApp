@@ -196,7 +196,9 @@
         trueName = $api.byId('truename');
         userName = $api.byId('username');
         fnReadyOpenWin();
-        fnInitUserInfo();
+        if ($api.getStorage('userInfo')) {
+          fnInitUserInfo();
+        }
         fnInit();
         fnInitEvent();
 

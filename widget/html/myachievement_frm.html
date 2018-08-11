@@ -376,9 +376,11 @@
     function fnOkDate() {
         if (flag == 1) {
             startDate.innerHTML = yearvalue.innerHTML + "/" + monthvalue.innerHTML + "/" + dayvalue.innerHTML;
+            fnHide(1);
         }
         if (flag == 2) {
             endDate.innerHTML = yearvalue.innerHTML + "/" + monthvalue.innerHTML + "/" + dayvalue.innerHTML;
+            fnHide(2);
         }
     }
     var skip = 0,

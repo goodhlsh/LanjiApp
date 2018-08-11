@@ -276,7 +276,10 @@
                     duration: 2000,
                     location: 'bottom'
                 });
-                api.closeWin();
+                api.closeWin({
+                    name: 'login'
+                });
+
             } else {
                 api.alert({
                     title: '消息',

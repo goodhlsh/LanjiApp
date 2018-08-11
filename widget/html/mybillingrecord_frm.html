@@ -128,7 +128,7 @@
         initEventListenter();
         // 初始化下拉刷新
         initRefresh();
-        // 获取订单列表
+        // 获取列表
         fnGetWalletList(false);
     };
     var skip = 0,
@@ -142,7 +142,7 @@
                 threshold: 300 // 距离底部还有多少触发scrolltobottom事件
             }
         }, function(ret, err) {
-            // 获取更多的商品
+            // 获取更多的
             fnGetWalletList(true);
         });
     }
@@ -194,7 +194,7 @@
 
                 // 恢复下拉刷新的状态
                 api.refreshHeaderLoadDone();
-
+                fnShowWareList(true);
                 // 在界面中更新订单列表显示
                 fnUpdateWalletList(ret, loadMore_);
             } else {

@@ -20,12 +20,12 @@
         <ul class="aui-list aui-list-in">
 
             <li class="aui-list-item aui-list-item-middle">
-                <div class="aui-list-item-inner aui-list-item-arrow" onclick="showcode()">
+                <div class="aui-list-item-inner aui-list-item-arrow open-win" win="showcode" login="true">
                     <i class="aui-iconfont aui-icon-copy">我的会员名片</i>
                 </div>
             </li>
             <li class="aui-list-item aui-list-item-middle">
-                <div class="aui-list-item-inner aui-list-item-arrow" onclick="showshare()">
+                <div class="aui-list-item-inner aui-list-item-arrow open-win" win="showshare" login="true">
                     <i class="aui-iconfont aui-icon-magic">我的推广名片</i>
                 </div>
             </li>
@@ -35,7 +35,7 @@
                 </div>
             </li>
             <li class="aui-list-item aui-list-item-middle">
-                <div class="aui-list-item-inner aui-list-item-arrow" onclick="puterzi()">
+                <div class="aui-list-item-inner aui-list-item-arrow open-win" win="puterzi" login="true">
                     <i class="aui-iconfont aui-icon-friendfavor">确认新会员</i>
                 </div>
             </li>
@@ -43,8 +43,10 @@
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
 <script type="text/javascript">
     apiready = function() {
+        fnReady();
         api.parseTapmode();
     }
 

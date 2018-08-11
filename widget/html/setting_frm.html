@@ -55,6 +55,7 @@
     </div>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/rmst.js"></script>
 <script type="text/javascript">
     apiready = function() {
         getCacheSize();
@@ -199,7 +200,12 @@
                         }
                     });
                     fnRmAllStorage();
+
+
                     setTimeout("api.closeWin({})", 2000);
+                    api.closeWin({
+                        name: 'my'
+                    });
                 }
             }
         });

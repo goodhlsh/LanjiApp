@@ -15,16 +15,13 @@
 <body>
   <div class="aui-content aui-margin-b-15">
       <ul class="aui-list aui-list-in" id="list">
-
-
-
-        </ul>
-        </div>
-    </section>
+      </ul>
+  </div>
 </body>
 <script type="text/template" id="template">
+
     {{for(var i=0;i
-    <it[it.length-1].levelMan;i++){}} <li class="aui-list-header">
+    <it[0].levelMax;i++){}} <li class="aui-list-header">
             <div class="aui-list-item-title">{{=i+1}}级下属</div>
         </li>
         {{?i===0}}
@@ -49,6 +46,7 @@
                     {{?}} {{}}}
       {{?}}
    {{}}}
+
 </script>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/common.js"></script>
@@ -88,7 +86,7 @@ function fnShowList() {
                 'uid': uid_
             },
             skip: 0,
-            limit: 200
+            limit: 1000
         }
         fnGet('SysUser/GetAllChildren', filter, function(ret, err) {
             if (ret) {

@@ -435,25 +435,25 @@
             <table>
                 <tr>
                     <td>
-                        <div class="box">
+                        <div class="box open-win" win="showcode" login="true">
                             <img src="../image/home/tuiguang.png"></img>
                             <div class="aui-grid-label">推广</div>
                         </div>
                     </td>
                     <td>
-                        <div class="box">
+                        <div class="box open-win" win="myteam" login="true">
                             <img src="../image/home/fenxiao.png"></img>
                             <div class="aui-grid-label">分销</div>
                         </div>
                     </td>
                     <td>
-                        <div class="box">
+                        <div class="box open-win" win="mychongzhi" login="true">
                             <img src="../image/home/chongzhi.png"></img>
                             <div class="aui-grid-label">充值</div>
                         </div>
                     </td>
                     <td>
-                        <div class="box">
+                        <div class="box open-win" win="mytixian" login="true">
                             <img src="../image/home/tixian.png"></img>
                             <div class="aui-grid-label">提现</div>
                         </div>
@@ -467,31 +467,31 @@
                 </tr>
                 <tr>
                     <td>
-                        <div class="box">
+                        <div class="box open-win" win="message" login="true">
                             <img src="../image/home/xiaoxi.png"></img>
                             <div class="aui-grid-label">消息</div>
                         </div>
                     </td>
                     <td>
-                        <div class="box">
+                        <div class="box open-win" win="mybillingrecord" login="true">
                             <img src="../image/home/zhangdan.png"></img>
                             <div class="aui-grid-label">账单</div>
                         </div>
                     </td>
                     <td>
-                        <div class="box">
+                        <div class="box open-win" win="">
                             <img src="../image/home/faxian.png"></img>
                             <div class="aui-grid-label">发现</div>
                         </div>
                     </td>
                     <td>
-                        <div class="box">
+                        <div class="box open-win" win="myorder" login="true">
                             <img src="../image/home/dingdan.png"></img>
                             <div class="aui-grid-label">订单</div>
                         </div>
                     </td>
                     <td>
-                        <div class="box">
+                        <div class="box open-win" win="" login="true">
                             <img src="../image/home/wuliu.png"></img>
                             <div class="aui-grid-label">物流</div>
                         </div>
@@ -538,12 +538,12 @@
         </div>
         -->
     <section class="aui-grid  post">
-      <div class="youhuidiv"><img class="youhuilogo" src="../image/home/youhui.png"/></div>
+      <div class="youhuidiv"><img class="youhuilogo open-win" win="active" login="true" src="../image/home/youhui.png"/></div>
 
         <div class="aui-row">
             <div class="remaiheaddiv"><img src="../image/home/remailogo.png" class="remailogo" /></div>
-            <div id="activelist" class="activebg">
-                <div class="aui-col-xs-6 aui-padded-l-5 aui-padded-0 activebg">
+            <div id="remailist" class="activebg">
+               <div class="aui-col-xs-6 aui-padded-l-5 aui-padded-0 activebg">
                     <div class="activebg open-win" win="active" param=''>
                         <div class="matrix">
                             <div class="matrixcell">
@@ -605,6 +605,7 @@
                         </div>
                     </div>
                 </div>
+            
             </div>
         </div>
     </section>
@@ -621,7 +622,24 @@
     </div>
     {{~}}
 </script>
-
+<script type="text/template" id="remaitemplate">
+    {{~ it:data }}
+    <div class="aui-col-xs-6 aui-padded-0 activebg">
+        <div class="activebg">
+            <div class="matrix">
+                <div class="matrixcell">
+                    <div class="aui-grid-label">
+                        <img src="{{= data.Thumbnail}}">
+                        <div class="aui-text-warning">{{= data.Name}}</div>
+                        <div class="info"><span class="rmb"><i>RMB</i></span> {{= data.PromotionPrice }}<span class="rmb"><i>原价￥{{= data.Price }}</i></span></div>
+                        <div class="ljgmdiv"><img class="btn open-win" win="ware"  param='{"wareId":"{{= data.WareId }}"}' src="../image/home/ljgm.png" /></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{~}}
+</script>
 <script type="text/template" id="template">
     {{~ it:data }}
     <div class="item Fix hightitem open-win" win="ware" param='{"wareId":"{{= data.Id }}"}'>
@@ -661,9 +679,9 @@
         cont_t = $api.offset(cont).t;
         $api.fixStatusBar(header);
 
-        fnInitSwipList(0, 6); //首页滚动图片
+        fnInitSwipList(0, 10); //首页滚动图片
 
-        fnInitActiveList(0, 4); //首页活动内容
+        fnInitRemaiList(0, 4); //首页活动内容
         index_ = $api.getStorage('index_') != null ? $api.getStorage('index_') : 0;
         keyword = $api.getStorage('keyword') != null ? $api.getStorage('keyword') : "";
         //按最近一次搜索的商品给出喜欢的商品
@@ -813,15 +831,15 @@
 
     /*幻灯片end*/
     /*热卖begin*/
-    var activelist;
+    var RemaiList;
 
-    function fnInitActiveList(skip, activeLIMIT) {
-        fnGet('Spl_Ware/GetAllActive', {
+    function fnInitRemaiList(skip, remaiLIMIT) {
+        fnGet('Spl_Ware/GetHotWare', {
             'where': {
                 'isShow': 'true'
             },
             'skip': skip,
-            'limit': activeLIMIT
+            'limit': remaiLIMIT
         }, function(ret, err) {
             api.hideProgress();
             api.refreshHeaderLoadDone();
@@ -830,13 +848,13 @@
         });
     };
 
-    function fnShowActiveList(datas) {
-        activelist = $api.byId('activelist');
-        var activetemplate = $api.byId('activetemplate');
-        if (activetemplate) {
-            dotactive = doT.template(activetemplate.innerHTML);
+    function fnShowRemaiList(datas) {
+        RemaiList = $api.byId('remailist');
+        var remaitemplate = $api.byId('remaitemplate');
+        if (remaitemplate) {
+            dotactive = doT.template(remaitemplate.innerHTML);
         }
-        activelist.innerHTML = dotactive(datas);
+        RemaiList.innerHTML = dotactive(datas);
         fnReadyOpenWin();
     };
     /*热卖end*/
@@ -940,15 +958,17 @@
             showTime: true
         }, function(ret, err) {
             // 首页内容刷新
-            fnInitSwipList(0, 6); //首页滚动图片
+            fnInitSwipList(0, 10); //首页滚动图片
 
-            fnInitActiveList(0, 4); //首页活动内容
+            fnInitRemaiList(0, 4); //首页活动内容
             index_ = $api.getStorage('index_') != null ? $api.getStorage('index_') : 0;
             keyword = $api.getStorage('keyword') != null ? $api.getStorage('keyword') : "";
             //按最近一次搜索的商品给出喜欢的商品
             fnInitLikeList(keyword, 0, 20);
             //用户信息更新
-            fnInitUserInfo();
+            if ($api.getStorage('userInfo')) {
+              fnInitUserInfo();
+            }
         });
     }
     //从后台更新本地存储

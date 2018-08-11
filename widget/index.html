@@ -130,7 +130,10 @@
       //  $api.fixStatusBar(header);
       //  headerHeight = $api.offset(header).h;
         footerHeight = $api.offset(footer).h;
-        fnInitUserInfo();
+        if ($api.getStorage('userInfo')) {
+          fnInitUserInfo();
+        }
+
         //设置我的小红点
         var num = $api.getStorage('newmessage') == null ? 0 : $api.getStorage('newmessage');
 
