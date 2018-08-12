@@ -274,7 +274,7 @@
 <script type="text/template" id="template">
     {{~it:value:index}}
     <div class="icon-panel">
-        <div><img class="thum" src="{{=value.Thumbnail}}" /></div>
+        <div><img  onload="fnLoadImage(this,'{{=value.Thumbnail}}')" class="thum" src="{{=value.Thumbnail}}" /></div>
 
         <div class="info">
             <div class="top">商品名称：{{=value.Name}}</div>
@@ -290,6 +290,8 @@
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript" src="../script/common.js"></script>
 <script type="text/javascript" src="../script/localdb.js"></script>
+<script type="text/javascript" src="../script/sha1.min.js"></script>
+<script type="text/javascript" src="../script/download.js"></script>
 <script type="text/javascript">
     apiready = function() {
         fnReady();

@@ -356,7 +356,7 @@
     <div id="ware_{{=value.Id}}" class="ware">
         <div class="content" tapmode onclick="fnOpenWareWin('{{=value.Id}}');">
             <div id="select_{{=value.Id}}" class="{{=value.WareState}}" onclick="fnSetSelect('{{=value.Id}}');"></div>
-            <img class="thumbnail" src="{{=value.Thumbnail}}">
+            <img  onload="fnLoadImage(this,'{{=value.Thumbnail}}')" class="thumbnail" src="{{=value.Thumbnail}}">
             <div class="info">
                 <div class="name">{{=value.Name}}</div>
                 <div class="price-tag">
@@ -380,6 +380,8 @@
 <script type="text/javascript" src="../script/doT.min.js"></script>
 <script type="text/javascript" src="../script/SHA1.js"></script>
 <script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript" src="../script/sha1.min.js"></script>
+<script type="text/javascript" src="../script/download.js"></script>
 <script type="text/javascript">
     apiready = function() {
         fnReady();

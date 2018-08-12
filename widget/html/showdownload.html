@@ -11,6 +11,10 @@
         html,
         body {
             height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url('../image/my/mingpian.png');
+            background-size: cover;
         }
 
         body {
@@ -20,8 +24,7 @@
             -webkit-box-orient: vertical;
             -webkit-flex-flow: column;
             flex-flow: column;
-
-          }
+        }
 
         section {
             -webkit-box-flex: 1;
@@ -36,26 +39,34 @@
         }
 
         .usertext {
-          position: absolute;
-          left:160px;
-          top:405px;
+            position: absolute;
+            left: 160px;
+            top: 405px;
             font-size: 18px;
             color: #ffffff;
             z-index: 3;
         }
-        .bgpic{
-          position: absolute;
-          left:0px;
-          top:0px;
-          z-index: 0;
+
+        .bgpic {
+            position: absolute;
+            left: 0px;
+            top: 0px;
+            z-index: 0;
         }
 
         .card-extend {
-          position: absolute;
-          left:140px;
-          top:500px;
-          text-align: center;
-          z-index: 3;
+            position: absolute;
+            left: 90px;
+            top: 350px;
+            margin: 0 auto;
+            z-index: 3;
+        }
+
+        .card-extend img {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
         }
     </style>
 </head>
@@ -67,55 +78,57 @@
         </a>
         <div class="aui-title">扫码下载app</div>
     </header>
-
     <section>
-
-        <div id="bgpic" class="bgpic">
-          <img id="qrbg" src="../image/my/mingpian.png" class="qrbg"</img>
-        </div>
-        <div id="extenCode" class="card-extend">
-            <img id="qrCore" src="" width="200" height="200" srcs="http://154.8.159.50:1693/iis-85.png" class="imgCache" ontouchstart="gtouchstart(this)" ontouchmove="gtouchmove()" ontouchend="gtouchend()"></img>
+        <div id="extCore" class="card-extend">
+            <img id="qrCore" src="" width="200" height="200" srcs="http://154.8.159.50:1693/iis-85.png" class="imgCache"  ontouchstart="gtouchstart(this)" ontouchmove="gtouchmove()" ontouchend="gtouchend()"></img>
         </div>
     </section>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/sha1.min.js"></script>
+<script type="text/javascript" src="../script/download.js"></script>
 <script type="text/javascript">
     apiready = function() {
         fnReady();
-        fnLoadImage() ;
-      //  extenCode = $api.byId('extenCode');
-        //extenCode.style.position='absolute';
-
-        //extenCode.style.paddingTop = api.winHeight*0.4 + 'px';
-        //extenCode.style.paddingLeft= api.winWidth*0.3+'px';
-        qrCore=$api.byId('qrCore');
+        //  fnLoadImage();
+        qrCore = $api.byId('qrCore');
+        fnLoadImage(qrCore,'/iis-85.png');
+        //IMGcache();
     }
-    var extenCode,qrCore;
-    //下载
-    /*function IMGcache() {
+    var qrCore;
+    //下载多图片
+    function IMGcache() {
         var imgDir = "fs://images/";
-
-        var srcs = $api.domAll(qrCore, 'img.imgCache');
+        var extCore = $api.byId('extCore');
+        var srcs = $api.domAll(extCore, 'img.imgCache');
+        console.log(srcs.length);
         if (srcs.length > 0) {
-            var imgObj = srcs.first();
-            var imgUrl = imgObj.attr("srcs");
-            var imgSha1 = hex_sha1(imgUrl);
+            var imgObj = $api.first(extCore, 'img.imgCache'); // srcs.first();
+            var imgUrl = $api.attr(imgObj, "srcs");
+
+            var imgSha1 = sha1(imgUrl);
+            console.log(imgSha1);
+            console.log($api.getStorage("imgcache" + imgSha1));
             if ($api.getStorage("imgcache" + imgSha1) == undefined) {
+                console.log(imgUrl);
+
                 api.download({
                     url: imgUrl,
                     savePath: imgDir + imgSha1 + '.png',
                     cache: false,
                     allowResume: true
                 }, function(ret, err) {
+                    console.log(JSON.stringify(ret));
                     if (ret.state == 1) {
                         var trans = api.require('trans');
                         trans.decodeImgToBase64({
                             imgPath: ret.savePath
                         }, function(ret1, err1) {
                             if (ret1.status) {
-                                imgObj.attr("src", "data:image/png;base64," + ret1.base64Str);
-                                imgObj.removeClass("imgCache");
+                                console.log(ret1.base64Str);
+                                $api.attr(imgObj, "src", "data:image/png;base64," + ret1.base64Str);
+                                $api.removeCls(imgObj, "imgCache");
                                 $api.setStorage("imgcache" + imgSha1, "data:image/png;base64," + ret1.base64Str);
                                 IMGcache();
                             } else {
@@ -129,68 +142,51 @@
                     }
                 });
             } else {
-                imgObj.attr("src", $api.getStorage("imgcache" + imgSha1));
-                imgObj.removeClass("imgCache");
+                $api.attr(imgObj, "src", $api.getStorage("imgcache" + imgSha1));
+                $api.removeCls(imgObj, "imgCache");
                 IMGcache();
             }
         }
     }
-*/
-    function fnLoadImage() {
-        api.download({
-            url: 'http://154.8.159.50:1693/iis-85.png',
-            savePath: 'fs://images/soft.png',
-            report: true,
-            cache: true,
-            allowResume: true
-        }, function(ret, err) {
-            if (ret.state == 1) {
-              //  alert('下载成功！')
-                qrCore.src=ret.savePath
-            } else {
 
-            }
-        });
+    /*长按分享*/
+    var Htmls = "";
+    var timeOutEvent = 0;
 
-    }
+    function gtouchstart(obj) {
+        Htmls = obj.src;
+        timeOutEvent = setTimeout(function() {
+            //alert("清除了");//因为页面弹动会导致元素一直处于按住的状态，所以超过700毫秒自动清空变量，避免点击其他元素触发事件
+            //Htmls = "";
+            api.openFrame({
+                name: 'share',
+                url: './share.html',
+                pageParam: {
+                    height: 0,
+                    src: 'fs://images/soft.png'
+                },
+                rect: {
+                    x: 0,
+                    y: 0,
+                    w: 'auto',
+                    h: 'auto'
+                }
+            });
+        }, 700);
+        return false;
+    };
 
-var Htmls = "";
-var timeOutEvent = 0;
+    //手释放，取消长按事件
+    function gtouchend() {
+        clearTimeout(timeOutEvent);
+        Htmls = "";
+    };
 
-function gtouchstart(obj) {
-    Htmls = obj.src;
-    timeOutEvent = setTimeout(function() {
-        //alert("清除了");//因为页面弹动会导致元素一直处于按住的状态，所以超过700毫秒自动清空变量，避免点击其他元素触发事件
-        //Htmls = "";
-        api.openFrame({
-            name: 'share',
-            url: './share.html',
-            pageParam: {
-                height: 0,
-                src:'fs://images/soft.png'
-            },
-            rect: {
-                x: 0,
-                y: 0,
-                w: 'auto',
-                h: 'auto'
-            }
-        });
-    }, 700);
-    return false;
-};
-
-//手释放，取消长按事件
-function gtouchend() {
-    clearTimeout(timeOutEvent);
-    Htmls = "";
-};
-
-//如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按
-function gtouchmove() {
-    clearTimeout(timeOutEvent);
-    Htmls = "";
-};
+    //如果手指有移动，则取消所有事件，此时说明用户只是要移动而不是长按
+    function gtouchmove() {
+        clearTimeout(timeOutEvent);
+        Htmls = "";
+    };
 </script>
 
 </html>

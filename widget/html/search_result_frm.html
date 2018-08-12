@@ -111,7 +111,7 @@
     {{~it:value:index}}
     <div class="ware ware-1">
         <div class="content" tapmode onclick="fnOpenWareWin('{{=value.Id}}');">
-            <img onload="fnLoadImage(this)" data-url="{{=value.Thumbnail}}" class="thumbnail" src="../image/default_square.png">
+            <img  onload="fnLoadImage(this,'{{=value.Thumbnail}}')"  data-url="{{=value.Thumbnail}}" class="thumbnail" src="../image/default_square.png">
             <div class="info">
                 <div class="name">{{=value.Name}}</div>
                 <div class="description">{{=value.Description}}</div>
@@ -131,6 +131,8 @@
 <script type="text/javascript" src="../script/doT.min.js"></script>
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript" src="../script/list.js"></script>
+<script type="text/javascript" src="../script/sha1.min.js"></script>
+<script type="text/javascript" src="../script/download.js"></script>
 <script type="text/javascript">
     apiready = function() {
 

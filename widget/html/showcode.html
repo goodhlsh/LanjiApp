@@ -11,6 +11,10 @@
         html,
         body {
             height: 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-image: url('../image/my/mingpian.png');
+            background-size: cover;
         }
 
         body {
@@ -28,33 +32,32 @@
             -webkit-flex: 1;
             flex: 1;
             overflow: auto;
-            text-align: center;
+
         }
 
-        .picCenter {
-            margin: 0 auto;
-        }
+
 
         .usertext {
           position: absolute;
-          left:100px;
-          top:205px;
+          left:140px;
+          top:280px;
             font-size: 18px;
             color: #ffffff;
             z-index: 2;
         }
-        .bgpic{
-          position: absolute;
-          left:0px;
-          top:0px;
-          z-index: 0;
-        }
+
         .card-extend {
           position: absolute;
-          left:70px;
-          top:300px;
+          left: 85px;
+          top:340px;
           text-align: center;
           z-index: 3;
+        }
+        .card-extend img{
+          width: auto;
+          height: auto;
+          max-width: 100%;
+          max-height: 100%;
         }
 
     </style>
@@ -70,11 +73,9 @@
     </header>
     <section>
         <div id="username" class="usertext">顶</div>
-        <div id="bgpic" class="bgpic">
-          <img id="qrbg" src="../image/my/mingpian.png" class="qrbg"</img>
-        </div>
+
         <div id="extenCode" class="card-extend">
-            <img id="qrCore" src="" class="picCenter" ontouchstart="gtouchstart(this)" ontouchmove="gtouchmove()" ontouchend="gtouchend()"></img>
+            <img id="qrCore" src="" width="200" height="200" ontouchstart="gtouchstart(this)" ontouchmove="gtouchmove()" ontouchend="gtouchend()"></img>
         </div>
     </section>
 
@@ -147,7 +148,8 @@
                 qr_image.src = ret.imgPath;
                 //$api.attr(qr_image, 'src', ret.imgPath);
                 var username = $api.byId('username');
-                $api.html(username, '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + $api.getStorage('userInfo').UserName);
+                var tmp=$api.getStorage('userInfo').UserName;
+                $api.html(username, tmp.substring(0,3)+'&nbsp;****&nbsp;' + tmp.substring(7,11));
             }
         });
         // inter =   window.setInterval(getDone(tid), 3000);

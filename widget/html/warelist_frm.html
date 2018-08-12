@@ -98,36 +98,19 @@
 </head>
 
 <body>
-
-    <!--    <section id="list">
-              <div class="ware ware-1">
-                  <div class="content" tapmode onclick="fnOpenWareWin('12');">
-                      <img class="thumbnail" src="../image/default_square.png">
-                      <div class="info">
-                          <div class="name">清新滋润营养洁面乳</div>
-                          <div class="description">*********************************</div>
-                          <div class="price-tag">
-                              <span class="price">￥36</span>
-                              <span class="unit">/1个</span>
-                          </div>
-                          <div class="origin-price">原价:
-                              <del>36元</del>
-                          </div>
-                      </div>
-                  </div>
-              </div>
--->
-    <section id="list">
-    </section>
-
+    <div id="imgDiv">
+        <section id="list">
+        </section>
+    </div>
     <div class="push-status" id="pushStatus">上拉显示更多</div>
 </body>
 
 <script type="text/template" id="template">
     {{~it:value:index}}
-    <div class="ware ware-1">
+    <div class="ware ware-1" id="w{{=index}}">
         <div class="content" tapmode onclick="fnOpenWareWin('{{=value.Id}}');">
-            <img onload="fnLoadImage(this)" data-url="{{=value.Thumbnail}}" class="thumbnail" src="../image/default_square.png">
+            <img onload="fnLoadImage(this,'{{=value.Thumbnail}}')" data-url="{{=value.Thumbnail}}" class="thumbnail" src="../image/default_square.png">
+            <!--<img srcs="{{=value.Thumbnail}}" class="thumbnail imgCache" src="../image/default_square.png">-->
             <div class="info">
                 <div class="name">{{=value.Name}}</div>
                 <div class="description">{{=value.Description}}</div>
@@ -141,26 +124,22 @@
 </script>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/sha1.min.js"></script>
 <script type="text/javascript" src="../script/SHA1.js"></script>
 <script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript" src="../script/download.js"></script>
 <script type="text/javascript">
     apiready = function() {
-        // 初始化一下默认数据
-        init();
         // 初始化事件监听
         initEventListenter();
         // 初始化下拉刷新
         initRefresh();
+
         // 获取商品列表
         fnGetWareList(false);
-      
     }
-    var  skip = 0,
+    var skip = 0,
         LIMIT = 20;
-
-    function init() {
-
-    }
 
     function initEventListenter() {
         // 监听滚动到Frame底部的事件
@@ -236,6 +215,7 @@
 
                 // 在界面中更新商品列表显示
                 fnUpdateWareList(ret, loadMore_);
+
             } else {
                 api.toast({
                     msg: '没有加载数据',
@@ -249,7 +229,7 @@
     }
 
     // 实现商品列表的图片缓存
-    function fnLoadImage(ele_) {
+    function fnCacheImage(ele_) {
         var dataUrl = $api.attr(ele_, 'data-url');
         // 缓存data-url所指定的图片
         if (dataUrl) {
@@ -284,8 +264,53 @@
             // 否则，直接替换list中的内容
             $api.html(list, resultHTML);
         }
+
         // 由于是动态的将元素添加到Dom树上，所以需要手动触发tapmode检查，列表中的元素才能实现点击加速的效果
         api.parseTapmode();
+    }
+
+    //下载
+    function IMGcache() {
+        var imgDir = "fs://images/";
+        var imgDiv = $api.byId('w1');
+        var srcs = $api.domAll(imgDiv, 'img.imgCache');
+        if (srcs.length > 0) {
+            var imgObj = $api.first(imgDiv, 'img.imgCache');
+            var imgUrl = $api.attr(imgObj, "srcs");
+            var imgSha1 = SHA1(imgUrl);
+            if ($api.getStorage("imgcache" + imgSha1) == undefined) {
+                api.download({
+                    url: imgUrl,
+                    savePath: imgDir + imgSha1 + '.png',
+                    cache: false,
+                    allowResume: true
+                }, function(ret, err) {
+                    if (ret.state == 1) {
+                        var trans = api.require('trans');
+                        trans.decodeImgToBase64({
+                            imgPath: ret.savePath
+                        }, function(ret1, err1) {
+                            if (ret1.status) {
+                                $api.attr(imgObj, "src", "data:image/png;base64," + ret1.base64Str);
+                                $api.removeCls(imgObj, "imgCache");
+                                $api.setStorage("imgcache" + imgSha1, "data:image/png;base64," + ret1.base64Str);
+                                IMGcache();
+                            } else {
+                                api.alert({
+                                    msg: err1.msg
+                                });
+                            }
+                        });
+                    } else {
+                        IMGcache();
+                    }
+                });
+            } else {
+                $api.attr(imgObj, "src", $api.getStorage("imgcache" + imgSha1));
+                $api.removeCls(imgObj, "imgCache");
+                IMGcache();
+            }
+        }
     }
 </script>
 

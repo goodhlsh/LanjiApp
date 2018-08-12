@@ -180,6 +180,7 @@
             <div class="name">优惠活动：</div>
             <div id="discount" class="value">可参与</div>
         </div>
+
         <div class="picture">
             <img id="pic3" src="" />
         </div>
@@ -199,6 +200,7 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/SHA1.js"></script>
 <script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript" src="../script/download.js"></script>
 <script type="text/javascript">
     apiready = function() {
         // 初始化轮播图模块
@@ -281,6 +283,7 @@
             limit: 1
         }
         fnGet('Spl_Ware/GetByID', filter, function(ret, err) {
+          console.log(JSON.stringify(ret));
             api.hideProgress();
             // 更新商品详情展示
             fnUpdateWareInfo(ret);
@@ -330,17 +333,18 @@
 
 
         if (ware_.Picture3) {
-            pic3.src = ware_.Picture3;
+          fnLoadImage(pic3, ware_.Picture3)
+            //pic3.src = ware_.Picture3;
         }else {
           pic3.display='none';
         }
         if (ware_.Picture4) {
-            pic4.src = ware_.Picture4;
+            fnLoadImage(pic4, ware_.Picture4)
         }else {
           pic4.display='none';
         }
         if (ware_.Picture5) {
-            pic5.src = ware_.Picture5;
+            fnLoadImage(pic5, ware_.Picture5)
         }else {
           pic5.display='none';
         }
@@ -350,14 +354,16 @@
         // 更新轮播图中的图片
         var paths = [];
         if (ware_.Picture0) {
+
             //"widget://"+ware_.Picture0.substring(3)
-            paths.push("widget://" + ware_.Picture0.substring(3));
+            //paths.push("widget://" + ware_.Picture0.substring(3));//截取掉“../”
+            paths.push(fnLoadImage(ware_.Picture0));
         }
         if (ware_.Picture1) {
-            paths.push("widget://" + ware_.Picture1.substring(3));
+            paths.push(fnLoadImage(ware_.Picture1));
         }
         if (ware_.Picture2) {
-            paths.push("widget://" + ware_.Picture2.substring(3));
+            paths.push(fnLoadImage(ware_.Picture2));
         }
 
 
@@ -367,6 +373,7 @@
             }
         });
     }
+
 </script>
 
 </html>

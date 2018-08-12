@@ -128,10 +128,10 @@
             text-decoration:line-through;
           }
 
-        .matrix .matrixcell img {
+        .thum {
             padding: 2px;
-            width: 130px;
-            height: 70%;
+            width: 124px;
+            height: 102px;
             margin: 0 auto;
         }
 
@@ -149,9 +149,10 @@
           max-height: 100%;
         }
         .ljgmdiv{
-          width: 75px;
-
+          width: 125px;
+          height: 100%;
           margin: 2px auto;
+          padding: 12px;
         }
         .ljgmdiv .btn {
             width: auto;
@@ -162,9 +163,10 @@
         /* 猜你喜欢 */
         .ljgmdiv2{
 
-          width: 75px;
-
+          width: 105px;
+height: 100%;
           margin: 20px auto;
+          padding: 12px;
         }
         .ljgmdiv2 .btn {
             width: auto;
@@ -637,32 +639,32 @@
 <script type="text/template" id="swiptemplate">
     {{~it:swipdata }}
     {{?swipdata.ttype==='0'}}
-    <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center  open-win" win="active" param='{"Id":"{{= swipdata.Id }}"}'>
+    <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center  open-win" win="active" param='{"ActiveId":"{{= swipdata.Id }}"}'>
         <div class="aui-content aui-padded-15 aui-text-center">
-            <img id="picshow_{{= swipdata.Id }}" src="{{= swipdata.PicShow}}" class="" /></div>
+            <img onload="fnLoadImage(this,'{{=swipdata.PicShow}}')"  id="picshow_{{= swipdata.Id }}" src="{{= swipdata.PicShow}}" class="" /></div>
     </div>
     {{??swipdata.ttype==='1'}}
-    <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center  open-win" win="active" param='{"Id":"{{= swipdata.Id }}"}'>
+    <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center  open-win" win="ware" param='{"wareId":"{{= swipdata.Id }}"}'>
         <div class="aui-content aui-padded-15 aui-text-center">
-            <img id="picshow_{{= swipdata.Id }}" src="{{= swipdata.PicShow}}" class="" /></div>
+            <img  onload="fnLoadImage(this,'{{=swipdata.PicShow}}')" id="picshow_{{= swipdata.Id }}" src="{{= swipdata.PicShow}}" class="" /></div>
     </div>
     {{??}}
-    <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center  open-win" win="warelist" param='{"Id":"{{= swipdata.Id }}"}'>
+    <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center  open-win" win="warelist" param='{"wareTypeId":"{{= swipdata.Id }}"}'>
         <div class="aui-content aui-padded-15 aui-text-center">
-            <img id="picshow_{{= swipdata.Id }}" src="{{= swipdata.PicShow}}" class="" /></div>
+            <img  onload="fnLoadImage(this,'{{=swipdata.PicShow}}')" id="picshow_{{= swipdata.Id }}" src="{{= swipdata.PicShow}}" class="" /></div>
     </div>
     {{?}}
     {{~}}
 </script>
 <script type="text/template" id="remaitemplate">
     {{~ it:data }}
-    <div class="aui-col-xs-6 aui-padded-0 activebg">
+    <div class="aui-col-xs-6 aui-padded-0 activebg open-win" win="ware" param='{"wareId":"{{= data.WareId }}"}'>
         <div class="activebg">
             <div class="matrix">
                 <div class="matrixcell">
                     <div class="aui-grid-label">
-                        <img src="{{= data.Thumbnail}}">
-                        <div class="aui-text-warning">{{= data.Name}}</div>
+                        <img onload="fnLoadImage(this,'{{=data.Thumbnail}}')"  class="thum" src="{{= data.Thumbnail}}">
+                        <div class="aui-text-warning">{{= data.WareName}}</div>
                         <div class="info"><span class="rmb"><i>RMB</i></span> {{= data.PromotionPrice }}<i><span class="rmb">原价</span><span class="yuanjia">￥{{= data.Price }}</span></i></div>
                         <div class="ljgmdiv"><img class="btn open-win" win="ware"  param='{"wareId":"{{= data.WareId }}"}' src="../image/home/ljgm.png" /></div>
                     </div>
@@ -676,7 +678,7 @@
     {{~ it:data }}
     <div class="item Fix hightitem open-win" win="ware" param='{"wareId":"{{= data.Id }}"}'>
         <div class="cnt">
-            <img id="thumbnail_{{= data.Id }}" class="pic" src="{{= data.Thumbnail}}" />
+            <img onload="fnLoadImage(this,'{{=data.Thumbnail}}')" id="thumbnail_{{= data.Id }}" class="pic" src="{{= data.Thumbnail}}" />
             <div class="wrap">
                 <div class="wrap2">
                     <div class="content">
@@ -702,6 +704,8 @@
 <script type="text/javascript" src="../script/SHA1.js"></script>
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript" src="../script/list.js"></script>
+<script type="text/javascript" src="../script/sha1.min.js"></script>
+<script type="text/javascript" src="../script/download.js"></script>
 <script type="text/javascript">
     var header, cont;
     apiready = function() {
@@ -788,7 +792,7 @@
             'skip': skip,
             'limit': swipLIMIT
         }, function(ret, err) {
-            //console.log(JSON.stringify(ret));
+          //  console.log(JSON.stringify(ret));
             if (ret) {
                 api.hideProgress();
                 api.refreshHeaderLoadDone();
