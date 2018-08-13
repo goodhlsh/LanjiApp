@@ -44,7 +44,7 @@ function fnLoadImage(imgObj_, url_) {
           console.log('beginnnnnnnnnnnnnnn');
             api.download({
                 //url: 'http://154.8.159.50:1693'+url_,
-                url: 'http://localhost:2016'+url_,
+                url: 'http://154.8.159.50:1693'+url_,
                 savePath: imgDir + imgSha1 + '.png',
                 report: true,
                 cache: true,
