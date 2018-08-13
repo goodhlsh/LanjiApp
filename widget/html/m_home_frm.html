@@ -27,7 +27,6 @@
             -o-box-shadow: 0px 1px 1px 1px 1gba(0, 0, 0, 0.1);
         }
 
-
         .fixed {
             position: fixed;
             /* 随着鼠标滚动固定位置*/
@@ -61,8 +60,8 @@
         /*滚动图片*/
 
         .aui-slide-node {
-            width: auto;
-            height: 604px;
+            width: 100%;
+            height: 100%;
         }
 
         .aui-slide-node img {
@@ -80,18 +79,106 @@
             link 可以引入 html ， 也可以引入css*/
             background: #333333 !important;
         }
-        /* 2X2样式 */
+        /*九宫格---begin*/
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        img {
+            border: 0;
+        }
+
+        .tools {
+            width: 100%;
+            max-width: 480px;
+            height: auto;
+            margin: 0 auto;
+            background-color: #eee;
+            text-align: center;
+            padding: 0px;
+        }
+        table {
+            width:600px;
+            height: auto;
+            margin: 0 auto;
+            box-sizing: border-box;
+            padding: 2px 20px 0px 20px;
+            text-align: center;
+        }
+
+        table tr td {
+            display: inline-block;
+            float: left;
+            padding: 0 0 2px 20px;
+        }
+
+        table tr td .box {
+            width: 39px;
+            height: 40px;
+            line-height: 40px;
+            display: inline-block;
+            background: #eee;
+            color: #000;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+        table tr td .box .ic{
+          width: 100%;
+          height: 100%;
+        }
+        /*九宫格---end*/
+        /*优惠logo*/
+
+        .youhuidiv {
+            width: 100%;
+            height: 40px;
+            margin: 0 auto;
+            padding: 0px;
+            background-color: #eee;
+        }
+
+        .youhuidiv .youhuilogo {
+          margin: 0px;
+          padding: 0px;
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        /*热卖 2X2样式 */
 
         .activebg {
             background-color: #eee;
+        }
+        .remaiheaddiv {
+            width: 100%;
+            height: 32px;
+            margin: 0 auto;
+            background-color: #eee;
+            padding: 0 0;
+        }
+
+        .remaiheaddiv .remailogo {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        .remaidiv {
+            width: 100%;
+            padding: 0 28px;
         }
 
         .matrix {
             display: table;
             width: 100%;
-            height: inherit;
+            height: 100%;
             border: solid 3px #e0e0e0;
-              /* box-shadow: #e0e0e0 3px 3px 10px 5px; //边框阴影
+            /* box-shadow: #e0e0e0 3px 3px 10px 5px; //边框阴影
            box-shadow：color  h-shadow  v-shadow blur spread  inset；
                 color：阴影颜色 ------------ 可选
                 h-shadow ：水平偏移量 ----必选
@@ -106,74 +193,80 @@
         }
 
         .matrix .matrixcell {
-            padding-top: 20px;
+            padding: 5px;
             width: 100%;
-            height: 100%;
-            text-align: center;
-        }
-
-        .matrix .matrixcell .info {
-            font-size: 14px;
-            line-height: 14px;
-            padding-left: 8px;
-            color: #f26384;
-        }
-        .matrix .matrixcell .info .rmb{
-            font-size: 10px;
-            line-height: 10px;
-
-            color: #f26384;
-        }
-          .matrix .matrixcell .info .yuanjia{
-            text-decoration:line-through;
-          }
-
-        .thum {
-            padding: 2px;
-            width: 124px;
-            height: 102px;
+            height: 177px;
+            text-align: right;
             margin: 0 auto;
         }
 
-        .remaiheaddiv{
-          width: 100%;
-          height: 45px;
-          margin: 0 auto;
-          background-color: #eee;
+        .matrix .matrixcell .name {
+            text-align: center;
+            font-size: 12px;
+            line-height: 12px;
+            margin: 4px auto;
+        }
 
+        .matrix .matrixcell .info {
+            font-size: 12px;
+            line-height: 12px;
+            padding-left: 8px;
+            color: #f26384;
         }
-        .remaiheaddiv .remailogo{
-          width: auto;
-          height: auto;
-          max-width: 100%;
-          max-height: 100%;
+
+        .matrix .matrixcell .info .rmb {
+            font-size: 10px;
+            line-height: 10px;
+            color: #f26384;
         }
-        .ljgmdiv{
-          width: 125px;
-          height: 100%;
-          margin: 2px auto;
-          padding: 12px;
+
+        .matrix .matrixcell .info .yuanjia {
+            text-decoration: line-through;
         }
-        .ljgmdiv .btn {
+
+        .matrix .matrixcell .thum {
+            padding: 0px;
+            width: 118px;
+            height: 104px;
+            margin: 0 auto;
+        }
+
+
+
+        .juzhong {
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .matrix .matrixcell .ljgmdiv {
+            width: 100%;
+            height: 15px;
+            margin: 3px auto;
+            padding-left: 30px;
+        }
+
+        .matrix .matrixcell .ljgmdiv .btn {
             width: auto;
             height: auto;
             max-width: 100%;
             max-height: 100%;
         }
         /* 猜你喜欢 */
-        .ljgmdiv2{
 
-          width: 105px;
-height: 100%;
-          margin: 20px auto;
-          padding: 12px;
+        .ljgmdiv2 {
+            width: 105px;
+            height: 100%;
+            margin: 20px auto;
+            padding: 12px;
         }
+
         .ljgmdiv2 .btn {
             width: auto;
             height: auto;
             max-width: 100%;
             max-height: 100%;
         }
+
         .guesstitle {
             height: 45px;
             line-height: 45px;
@@ -189,7 +282,7 @@ height: 100%;
         .home-like-list .item {
             position: relative;
             display: block;
-            padding-left: 10px;
+            padding-left: 30px;
             border-bottom: 1px solid #e0e0e0;
         }
 
@@ -343,74 +436,10 @@ height: 100%;
             height: 0;
             clear: both;
         }
-        /*九宫格---begin*/
-        *{
-           margin: 0;
-           padding: 0;
-       }
-       img{
-    border:0;
-}
-        .tools {
-            width: 100%;
-            max-width: 480px;
-            height:auto;
-            margin: 0 auto;
-            background-color: #eee;
-            text-align: center;
-        }
-
-        .con {
-            width: 100%;
-            position: relative;
-            left: 0;
-            top: 0px;
-            text-align: center;
-        }
-
-        table {
-            margin: 0 auto;
-            box-sizing: border-box;
-            padding: 15px 15px 0 0;
-            text-align: center;
-        }
-
-        table tr td {
-            display: inline-block;
-            float: left;
-            padding: 0 0 15px 15px;
-
-        }
-
-        table tr td .box {
-            width:48px;
-            height: 48px;
-            line-height: 48px;
-            display: inline-block;
-            background: #eee;
-            color: #000;
-            font-size: 0.8rem;
-            text-align: center;
-        }
-        /*九宫格---end*/
-        /*优惠logo*/
-        .youhuidiv{
-          width: 100%;
-          height: 70px;
-          margin: 0 auto;
-          padding: 0px;
-          background-color: #eee;
-        }
-        .youhuidiv .youhuilogo{
-          width: auto;
-          height: auto;
-          max-width: 100%;
-          max-height: 100%;
-        }
 
         .post {
             position: relative;
-            top: 20px;
+            top: -20px;
         }
     </style>
 </head>
@@ -440,9 +469,8 @@ height: 100%;
 
     <div id="aui-slide" class="post">
         <div id="swiplist" class="aui-slide-wrap">
-            <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center  open-win" win="ware">
-                <div class="aui-content aui-text-center">
-                    <img src="../image/home/banner1.jpg" class="" /></div>
+            <div class="aui-slide-node open-win" win="ware">
+                  <img src="../image/home/banner1.png" class="" />
             </div>
         </div>
         <div class="aui-slide-page-wrap">
@@ -450,78 +478,78 @@ height: 100%;
         </div>
     </div>
 
-
-    <div id="cont" class="tools  post">
-        <div class="con">
+    <div id="cont" class="tools post">
             <table>
                 <tr>
                     <td>
                         <div class="box open-win" win="showcode" login="true">
-                            <img src="../image/home/tuiguang.png"></img>
-                            <div class="aui-grid-label">推广</div>
+                            <img class="ic" src="../image/home/tuiguang.png"></img>
+                            <div>推广</div>
                         </div>
                     </td>
                     <td>
                         <div class="box open-win" win="myteam" login="true">
-                            <img src="../image/home/fenxiao.png"></img>
-                            <div class="aui-grid-label">分销</div>
+                            <img class="ic" src="../image/home/fenxiao.png"></img>
+                            <div>分销</div>
                         </div>
                     </td>
                     <td>
                         <div class="box open-win" win="mychongzhi" login="true">
-                            <img src="../image/home/chongzhi.png"></img>
-                            <div class="aui-grid-label">充值</div>
+                            <img  class="ic" src="../image/home/chongzhi.png"></img>
+                            <div>充值</div>
                         </div>
                     </td>
                     <td>
                         <div class="box open-win" win="mytixian" login="true">
-                            <img src="../image/home/tixian.png"></img>
-                            <div class="aui-grid-label">提现</div>
+                            <img class="ic" src="../image/home/tixian.png"></img>
+                            <div>提现</div>
                         </div>
                     </td>
                     <td>
                         <div class="box open-win" win="franchisee">
-                            <img src="../image/home/mendian.png"></img>
-                            <div class="aui-grid-label">门店</div>
+                            <img class="ic" src="../image/home/mendian.png"></img>
+                            <div>门店</div>
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <div class="box open-win" win="message" login="true">
-                            <img src="../image/home/xiaoxi.png"></img>
-                            <div class="aui-grid-label">消息</div>
+                            <img class="ic" src="../image/home/xiaoxi.png"></img>
+                            <div>消息</div>
                         </div>
                     </td>
                     <td>
                         <div class="box open-win" win="mybillingrecord" login="true">
-                            <img src="../image/home/zhangdan.png"></img>
-                            <div class="aui-grid-label">账单</div>
+                            <img class="ic" src="../image/home/zhangdan.png"></img>
+                            <div>账单</div>
                         </div>
                     </td>
                     <td>
                         <div class="box open-win" win="">
-                            <img src="../image/home/faxian.png"></img>
-                            <div class="aui-grid-label">发现</div>
+                            <img class="ic" src="../image/home/faxian.png"></img>
+                            <div>发现</div>
                         </div>
                     </td>
                     <td>
                         <div class="box open-win" win="myorder" login="true">
-                            <img src="../image/home/dingdan.png"></img>
-                            <div class="aui-grid-label">订单</div>
+                            <img class="ic" src="../image/home/dingdan.png"></img>
+                            <div>订单</div>
                         </div>
                     </td>
                     <td>
                         <div class="box open-win" win="" login="true">
-                            <img src="../image/home/wuliu.png"></img>
-                            <div class="aui-grid-label">物流</div>
+                            <img class="ic" src="../image/home/wuliu.png"></img>
+                            <div>物流</div>
                         </div>
                     </td>
                 </tr>
 
             </table>
-        </div>
     </div>
+    <div class="youhuidiv post"><img class="youhuilogo open-win" win="active" login="true" src="../image/home/youhui.png" /></div>
+    <div class="remaiheaddiv post"><img src="../image/home/remailogo.png" class="remailogo" /></div>
+
     <!--bootstrap 九宫格  <section class="aui-grid">
         <div class="aui-row">
             <div class="aui-col-xs-3">
@@ -559,12 +587,10 @@ height: 100%;
         </div>
         -->
     <section class="aui-grid  post">
-      <div class="youhuidiv"><img class="youhuilogo open-win" win="active" login="true" src="../image/home/youhui.png"/></div>
 
-        <div class="aui-row">
-            <div class="remaiheaddiv"><img src="../image/home/remailogo.png" class="remailogo" /></div>
-            <div id="remailist" class="activebg">
-               <div class="aui-col-xs-6 aui-padded-l-5 aui-padded-0 activebg">
+        <div class="aui-row activebg">
+            <div id="remailist" class="remaidiv">
+                <div class="aui-col-xs-6 aui-padded-l-5 aui-padded-0">
                     <div class="activebg open-win" win="active" param=''>
                         <div class="matrix">
                             <div class="matrixcell">
@@ -584,12 +610,12 @@ height: 100%;
                     <div class="activebg open-win" win="active" param=''>
                         <div class="matrix">
                             <div class="matrixcell">
-                              <div class="aui-grid-label">
-                                  <img src="../image/home/remaitu_01.png">
-                                  <div class="aui-text-warning">商品名称</div>
-                                  <div class="info"><span class="rmb"><i>RMB</i></span> 330<i><span class="rmb">原价</span><span class="yuanjia">￥390</span></i></div>
-                                  <div class="ljgmdiv"><img class="btn" src="../image/home/ljgm.png" /></div>
-                              </div>
+                                <div class="aui-grid-label">
+                                    <img src="../image/home/remaitu_01.png">
+                                    <div class="aui-text-warning">商品名称</div>
+                                    <div class="info"><span class="rmb"><i>RMB</i></span> 330<i><span class="rmb">原价</span><span class="yuanjia">￥390</span></i></div>
+                                    <div class="ljgmdiv"><img class="btn" src="../image/home/ljgm.png" /></div>
+                                </div>
                             </div>
                         </div>
 
@@ -600,12 +626,12 @@ height: 100%;
                     <div class="activebg open-win" win="active" param=''>
                         <div class="matrix">
                             <div class="matrixcell">
-                              <div class="aui-grid-label">
-                                  <img src="../image/home/remaitu_01.png">
-                                  <div class="aui-text-warning">商品名称</div>
-                                  <div class="info"><span class="rmb"><i>RMB</i></span> 330<i><span class="rmb">原价</span><span class="yuanjia">￥390</span></i></div>
-                                  <div class="ljgmdiv"><img class="btn" src="../image/home/ljgm.png" /></div>
-                              </div>
+                                <div class="aui-grid-label">
+                                    <img src="../image/home/remaitu_01.png">
+                                    <div class="aui-text-warning">商品名称</div>
+                                    <div class="info"><span class="rmb"><i>RMB</i></span> 330<i><span class="rmb">原价</span><span class="yuanjia">￥390</span></i></div>
+                                    <div class="ljgmdiv"><img class="btn" src="../image/home/ljgm.png" /></div>
+                                </div>
                             </div>
                         </div>
 
@@ -616,12 +642,12 @@ height: 100%;
                     <div class="activebg open-win" win="active" param=''>
                         <div class="matrix">
                             <div class="matrixcell">
-                              <div class="aui-grid-label">
-                                  <img src="../image/home/remaitu_01.png">
-                                  <div class="aui-text-warning">商品名称</div>
-                                  <div class="info"><span class="rmb"><i>RMB</i></span> 330<i><span class="rmb">原价</span><span class="yuanjia">￥390</span></i></div>
-                                  <div class="ljgmdiv"><img class="btn" src="../image/home/ljgm.png" /></div>
-                              </div>
+                                <div class="aui-grid-label">
+                                    <img src="../image/home/remaitu_01.png">
+                                    <div class="aui-text-warning">商品名称</div>
+                                    <div class="info"><span class="rmb"><i>RMB</i></span> 330<i><span class="rmb">原价</span><span class="yuanjia">￥390</span></i></div>
+                                    <div class="ljgmdiv"><img class="btn" src="../image/home/ljgm.png" /></div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -637,40 +663,35 @@ height: 100%;
     </div>
 </body>
 <script type="text/template" id="swiptemplate">
-    {{~it:swipdata }}
-    {{?swipdata.ttype==='0'}}
-    <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center  open-win" win="active" param='{"ActiveId":"{{= swipdata.Id }}"}'>
-        <div class="aui-content aui-padded-15 aui-text-center">
-            <img onload="fnLoadImage(this,'{{=swipdata.PicShow}}')"  id="picshow_{{= swipdata.Id }}" src="{{= swipdata.PicShow}}" class="" /></div>
+    {{~it:swipdata }} {{?swipdata.ttype==='0'}}
+    <div class="aui-slide-node open-win" win="ware">
+          <img src="../image/home/banner1.png" class="" />
     </div>
-    {{??swipdata.ttype==='1'}}
-    <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center  open-win" win="ware" param='{"wareId":"{{= swipdata.Id }}"}'>
-        <div class="aui-content aui-padded-15 aui-text-center">
-            <img  onload="fnLoadImage(this,'{{=swipdata.PicShow}}')" id="picshow_{{= swipdata.Id }}" src="{{= swipdata.PicShow}}" class="" /></div>
-    </div>
-    {{??}}
-    <div class="aui-slide-node aui-slide-node-middle aui-slide-node-center  open-win" win="warelist" param='{"wareTypeId":"{{= swipdata.Id }}"}'>
-        <div class="aui-content aui-padded-15 aui-text-center">
-            <img  onload="fnLoadImage(this,'{{=swipdata.PicShow}}')" id="picshow_{{= swipdata.Id }}" src="{{= swipdata.PicShow}}" class="" /></div>
-    </div>
-    {{?}}
-    {{~}}
+    <div class="aui-slide-node open-win" win="active" param='{"ActiveId":"{{= swipdata.Id }}"}'>
+                    <img onload="fnLoadImage(this,'{{=swipdata.PicShow}}')" id="picshow_{{= swipdata.Id }}" src="{{= swipdata.PicShow}}" class="" /></div>
+      {{??swipdata.ttype==='1'}}
+    <div class="aui-slide-node open-win" win="ware" param='{"wareId":"{{= swipdata.Id }}"}'>
+                <img onload="fnLoadImage(this,'{{=swipdata.PicShow}}')" id="picshow_{{= swipdata.Id }}" src="{{= swipdata.PicShow}}" class="" /></div>
+      {{??}}
+    <div class="aui-slide-node open-win" win="warelist" param='{"wareTypeId":"{{= swipdata.Id }}"}'>
+                    <img onload="fnLoadImage(this,'{{=swipdata.PicShow}}')" id="picshow_{{= swipdata.Id }}" src="{{= swipdata.PicShow}}" class="" /></div>
+    {{?}} {{~}}
 </script>
 <script type="text/template" id="remaitemplate">
     {{~ it:data }}
-    <div class="aui-col-xs-6 aui-padded-0 activebg open-win" win="ware" param='{"wareId":"{{= data.WareId }}"}'>
-        <div class="activebg">
-            <div class="matrix">
-                <div class="matrixcell">
-                    <div class="aui-grid-label">
-                        <img onload="fnLoadImage(this,'{{=data.Thumbnail}}')"  class="thum" src="{{= data.Thumbnail}}">
-                        <div class="aui-text-warning">{{= data.WareName}}</div>
-                        <div class="info"><span class="rmb"><i>RMB</i></span> {{= data.PromotionPrice }}<i><span class="rmb">原价</span><span class="yuanjia">￥{{= data.Price }}</span></i></div>
-                        <div class="ljgmdiv"><img class="btn open-win" win="ware"  param='{"wareId":"{{= data.WareId }}"}' src="../image/home/ljgm.png" /></div>
-                    </div>
+    <div class="aui-col-xs-6 aui-padded-0 open-win" win="ware" param='{"wareId":"{{= data.WareId }}"}'>
+        <div class="matrix">
+            <div class="matrixcell">
+                <div class="aui-grid-label">
+                    <img class="thum" src="{{= data.Thumbnail}}">
+                    <div class="name">{{= data.WareName}}</div>
+                    <div class="info"><span class="rmb"><i>RMB</i></span> {{= data.PromotionPrice }}<i><span class="rmb">原价</span><span class="yuanjia">￥{{= data.Price }}</span></i></div>
+                    <div class="ljgmdiv">
+                        <img class="btn open-win" win="ware" param='{"wareId":"{{= data.WareId }}"}' src="../image/home/ljgm.png" /></div>
                 </div>
             </div>
         </div>
+
     </div>
     {{~}}
 </script>
@@ -678,7 +699,7 @@ height: 100%;
     {{~ it:data }}
     <div class="item Fix hightitem open-win" win="ware" param='{"wareId":"{{= data.Id }}"}'>
         <div class="cnt">
-            <img onload="fnLoadImage(this,'{{=data.Thumbnail}}')" id="thumbnail_{{= data.Id }}" class="pic" src="{{= data.Thumbnail}}" />
+            <img id="thumbnail_{{= data.Id }}" class="pic" src="{{= data.Thumbnail}}" />
             <div class="wrap">
                 <div class="wrap2">
                     <div class="content">
@@ -792,7 +813,7 @@ height: 100%;
             'skip': skip,
             'limit': swipLIMIT
         }, function(ret, err) {
-          //  console.log(JSON.stringify(ret));
+            //  console.log(JSON.stringify(ret));
             if (ret) {
                 api.hideProgress();
                 api.refreshHeaderLoadDone();
@@ -808,12 +829,12 @@ height: 100%;
     var swiplist;
 
     function fnShowSwipList(datas) {
-        swiplist = $api.byId('swiplist');
+        //swiplist = $api.byId('swiplist');
         var swiptemplate = $api.byId('swiptemplate');
         if (swiptemplate) {
             dotswip = doT.template(swiptemplate.innerHTML);
         }
-        swiplist.innerHTML = dotswip(datas);
+        //  swiplist.innerHTML = dotswip(datas);
         fnReadyOpenWin();
         fnAuiSlide();
     };
@@ -878,12 +899,12 @@ height: 100%;
             'skip': skip,
             'limit': remaiLIMIT
         }, function(ret, err) {
-          if(ret){
-            api.hideProgress();
-            api.refreshHeaderLoadDone();
-            fnShowRemaiList(ret);
-            fnCacheImage(ret, index_);
-          }
+            if (ret) {
+                api.hideProgress();
+                api.refreshHeaderLoadDone();
+                fnShowRemaiList(ret);
+                fnCacheImage(ret, index_);
+            }
         });
     };
 
@@ -1006,7 +1027,7 @@ height: 100%;
             fnInitLikeList(keyword, 0, 20);
             //用户信息更新
             if ($api.getStorage('userInfo')) {
-              fnInitUserInfo();
+                fnInitUserInfo();
             }
         });
     }

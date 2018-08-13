@@ -2,8 +2,8 @@ function fnLoadImage(url_) {
     if (url_==''||url_==null) {
       return '';
     }
-    var imgDir = "fs://images/";
-    var imgSha1 = api.fsDir;
+    var imgDir = api.fsDir;
+    var imgSha1 = sha1(url_);
     var fs = api.require('fs');
     fs.exist({
         path: imgDir + imgSha1 + '.png'
@@ -32,7 +32,7 @@ function fnLoadImage(imgObj_, url_) {
   }
     var imgDir = api.fsDir;
     var imgSha1 = sha1(url_);
-    console.log(imgSha1);
+    console.log('http://localhost:2016'+url_);
     var fs = api.require('fs');
     fs.exist({
         path: imgDir + imgSha1 + '.png'
@@ -43,7 +43,8 @@ function fnLoadImage(imgObj_, url_) {
         } else {
           console.log('beginnnnnnnnnnnnnnn');
             api.download({
-                url: 'http://154.8.159.50:1693'+url_,
+                //url: 'http://154.8.159.50:1693'+url_,
+                url: 'http://localhost:2016'+url_,
                 savePath: imgDir + imgSha1 + '.png',
                 report: true,
                 cache: true,
