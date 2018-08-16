@@ -111,7 +111,7 @@
     {{~it:value:index}}
     <div class="ware ware-1">
         <div class="content" tapmode onclick="fnOpenWareWin('{{=value.Id}}');">
-            <img  onload="fnLoadImage(this)"  data-url="{{=value.Thumbnail}}" class="thumbnail" src="../image/default_square.png">
+            <img  onload="fnCacheImage(this)"  data-url="{{=value.Thumbnail}}" class="thumbnail" src="../image/default_square.png">
             <div class="info">
                 <div class="name">{{=value.Name}}</div>
                 <div class="description">{{=value.Description}}</div>
@@ -235,7 +235,7 @@
     }
 
     // 实现商品列表的图片缓存
-    function fnLoadImage(ele_) {
+    function fnCacheImage(ele_) {
         var dataUrl = $api.attr(ele_, 'data-url');
         // 缓存data-url所指定的图片
         if (dataUrl) {

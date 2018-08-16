@@ -6,6 +6,7 @@
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
     <title>title</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-slide.css" />
     <style>
         html,
         body {
@@ -147,21 +148,50 @@
             height: 20px;
             line-height: 20px;
         }
-        .picture{
-          height: auto;
-          width: auto;
+
+        .picture {
+            height: auto;
+            width: auto;
         }
-        .picture img{
-          width: 90%;
-          height: auto;
+
+        .picture img {
+            width: 90%;
+            height: auto;
+            margin: 0 auto;
+        }
+        /*滚动图片*/
+        #aui-slide {overflow: hidden;}
+        .aui-slide-node {
+            width: 100%;
+            height: 100%;
+        }
+
+        .aui-slide-node img {
           margin: 0 auto;
+            width: auto;
+            height: auto;
+            /*宽度 自适应*/
+            max-width: 100%;
+            /*高度 百分百*/
+            max-height: 100%;
+        }
+
+        .dis {
+            display: none;
         }
     </style>
 </head>
 
 <body>
     <section>
-        <div id="picture"></div>
+        <div id="aui-slide">
+            <div id="swiplist" class="aui-slide-wrap">
+
+            </div>
+            <div class="aui-slide-page-wrap">
+                <!--分页容器-->
+            </div>
+        </div>
         <div class="info-name">
             <div id="wareName" class="name">商品名:</div>
             <div id="description" class="description">商品描述:</div>
@@ -173,14 +203,12 @@
                     <del id="originPrice">原价：</del>
                 </div>
                 <div id="stock" class="place">销量：0件</div>
-
             </div>
         </div>
         <div class="info-discount">
-            <div class="name">优惠活动：</div>
+            <div class="name">优惠：</div>
             <div id="discount" class="value">可参与</div>
         </div>
-
         <div class="picture">
             <img id="pic3" src="" />
         </div>
@@ -200,72 +228,14 @@
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/SHA1.js"></script>
 <script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript" src="../script/sha1.min.js"></script>
 <script type="text/javascript" src="../script/download.js"></script>
+<script type="text/javascript" src="../script/aui-slide.js"></script>
 <script type="text/javascript">
     apiready = function() {
-        // 初始化轮播图模块
-        initUIScrollPicture();
         // 获取商品详情数据
         getWareInfo(api.pageParam.wareId);
     };
-
-    var UIScrollPicture;
-
-    function initUIScrollPicture() {
-
-        // 获取占位的div元素，并设置元素的宽高
-        var picture = $api.byId('picture');
-        picture.style.width = api.winWidth  + 'px';
-        picture.style.height = api.winWidth*0.8  + 'px';
-
-        var rect = $api.offset(picture);
-
-        // 引入UIScrollPicture模块，并指定位置和宽高
-        UIScrollPicture = api.require('UIScrollPicture');
-        UIScrollPicture.open({
-            rect: {
-                x: rect.l,
-                y: rect.t,
-                w: rect.w,
-                h: rect.h
-            },
-            data: {
-                paths: [
-                    //'widget://image/demo1.png',
-                    //'widget://image/demo2.png',
-
-                ]
-            },
-            styles: {
-                caption: {
-                    height: 35,
-                    color: '#E0FFFF',
-                    size: 13,
-                    bgColor: '#696969',
-                    position: 'bottom'
-                },
-                indicator: {
-                    align: 'center',
-                    color: '#FFFFFF',
-                    activeColor: '#DA70D6'
-                }
-            },
-            placeholderImg: 'widget://image/default_square.png',
-            contentMode: 'scaleAspectFit',
-            interval: 5,
-            fixedOn: api.frameName,
-            auto:true,
-            loop: true,
-            fixed: false
-        }, function(ret, err) {
-            if (ret) {
-                //alert(JSON.stringify(ret));
-            } else {
-                //alert(JSON.stringify(err));
-            }
-        });
-    }
-
 
     function getWareInfo(wareId_) {
         api.showProgress({
@@ -283,7 +253,7 @@
             limit: 1
         }
         fnGet('Spl_Ware/GetByID', filter, function(ret, err) {
-          console.log(JSON.stringify(ret));
+            //  console.log(JSON.stringify(ret));
             api.hideProgress();
             // 更新商品详情展示
             fnUpdateWareInfo(ret);
@@ -318,12 +288,11 @@
             stock.innerHTML = '销量： ' + ware_.Stock;
         }
         //优惠活动
-        var discount=$api.byId('discount');
+        var discount = $api.byId('discount');
         if (ware_.YTypeName) {
-            discount.innerHTML+=ware_.YTypeName;
-        }
-        else {
-            discount.innerHTML='无';
+            discount.innerHTML += ware_.YTypeName;
+        } else {
+            discount.innerHTML = '无';
         }
 
         //图片介绍
@@ -333,47 +302,72 @@
 
 
         if (ware_.Picture3) {
-          fnLoadImage(pic3, ware_.Picture3)
+            fnLoadImage(pic3, ware_.Picture3);
             //pic3.src = ware_.Picture3;
-        }else {
-          pic3.display='none';
+        } else {
+            pic3.display = 'none';
         }
         if (ware_.Picture4) {
-            fnLoadImage(pic4, ware_.Picture4)
-        }else {
-          pic4.display='none';
+            fnLoadImage(pic4, ware_.Picture4);
+        } else {
+            pic4.display = 'none';
         }
         if (ware_.Picture5) {
-            fnLoadImage(pic5, ware_.Picture5)
-        }else {
-          pic5.display='none';
+            fnLoadImage(pic5, ware_.Picture5);
+        } else {
+            pic5.display = 'none';
         }
-
-
-
         // 更新轮播图中的图片
-        var paths = [];
         if (ware_.Picture0) {
-
-            //"widget://"+ware_.Picture0.substring(3)
-            //paths.push("widget://" + ware_.Picture0.substring(3));//截取掉“../”
-            paths.push(fnLoadImage(ware_.Picture0));
+            fnLoadOnlyImage(ware_.Picture0, function(path_, ret, err) {
+                getpath(path_);
+            });
         }
         if (ware_.Picture1) {
-            paths.push(fnLoadImage(ware_.Picture1));
+            fnLoadOnlyImage(ware_.Picture1, function(path_, ret, err) {
+                getpath(path_);
+            });
         }
         if (ware_.Picture2) {
-            paths.push(fnLoadImage(ware_.Picture2));
+            fnLoadOnlyImage(ware_.Picture2, function(path_, ret, err) {
+                getpath(path_);
+            });
         }
+    }
+    var swiplist = $api.byId('swiplist');
+    var tmp = '';
 
-
-        UIScrollPicture.reloadData({
-            data: {
-                paths: paths
-            }
-        });
+    function getpath(path) {
+        if (path != null) {
+            tmp += "<div class='aui-slide-node'><img  src='" + path + "'/></div>"
+        }
+        swiplist.innerHTML = tmp;
+        fnAuiSlide();
     }
 
+    function fnAuiSlide() {
+        var slide = new auiSlide({
+            //      指定 获取当前页的函数  必须实现
+            //  currentPage:currentFun,
+            //      获取最外层div元素
+            "container": document.getElementById("aui-slide"),
+            //"width":120,
+            //      高度
+            "height": 260,
+            //      速度
+            "speed": 300,
+            //自动播放
+            "autoPlay": 3000,
+            //      是否显示
+            "pageShow": true,
+            //      点风格显示
+            "pageStyle": 'dot',
+            //      是否循环 滚动
+            "loop": true,
+            //      点的位置
+            "dotPosition": 'center',
+        });
+    }
 </script>
 
 </html>

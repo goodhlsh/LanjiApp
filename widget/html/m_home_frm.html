@@ -658,13 +658,13 @@
 <script type="text/template" id="swiptemplate">
     {{~it:swipdata }} {{?swipdata.ttype==='0'}}
     <div class="aui-slide-node open-win" win="active" param='{"ActiveId":"{{= swipdata.Id }}"}'>
-        <img onload="fnLoadImage(this)" src="../image/home/banner1.png" id="picshow_{{= swipdata.Id }}" data-url="http://154.8.159.50:8080/{{= swipdata.PicShow}}" class="" /></div>
+        <img onload="fnCacheImage(this)" src="../image/home/banner1.png" id="picshow_{{= swipdata.Id }}" data-url="http://154.8.159.50:8080/{{= swipdata.PicShow}}" class="" /></div>
     {{??swipdata.ttype==='1'}}
     <div class="aui-slide-node open-win" win="ware" param='{"wareId":"{{= swipdata.Id }}"}'>
-        <img onload="fnLoadImage(this)" src="../image/home/banner1.png" id="picshow_{{= swipdata.Id }}" data-url="http://154.8.159.50:8080/{{= swipdata.PicShow}}" class="" /></div>
+        <img onload="fnCacheImage(this)" src="../image/home/banner1.png" id="picshow_{{= swipdata.Id }}" data-url="http://154.8.159.50:8080/{{= swipdata.PicShow}}" class="" /></div>
     {{??}}
     <div class="aui-slide-node open-win" win="warelist" param='{"warelistId":"{{= swipdata.Id }}"}'>
-        <img onload="fnLoadImage(this)" src="../image/home/banner1.png" id="picshow_{{= swipdata.Id }}" data-url="http://154.8.159.50:8080/{{= swipdata.PicShow}}" class="" /></div>
+        <img onload="fnCacheImage(this)" src="../image/home/banner1.png" id="picshow_{{= swipdata.Id }}" data-url="http://154.8.159.50:8080/{{= swipdata.PicShow}}" class="" /></div>
     {{?}} {{~}}
 </script>
 <script type="text/template" id="remaitemplate">
@@ -673,7 +673,7 @@
         <div class="matrix">
             <div class="matrixcell">
                 <div class="aui-grid-label">
-                    <img onload="fnLoadImage(this)" src="../image/home/remaitu_01.png"  class="thum"  data-url="http://154.8.159.50:8080/{{= data.Thumbnail}}">
+                    <img onload="fnCacheImage(this)" src="../image/home/remaitu_01.png"  class="thum"  data-url="http://154.8.159.50:8080/{{= data.Thumbnail}}">
                     <div class="name">{{= data.WareName}}</div>
                     <div class="info"><span class="rmb"><i>RMB</i></span> {{= data.PromotionPrice }}<i><span class="rmb">原价</span><span class="yuanjia">￥{{= data.Price }}</span></i></div>
                     <div class="ljgmdiv">
@@ -688,7 +688,7 @@
     {{~ it:data }}
     <div class="item Fix hightitem open-win" win="ware" param='{"wareId":"{{= data.Id }}"}'>
         <div class="cnt">
-            <img onload="fnLoadImage(this)" src="../image/home/remaitu_01.png"  id="thumbnail_{{= data.Id }}" class="pic"  data-url="http://154.8.159.50:8080/{{= data.Thumbnail}}" />
+            <img onload="fnCacheImage(this)" src="../image/home/remaitu_01.png"  id="thumbnail_{{= data.Id }}" class="pic"  data-url="http://154.8.159.50:8080/{{= data.Thumbnail}}" />
             <div class="wrap">
                 <div class="wrap2">
                     <div class="content">
@@ -714,7 +714,7 @@
 <script type="text/javascript" src="../script/SHA1.js"></script>
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript" src="../script/list.js"></script>
-<script type="text/javascript" src="../script/sha1.min.js"></script>
+
 
 <script type="text/javascript">
     function fnLoadImage2(this_) {
@@ -722,13 +722,14 @@
 
     }
 
-    function fnLoadImage(ele_) {
+    function fnCacheImage(ele_) {
         var dataUrl = $api.attr(ele_, 'data-url');
         //            alert(fnLoadImage)
         if (dataUrl) {
             api.imageCache({
                 url: dataUrl
             }, function(ret, err) {
+              //console.log(JSON.stringify(ret));
                 if (ret) {
                     ele_.src = ret.url;
                     //alert(ret.url);
@@ -827,7 +828,7 @@
                 api.hideProgress();
                 api.refreshHeaderLoadDone();
                 fnShowSwipList(ret);
-                fnCacheImage(ret, index_);
+                fnCacheImage2(ret, index_);
             } else {
                 console.log(JSON.stringify(err));
             }
@@ -913,7 +914,7 @@
                 api.hideProgress();
                 api.refreshHeaderLoadDone();
                 fnShowRemaiList(ret);
-                fnCacheImage(ret, index_);
+                fnCacheImage2(ret, index_);
             }
         });
     };
@@ -964,7 +965,7 @@
     //图片缓存本地
     var index_;
 
-    function fnCacheImage(datas, index) {
+    function fnCacheImage2(datas, index) {
         if (datas.length <= index) {
             return;
         }
@@ -976,7 +977,7 @@
                 thumbnail.src = datas[index].Thumbnail;
             }
             index_ = index + 1;
-            fnCacheImage(datas, index_);
+            fnCacheImage2(datas, index_);
         });
         $api.setStorage('index_', index_);
     };

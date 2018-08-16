@@ -23,10 +23,6 @@
             -webkit-flex-flow: column;
             flex-flow: column;
         }
-
-        header {
-            height: 80px;
-        }
     </style>
 </head>
 
@@ -62,7 +58,7 @@
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
-      fnReady();
+        fnReady();
         var header = $api.byId('aui-header');
 
         var footer = $api.byId('aui-footer');
@@ -73,22 +69,7 @@
         headerH = $api.offset(header).h;
 
         footerHeight = $api.offset(footer).h;
-        wareTypeList = [{
-            "Id": "56D2EB459D90451584B853A5728C6A15",
-            "SonTypeName": "海植晶萃"
-        }, {
-            "Id": "3CFCDFBAE5C549B189FCEACFBE9BDA0A",
-            "SonTypeName": "面膜系列"
-        }, {
-            "Id": "284BF942C7C642C6B0BA8CEC7FDA46AC",
-            "SonTypeName": "清新滋润"
-        }, {
-            "Id": "46F18CE5F95A430DBB0E4502D52C3C16",
-            "SonTypeName": "套装系列"
-        }, {
-            "Id": "A48C196AE379499C9491092908BBE8F8",
-            "SonTypeName": "洗护系列"
-        }];
+
         //设置我的小红点
         var num = $api.getStorage('newmessage') == null ? 0 : $api.getStorage('newmessage');
 
@@ -104,8 +85,8 @@
             fnClostMenu();
         }
         //  fnReadyFrame();
-        fnInitMenu();
-        openFrames();
+
+
     };
     var headerH, footerHeight;
     var NVNavigationBar;
@@ -125,7 +106,7 @@
         });
     }
 
-    function fnInitMenu() {
+    function fnInitMenu(index_) {
 
         NVNavigationBar.open({
             rect: {
@@ -136,13 +117,13 @@
             },
             styles: {
                 orientation: 'vertical',
-                bg: '',
+                bg: '#fff',
                 bgAlpha: 1,
                 font: {
                     size: 12,
                     sizeSelected: 14,
                     color: '#6b6b6b',
-                    colorSelected: '#ff0000',
+                    colorSelected: '#f26384',
                     alpha: 1
                 },
                 itemSize: {
@@ -151,41 +132,38 @@
                 }
             },
             items: [{
-                title: '海植晶萃',
-                bg: '',
-                bgSelected: '#FFFFFF'
-            }, {
-                title: '面膜系列',
-                bg: '',
-                bgSelected: '#FFFFFF'
-            }, {
-                title: '清新滋润',
-                bg: '',
-                bgSelected: '#FFFFFF'
-            }, {
-                title: '套装系列',
-                bg: '',
-                bgSelected: '#FFFFFF'
-            }, {
-                title: '洗护系列',
-                bg: '',
-                bgSelected: '#FFFFFF'
+                title: '标题一',
+                bg: '#FFE7BA',
+                bgSelected: '#ff00000'
             }],
-            selectedIndex: 0,
+            selectedIndex: index_,
             fixedOn: api.frameName,
             id: 'first'
         }, function(ret, err) {
-            $api.setStorage('NVNavigationBar', ret.id);
-
-            fnSetNavMenuIndex(ret.index);
-            NVNavigationBar.setSelected({
-                id: 'first',
-                index: ret.index,
-                selected: true
-            }, function(ret) {
-
-                //alert(JSON.stringify(ret));
-            });
+            if (ret.eventType == 'show') {
+                $api.setStorage('NVNavigationBar', ret.id); //为判断导航条是否存在
+                fnSetNavMenuIndex(index_);
+                for (var i = 0; i < wareTypeList.length; i++) {
+                    fnInsertMenu(wareTypeList[i].SonTypeName, i);
+                }
+                fnDeleteMenu(wareTypeList.length);
+                NVNavigationBar.setSelected({
+                    id: 'first',
+                    index: index_,
+                    selected: true
+                }, function(ret) {
+                    //alert(JSON.stringify(ret));
+                });
+            } else {
+                fnSetNavMenuIndex(ret.index);
+                NVNavigationBar.setSelected({
+                    id: 'first',
+                    index: ret.index,
+                    selected: true
+                }, function(ret) {
+                    //alert(JSON.stringify(ret));
+                });
+            }
         });
     }
 
@@ -195,11 +173,11 @@
             index: index_,
             item: {
                 title: title_,
-                bg: '#eeeeee',
-                bgSelected: '#FFFFFF'
+                bg: '',
+                bgSelected: ''
             }
         }, function(ret) {
-            //alert(JSON.stringify(ret));
+            //  alert(JSON.stringify(ret));
         });
 
     }
@@ -220,8 +198,29 @@
             }
             //params = $api.jsonToStr(params);
         fnGet('spl_ProductCategory/GetList', filter, function(ret, err) {
+          //  console.log(JSON.stringify(ret));
             if (ret) {
                 wareTypeList = ret;
+                var wt = [];
+                for (var i = 0; i < ret.length; i++) {
+                    wt[i] = ret[i].Id;
+                }
+                var warelistId = api.pageParam == null ? '' : api.pageParam.warelistId;
+                var index = 0;
+                if (!Array.indexOf) {
+                    Array.prototype.indexOf = function(el) {
+                        for (var i = 0, n = this.length; i < n; i++) {
+                            if (this[i] === el) {
+                                return i;
+                            }
+                        }
+                        return -1;
+                    }
+                }
+                index = wt.indexOf(warelistId) !== -1 ? wt.indexOf(warelistId) : 0;
+
+                openFrames(index);
+                fnInitMenu(index);
             } else {
 
             }
@@ -229,7 +228,7 @@
     }
     var framesOpened;
     // 打开商品列表FrameGroup
-    function openFrames() {
+    function openFrames(index_) {
         // 构造FrameGroup中的Frame数组
         var frames = [];
         for (var i = 0; i < wareTypeList.length; i++) {
@@ -245,19 +244,18 @@
         // 打开FrameGroup
         api.openFrameGroup({
             name: 'mainFrameGroup',
-            scrollEnabled: true, // 支持手势滑动切换
+            scrollEnabled: false, // 支持手势滑动切换
             rect: {
                 x: 90,
                 y: headerH,
                 w: api.frameWidth - 90, // 自动填充所在Window的宽度
                 h: api.frameHeight - headerH - footerHeight // 自动填充所在Window的高度
             },
-            index: 0, // 默认显示第一个Frame
+            index: index_, // 默认显示第一个Frame
             frames: frames,
-            preload: 0 //frames.length // 预加载所有Frame
+            preload: frames.length // 预加载所有Frame
         }, function(ret, err) {
             // Frame切换完成的响应函数，更新分类菜单的选中状态
-            fnSetNavMenuIndex(ret.index);
         });
 
         // 标记为已经打开
@@ -273,6 +271,12 @@
             index: index_,
             scroll: false
         });
+    }
+
+    function indexOf(arr, item) {
+
+        return arr.indexOf(item);
+
     }
 </script>
 

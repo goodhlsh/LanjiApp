@@ -10,6 +10,7 @@
         body {
             width: 100%;
             height: auto;
+            background-color: #ffffff;
         }
 
         section {
@@ -19,7 +20,7 @@
             box-sizing: border-box;
             margin: 0;
             padding-left: 10px;
-            background-color: #fff;
+
         }
 
         .content {
@@ -88,7 +89,7 @@
             color: #888;
             line-height: 40px;
             text-align: center;
-            background-color: #fff;
+
         }
 
         .active {
@@ -109,11 +110,11 @@
     {{~it:value:index}}
     <div class="ware ware-1" id="w{{=index}}">
         <div class="content" tapmode onclick="fnOpenWareWin('{{=value.Id}}');">
-            <img onload="fnLoadImage(this,'{{=value.Thumbnail}}')" data-url="{{=value.Thumbnail}}" class="thumbnail" src="../image/default_square.png">
+            <img onload="fnCacheImage(this)" data-url="http://154.8.159.50:8080/{{=value.Thumbnail}}" class="thumbnail" src="../image/default_square.png">
             <!--<img srcs="{{=value.Thumbnail}}" class="thumbnail imgCache" src="../image/default_square.png">-->
             <div class="info">
-                <div class="name">{{=value.Name}}</div>
-                <div class="description">{{=value.Description}}</div>
+                <div class="name">{{=cutstr(value.Name,14)}}</div>
+                <div class="description">{{=cutstr(value.Description,16)}}</div>
                 <div class="price-tag">
                     <span class="price">￥{{=value.Price}}</span>
                 </div>
@@ -127,7 +128,7 @@
 <script type="text/javascript" src="../script/sha1.min.js"></script>
 <script type="text/javascript" src="../script/SHA1.js"></script>
 <script type="text/javascript" src="../script/remotedb.js"></script>
-<script type="text/javascript" src="../script/download.js"></script>
+<script type="text/javascript" src="../script/cutstr.js"></script>
 <script type="text/javascript">
     apiready = function() {
         // 初始化事件监听
@@ -312,6 +313,7 @@
             }
         }
     }
+
 </script>
 
 </html>
