@@ -11,7 +11,7 @@
     };
     auiCollapse.prototype = {
         init: function(params,callback){
-            var collapseHeader = document.querySelectorAll(".aui-collapse-header");
+            var collapseHeader = document.querySelectorAll(".aui-collapse-header");          
             if(collapseHeader.length){
                 for(var i=0;i<collapseHeader.length;i++){
                     (function(e){

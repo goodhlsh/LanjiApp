@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
+    <style>
+        body {
+            width: 100%;
+            height: auto;
+        }
+        header{
+          width: 100%;
+          height: auto;
+        }
+
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id="aui-header">
+      <div class="aui-btn aui-pull-left" tapmode onclick="fnCloseFrame()">
+          <span class="aui-iconfont aui-icon-left"></span>
+      </div>
+      <div class="aui-title">文章列表
+      </div>
+    </header>
+    <div class="aui-content-padded" id="cont">
+        <ul class="aui-list" id="list">
+          <li class="aui-list-item" style="display: block;">
+                      <div class="aui-media-list-item-inner">
+                          <div class="aui-list-item-media">
+                              <img src="../image/demo1.png">
+                          </div>
+                          <div class="aui-list-item-inner aui-padded-t-10 aui-padded-b-10" style="display: block;">
+                              <div class="aui-list-item-text">
+                                  <div class="aui-list-item-title">带有媒体的列表二</div>
+                                  <div class="aui-list-item-right">08:00</div>
+                              </div>
+                              <div class="aui-list-item-text">
+                                  <div class="aui-ellipsis-2">这里是内容区域，新版中的列表布局可以很轻松的帮助开发者完成常见列表样式。</div>
+                              </div>
+                          </div>
+                      </div>
+                  </li>
+        </ul>
+
+    </div>
+
+</body>
+<script type="text/template" id="template">
+{{~it:cvalue:ckey}}
+<li class="aui-list-item" tapmode onclick="fnShowContent('{{=cvalue.Id}}')" style="display: block;">
+            <div class="aui-media-list-item-inner">
+                <div class="aui-list-item-media">
+                    <img src="{{=cvalue.ImgUrl}}">
+                </div>
+                <div class="aui-list-item-inner aui-padded-t-10 aui-padded-b-10" style="display: block;">
+                    <div class="aui-list-item-text">
+                        <div class="aui-list-item-title">{{=cvalue.Title}}</div>
+                        <div class="aui-list-item-right">{{=cutstr(cvalue.CreateTime,10)}}</div>
+                    </div>
+                    <div class="aui-list-item-text">
+                        <div class="aui-ellipsis-2">{{=clearbq(cvalue.BodyContent)}}</div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        {{~}}
+</script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript" src="../script/cutstr.js"></script>
+<script type="text/javascript">
+//去除字符串中的html标签
+function clearbq(str) {
+  var dd=str.replace(/<\/?.+?>/g,"");
+ var dds=dd.replace(/ /g,"");//dds为得到后的内容
+  return dds;
+}
+    apiready = function() {
+       fnReady();
+        header = $api.byId('aui-header');
+        cont = $api.byId('cont');
+        api.parseTapmode();
+        fnGetContentList();
+    };
+    var header, cont;
+    function fnGetContentList() {
+        var filter = {
+            where: {
+                title:'',
+                categoryid:api.pageParam.categoryid
+            },
+            istype:'0',
+            skip: 0,
+            limit: 100
+        }
+        fnGet('MyArticle/GetListByCategoryID', filter, function(ret, err) {
+            console.log(JSON.stringify(ret));
+            if (ret) {
+                list = $api.byId('list');
+                fnUpdateList(ret);
+            } else {
+                api.toast({
+                    msg: '加载数据失败',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+            // 隐藏加载状态对话框
+            api.hideProgress();
+        });
+    }
+    var list;
+    function fnUpdateList(data_) {
+        var tempFn = doT.template($api.byId('template').text);
+        list.innerHTML = tempFn(data_);
+        api.parseTapmode();
+    }
+
+    function fnShowContent(id_) {
+      api.openFrame({
+          name: 'arccontent_frm',
+          url: './arccontent_frm.html',
+          rect: {
+              x: 0,
+              y: 0,
+              w: api.winWidth,
+              h: api.winHeight
+          },
+          pageParam: {
+              id: id_
+          },
+          bounces: true,
+          bgColor: 'rgba(0,0,0,0)',
+          vScrollBarEnabled: true,
+          hScrollBarEnabled: true
+      });
+
+
+    }
+    //关闭本窗口
+    function fnCloseFrame() {
+      api.closeFrame({
+          name: 'arclist_frm'
+      });
+
+    }
+</script>
+
+</html>

@@ -1,233 +1,128 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
-
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
-    <title>title</title>
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>AUI快速完成布局</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
-    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
-    <style>
-        body {
-            width: 100%;
-            height: auto;
-        }
-
-        .tran {
-            background: transparent;
-        }
-
-        .aui-searchbar {
-            background: transparent;
-        }
-
-        .bg {
-            background: rgba(255, 255, 255, 0.9) none repeat scroll 0 0 !important;
-            /*实现FF背景透明，文字不透明*/
-            filter: Alpha(opacity=90);
-            background: #FFF;
-            /*实现IE背景透明*/
-            width: 100%;
-            box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
-            /*投影*/
-            -webkit-box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.1);
-            -moz-box-shadow: 0px 1px 1px 1px 1gba(0, 0, 0, 0.1);
-            -o-box-shadow: 0px 1px 1px 1px 1gba(0, 0, 0, 0.1);
-        }
-
-        .bg0 {
-            position: fixed;
-            /* 随着鼠标滚动*/
-        }
-    </style>
 </head>
-
 <body>
-    <header class="aui-bar aui-bar-nav bg0 bg" id="aui-header">
-        <div class="aui-pull-left aui-btn tran" onclick="fnOpenScanner()">
-            <i class="aui-iconfont aui-icon-scan"></i>
-        </div>
-        <div class="aui-title" style="left:1.5rem; right: 1.5rem;">
-            <div class="aui-searchbar" id="search">
-                <div class="aui-searchbar-input aui-border-radius">
-                    <i class="aui-iconfont aui-icon-search"></i>
-                    <input type="search" placeholder="请输入搜索内容" id="search-input">
-                    <div class="aui-searchbar-clear-btn">
-                        <i class="aui-iconfont aui-icon-close"></i>
+    <section class="aui-content-padded">
+        <ul class="aui-list aui-collapse aui-border">
+            <div class="aui-collapse-item">
+                <li class="aui-list-item aui-collapse-header" tapmode>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-title">参数说明</div>
+                        <div class="aui-list-item-right">
+                            <i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+                        </div>
+                    </div>
+                </li>
+                <div class="aui-collapse-content aui-padded-15 aui-border-b">
+                    配置autoHide可以控制是否自动隐藏已经展开的容器
+                </div>
+            </div>
+            <div class="aui-collapse-item">
+                <li class="aui-list-item aui-collapse-header" tapmode>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-title">折叠菜单标题</div>
+                        <div class="aui-list-item-right">
+                            <i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+                        </div>
+                    </div>
+                </li>
+                <div class="aui-collapse-content">
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title">Item1</div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title">Item2</div>
+                        </div>
+                    </li>
+                </div>
+            </div>
+
+            <div class="aui-collapse-item">
+                <li class="aui-list-item aui-collapse-header" tapmode>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-title">图文混排</div>
+                        <div class="aui-list-item-right">
+                            <i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+                        </div>
+                    </div>
+                </li>
+                <div class="aui-collapse-content">
+                    <li class="aui-list-item" style="display: block;">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-media">
+                                <img src="../image/demo1.png">
+                            </div>
+                            <div class="aui-list-item-inner aui-padded-t-10 aui-padded-b-10" style="display: block;">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title">带有媒体的列表二</div>
+                                    <div class="aui-list-item-right">08:00</div>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <div class="aui-ellipsis-2">这里是内容区域，新版中的列表布局可以很轻松的帮助开发者完成常见列表样式。</div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner aui-padded-t-10 aui-padded-b-10" style="display: block;">
+                            <div class="aui-list-item-title">多张图片列表一</div>
+                            <p>借助栅格来实现图片列表</p>
+                            <div class="aui-row aui-row-padded">
+                                <div class="aui-col-xs-4">
+                                    <img src="../image/demo1.png"/>
+                                </div>
+                                <div class="aui-col-xs-4">
+                                    <img src="../image/demo2.png" />
+                                </div>
+                                <div class="aui-col-xs-4">
+                                    <img src="../image/demo3.png" />
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </div>
+            </div>
+        </ul>
+    </section>
+    <section class="aui-content-padded">
+        <div class="aui-card-list">
+            <div class="aui-card-list-header aui-collapse-header" tapmode>
+                <div>卡片布局中使用折叠菜单</div>
+                <i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+            </div>
+            <div class="aui-card-list-content-padded aui-collapse-content">
+                <div class="aui-row aui-row-padded">
+                    <div class="aui-col-xs-4">
+                        <img src="../image/demo1.png" />
+                    </div>
+                    <div class="aui-col-xs-4">
+                        <img src="../image/demo2.png" />
+                    </div>
+                    <div class="aui-col-xs-4">
+                        <img src="../image/demo3.png" />
                     </div>
                 </div>
-
-                <div class="aui-searchbar-btn aui-text-warning" tapmode>取消</div>
             </div>
         </div>
-        <div class="aui-btn aui-pull-right tran open-win" tapmode="highlight" win="html/extension">
-            <span class="aui-iconfont aui-icon-qrcode"></span>
-        </div>
-    </header>
-    <div class="aui-content-padded" id="cont">
-        <ul class="aui-list">
-            <li class="aui-list-header">会员信息</li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-header">分红信息</li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-header">会员信息</li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-header">分红信息</li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-header">会员信息</li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-header">分红信息</li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-header">会员信息</li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-header">分红信息</li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-        </ul>
-
-    </div>
-    <div id="cont" class="bg">
-        <ul>
-            <li class="aui-list-header">分红信息</li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-            <li class="aui-list-item aui-arrow-right">
-                <div class="aui-list-item-inner">
-                    这是一个列表项
-                </div>
-            </li>
-        </ul>
-    </div>
+    </section>
 </body>
-<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/api.js" ></script>
+<script type="text/javascript" src="../script/aui-collapse.js" ></script>
 <script type="text/javascript">
-    apiready = function() {
-        header = $api.byId('aui-header');
-        cont = $api.byId('cont');
-        console.log($api.offset(header).t);
-
-        //$('#aui-header').css({
-        //      opacity:(2000-(header.offset().top))/2000
-        //    });
-        fnInitListener();
-    };
-    var header, cont;
-
-    function fnInitListener() {
-        api.addEventListener({
-            name: 'swipedown'
-        }, function(ret, err) {
-            if (cont.getBoundingClientRect().top > $api.offset(header).t) {
-
-                $api.addCls(header, 'bg');
-            }
-        });
-        api.addEventListener({
-            name: 'swipeup'
-        }, function(ret, err) {
-            console.log(cont.getBoundingClientRect().top);
-
-            if (cont.getBoundingClientRect().top < $api.offset(header).t) {
-
-                $api.removeCls(header, 'bg');
-
-            }
-        });
+    apiready = function () {
+        api.parseTapmode();
     }
+    var collapse = new auiCollapse({
+        autoHide:false //是否自动隐藏已经展开的容器
+    });
 </script>
-
 </html>

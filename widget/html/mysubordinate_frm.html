@@ -13,13 +13,47 @@
 </head>
 
 <body>
-  <div class="aui-content aui-margin-b-15">
+    <!--<div class="aui-content aui-margin-b-15">
       <ul class="aui-list aui-list-in" id="list">
       </ul>
-  </div>
+  </div>-->
+  <section class="aui-content-padded">
+      <ul class="aui-list aui-collapse aui-border">
+          <div class="aui-collapse-item" id="list">
+          </div>
+      </ul>
+  </section>
 </body>
 <script type="text/template" id="template">
-
+    {{for(var i=0;i
+    <it[0].levelMax;i++){}} <li class="aui-list-item aui-collapse-header">
+        <div class="aui-list-item-inner">
+            <div class="aui-list-item-title">{{=i+1}}级下属</div>
+            <div class="aui-list-item-right">
+                <i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+            </div>
+        </div>
+        </li>
+        {{?i===0}} {{for(var j=0;j
+        <it.length;j++){}} {{?it[j].levelMan===i+1}} <div class="aui-collapse-content">
+            <li class="aui-list-item" onclick="fnShowList()">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">{{=it[j].trueName}}</div>
+                    <div class="aui-list-item-right">{{=it[j].levelName}}</div>
+                </div>
+            </li>
+            </div>
+            {{?}} {{}}} {{??}} {{for(var j=0;j
+            <it.length;j++){}} {{?it[j].levelMan===i+1}} <div class="aui-collapse-content">
+                <li class="aui-list-item" onclick="fnShowList()">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-title">{{=it[j].trueName}}</div>
+                        <div class="aui-list-item-right">{{=it[j].levelName}}</div>
+                    </div>
+                </li>
+                </div>
+                {{?}} {{}}} {{?}} {{}}}
+                <!--
     {{for(var i=0;i
     <it[0].levelMax;i++){}} <li class="aui-list-header">
             <div class="aui-list-item-title">{{=i+1}}级下属</div>
@@ -45,7 +79,7 @@
                     </li>
                     {{?}} {{}}}
       {{?}}
-   {{}}}
+   {{}}}-->
 
 </script>
 <script type="text/javascript" src="../script/api.js"></script>
@@ -56,30 +90,31 @@
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
-      fnReady();
-      api.parseTapmode();
-      list = $api.byId('list');
-        fnGetChildren($api.getStorage('userInfo').Id);
-};
-function fnShowList() {
-  api.openFrame({
-      name: 'sonlist_frm',
-      url: './sonlist_frm.html',
-      rect: {
-        x: 0,
-        y: 0,
-        w: api.winWidth,
-        h: api.winHeight
-      },
-      pageParam: {
-      },
-      bounces: true,
-      bgColor: 'rgba(0, 0, 0, 0.6)',
-      vScrollBarEnabled: true,
-      hScrollBarEnabled: true
-  });
+        fnReady();
+        api.parseTapmode();
 
-}
+        fnGetChildren($api.getStorage('userInfo').Id);
+    };
+
+    function fnShowList() {
+        api.openFrame({
+            name: 'sonlist_frm',
+            url: './sonlist_frm.html',
+            rect: {
+                x: 0,
+                y: 0,
+                w: api.winWidth,
+                h: api.winHeight
+            },
+            pageParam: {},
+            bounces: true,
+            bgColor: 'rgba(0, 0, 0, 0.6)',
+            vScrollBarEnabled: true,
+            hScrollBarEnabled: true
+        });
+
+    }
+
     function fnGetChildren(uid_) {
         var filter = {
             where: {
@@ -90,7 +125,11 @@ function fnShowList() {
         }
         fnGet('SysUser/GetAllChildren', filter, function(ret, err) {
             if (ret) {
+              list = $api.byId('list');
                 fnUpdateList(ret);
+                var collapse = new auiCollapse({
+                    autoHide: true //是否自动隐藏已经展开的容器
+                });
             } else {
                 api.toast({
                     msg: '加载数据失败',
@@ -103,9 +142,10 @@ function fnShowList() {
         });
     }
     var list;
+
     function fnUpdateList(data_) {
         var tempFn = doT.template($api.byId('template').innerHTML);
-        list.innerHTML=tempFn(data_);
+        list.innerHTML = tempFn(data_);
         api.parseTapmode();
     }
 </script>
