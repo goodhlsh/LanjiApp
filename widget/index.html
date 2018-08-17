@@ -125,12 +125,8 @@
     //求首部和底部高 用户信息
     var footer, footerHeight;
     function fnInit() {
-      //  header = $api.byId('aui-header');
         footer = $api.byId('aui-footer');
-      //  $api.fixStatusBar(header);
-      //  headerHeight = $api.offset(header).h;
         footerHeight = $api.offset(footer).h;
-
 
         //设置我的小红点
         var num = $api.getStorage('newmessage') == null ? 0 : $api.getStorage('newmessage');
@@ -140,7 +136,7 @@
             $api.addCls(mydot, 'aui-dot');
         }
     }
-  
+
     //初始化首页
     var frames = ['m_home_frm'];
     var currindex = 0;

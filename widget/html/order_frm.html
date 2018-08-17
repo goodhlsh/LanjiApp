@@ -492,7 +492,11 @@
                             var yh = $api.byId('yhother');
                             yh.style.display = 'block';
                         } else {
-                            alert('您选购的商品有不符合活动要求的！');
+                          api.toast({
+                              msg: '您选购的商品有不符合活动要求的！',
+                              duration: 2000,
+                              location: 'bottom'
+                          });
                         }
                     }
                 }
@@ -502,7 +506,11 @@
                     var yh = $api.byId('yhother');
                     yh.style.display = 'block';
                 } else {
-                    alert('您选购的商品有不符合活动要求的！');
+                  api.toast({
+                      msg: '您选购的商品有不符合活动要求的！',
+                      duration: 2000,
+                      location: 'bottom'
+                  });
               }
             }
             //优惠根据政策

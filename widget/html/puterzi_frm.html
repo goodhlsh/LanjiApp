@@ -77,13 +77,13 @@
             font-size: 12px;
             vertical-align: top;
         }
+
         .ware-1 .info .btn {
-          position: absolute;
-          top: 20px;
-          right: 0px;
+            position: absolute;
+            top: 20px;
+            right: 0px;
             margin-top: 10px;
             width: 100%;
-
             vertical-align: top;
         }
 
@@ -117,7 +117,7 @@
     {{~it:value:index}}
     <div class="ware ware-1">
         <div class="content">
-          <div class="thumbnail">{{=index+1}}</div>
+            <div class="thumbnail">{{=index+1}}</div>
             <div class="info">
                 <div class="name">用户：{{=value.truename}}
                 </div>
@@ -178,36 +178,39 @@
     }
     // 确认入家谱
     function fnSetSon(id_, uid_, fJE_) {
-
-        api.alert({
-            title: '提醒！！！',
-            msg: '确认后将不能更改上下级关系，是否继续？',
+        api.confirm({
+            title: '特别提醒！！！',
+            msg: '被确认会员的等级若高于自己，确认会员将不会收到平台分红，同时确认后将不能更改会员间关系，是否继续？',
+            buttons: ['确定', '取消']
         }, function(ret, err) {
             if (ret) {
-              //打开分组选择frame
-              api.openFrame({
-                  name: 'selectgroup_frm',
-                  url: './selectgroup_frm.html',
-                  rect: {
-                    x: 0,
-                    y: 0,
-                    w: api.winWidth,
-                    h: api.winHeight
-                  },
-                  pageParam: {
-                      id:id_,
-                      userid: uid_,
-                      fJE:fJE_
-                  },
-                  bounces: true,
-                  bgColor: 'rgba(0, 0, 0, 0.6)',
-                  vScrollBarEnabled: true,
-                  hScrollBarEnabled: true
-              });
+                if (1 == ret.buttonIndex) {
+                    //打开分组选择frame
+                    api.openFrame({
+                        name: 'selectgroup_frm',
+                        url: './selectgroup_frm.html',
+                        rect: {
+                            x: 0,
+                            y: 0,
+                            w: api.winWidth,
+                            h: api.winHeight
+                        },
+                        pageParam: {
+                            id: id_,
+                            userid: uid_,
+                            fJE: fJE_
+                        },
+                        bounces: true,
+                        bgColor: 'rgba(0, 0, 0, 0.6)',
+                        vScrollBarEnabled: true,
+                        hScrollBarEnabled: true
+                    });
+                }
 
-
-            } ////
-        }); //
+            } else {
+                //alert( JSON.stringify( err ) );
+            }
+        });
     }
     // 获取用户列表，通过loadMore_参数区分是首次加载还是加载更多
     function fnGetUserList(loadMore_) {
@@ -236,7 +239,7 @@
             limit: LIMIT
         }
         fnGet('SysUser/GetListByTID', filter, function(ret, err) {
-            if (ret!=null) {
+            if (ret != null) {
                 // 恢复下拉刷新的状态
                 api.refreshHeaderLoadDone();
 

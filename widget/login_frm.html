@@ -267,7 +267,7 @@
         }, function(ret, err) {
             if (ret.Id!=null) {
                 $api.setStorage('userInfo', ret);
-                fnInitYuE();
+                fnInitYuE(ret.Id);
                 api.sendEvent({
                     name: 'setuserinfo'
                 });
@@ -288,10 +288,10 @@
             }
         });
     }
-    function fnInitYuE() {
+    function fnInitYuE(Id_) {
         var filter = {
             where: {
-                userid: $api.getStorage('userInfo').Id
+                userid: Id_
             },
             //order: "createAt DESC",
             limit: 1,

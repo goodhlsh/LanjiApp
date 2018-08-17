@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>个人中心</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+        }
+
+        .login {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-orient: horizontal;
+            -webkit-flex-flow: row;
+            flex-flow: row;
+
+        }
+
+        .login div {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            line-height: 20px;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .login .icon-panel {
+            width: 100%;
+            height: 86px;
+            text-align: left;
+            padding-left: 50px;
+            padding-right: 0px;
+        }
+
+        .login .icon-panel .icon {
+            display: inline-block;
+            width: 80px;
+            height: 80px;
+            border-radius: 80px;
+        }
+
+        .login .usern {
+            position: absolute;
+            left: 150px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        .login .usern .us {
+            margin-left: 0px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        .highlight {
+            opacity: 0.7;
+        }
+
+        .right {
+            position: absolute;
+            right: 20px;
+            top: 22px;
+        }
+
+        .splite {
+            width: 100%;
+            height: 12px;
+            background-color: #eeeeee;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <section class="aui-content">
+        <div class="aui-list aui-list-noborder">
+
+            <div class="aui-grid">
+                <div class="aui-row" id="classify">
+                    <div class="aui-col-xs-3 open-win" win="mysubordinate" login="true" tapmode>
+                        <i class="aui-iconfont aui-icon-group"></i>
+                        <div class="aui-grid-label">我的团队</div>
+                    </div>
+                    <div class="aui-col-xs-3 open-win" win="showcode" login="true"  tapmode>
+                        <i class="aui-iconfont aui-icon-addressbook"></i>
+                        <div class="aui-grid-label">我的名片</div>
+                    </div>
+                    <div class="aui-col-xs-3 " win="myfenxiaopaihang"  tapmode>
+                        <!--<div class="aui-badge">新</div>-->
+                        <i class="aui-iconfont aui-icon-rank"></i>
+                        <div class="aui-grid-label">分销排行</div>
+                    </div>
+                    <div class="aui-col-xs-3 open-win" win="myachievement" login="true"  tapmode>
+                        <i class="aui-iconfont aui-icon-refund"></i>
+                        <div class="aui-grid-label">分红明细</div>
+                    </div>
+                    <div class="aui-col-xs-3 open-win" win="mylevel" login="true"  tapmode>
+                        <i class="aui-iconfont aui-icon-selection"></i>
+                        <div class="aui-grid-label">等级变更</div>
+                    </div>
+                    <div class="aui-col-xs-3 open-win" win="puterzi" login="true"  tapmode>
+                        <i class="aui-iconfont aui-icon-friendadd"></i>
+                        <div class="aui-grid-label">确认会员</div>
+                    </div>
+                    <div class="aui-col-xs-3 open-win" win="showshare" login="true"  tapmode>
+                        <i class="aui-iconfont aui-icon-qrcode"></i>
+                        <div class="aui-grid-label">推广名片</div>
+                    </div>
+                </div>
+            </div>
+            <div class="splite"></div>
+            <div class="aui-list-item open-win" win="mytichong" login="true" tapmode>
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-sponsor"></i>分红提现</div>
+                    <div class="aui-list-item-right"></div>
+                </div>
+
+            </div>
+            <div class="aui-list-item">
+              <div class="aui-list-item-inner">
+                <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-tag"></i>可提现</div>
+                <div id="tixianvalue" class="aui-list-item-right">0.00元</div>
+              </div>
+            </div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript">
+var tixianvalue;
+    apiready = function() {
+      tixianvalue=$api.byId('tixianvalue');
+        fnReadyOpenWin();
+        if ($api.getStorage('userInfo')) {
+          fnInitUserInfo();
+        }
+        if ($api.getStorage('currentwallet')) {
+          fnInitYuE();
+        }
+        fnInit();
+
+    };
+      //从后台更新本地存储
+ function fnInitUserInfo() {        var filter = {
+            where: {
+                Id: $api.getStorage('userInfo').Id
+            },
+            skip: 0,
+            limit: 1
+        }
+        fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('userInfo', ret);
+            }
+        });
+      }
+
+    function fnInit() {
+
+
+    };
+
+    function fnInitYuE() {
+        var filter = {
+            where: {
+                userid: $api.getStorage('userInfo').Id
+            },
+            //order: "createAt DESC",
+            limit: 1,
+            skip: 0
+        };
+        fnGet('Syswallet/GetWallet', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('currentwallet', ret);
+                tixianvalue.innerHTML=ret.JieYu+'元';
+            } else {
+              tixianvalue.innerHTML='0.00 元';
+            }
+        });
+    }
+</script>
+
+</html>

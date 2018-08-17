@@ -13,6 +13,10 @@
             height: 12px;
             background: #eeeeee;
         }
+        .right{
+          position: absolute;
+          right: 5px;
+        }
 
         .highlight {
             opacity: 0.7;
@@ -28,18 +32,20 @@
                     <i class="aui-iconfont aui-icon-delete"></i>
                 </div>
                 <div class="aui-list-item-inner">
-                    清除缓存
+                    <div class="aui-list-item-title">
+                      清除缓存
+                    </div>
+                    <div id="cacheSize" class="aui-list-item-right"></div>
                 </div>
-                <div id="cacheSize" class="aui-list-item-inner aui-list-item-arrow"></div>
-            </li>
+              </li>
             <li class="splite"></li>
             <li class="aui-list-item" tapmode onclick="checkUpdate();">
                 <div class="aui-list-item-inner">
                     <div class="aui-list-item-title">
                         检查版本
                     </div>
-                    <div id="copyright" class="aui-list-item-right">1.0.0</div>
                     <div id="mydot" class="right"></div>
+                    <div id="copyright" class="aui-list-item-right">1.0</div>
                 </div>
             </li>
             <li class="aui-list-item" tapmode onclick="fnOpenAboutWin();">
@@ -61,12 +67,13 @@
         getCacheSize();
         cr = $api.byId('copyright');
         fnInit();
+update_widget();
     };
     var cr, mam;
-
     function fnInit() {
         mam = api.require('mam');
         mam.checkUpdate(function(ret, err) {
+          //console.log(JSON.stringify(ret));
             if (ret) {
                 if (!ret.status) {
                     api.toast({
@@ -76,13 +83,14 @@
                     });
                     return;
                 }
-                if (ret.result.version) {
-                    cr.innerHTML = ret.result.version;
+                if (ret.result.version&&ret.result.update) {
+                    cr.innerHTML = '有新版本：'+ret.result.version;
 
                     //设置我的小红点
                     var mydot = $api.byId('mydot');
                     $api.addCls(mydot, 'aui-dot');
-
+                }else{
+                  cr.innerHTML='已是最新版本！';
                 }
             }
         });
@@ -112,6 +120,7 @@
     function checkUpdate() {
         mam = api.require('mam');
         mam.checkUpdate(function(ret, err) {
+          console.log(JSON.stringify(ret));
             if (ret) {
                 if (!ret.status) {
                     api.toast({
@@ -175,6 +184,20 @@
                 });
                 return;
             }
+        });
+    }
+    //静默更新
+    function update_widget()
+    {
+    	api.addEventListener({
+    	    name:'smartupdatefinish'
+        },
+        function(ret,err)
+        {
+        	if(is_define(ret.value[0].extra))
+    		{
+    			$confirm(ret.value[0].extra,'请重启应用','',new Array('',exit_app));
+    		}
         });
     }
 

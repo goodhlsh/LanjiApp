@@ -34,25 +34,24 @@
             </div>
         </div>
         </li>
+        <div class="aui-collapse-content">
         {{?i===0}} {{for(var j=0;j
-        <it.length;j++){}} {{?it[j].levelMan===i+1}} <div class="aui-collapse-content">
+        <it.length;j++){}} {{?it[j].levelMan===i+1}}
             <li class="aui-list-item" onclick="fnShowList()">
                 <div class="aui-list-item-inner">
                     <div class="aui-list-item-title">{{=it[j].trueName}}</div>
                     <div class="aui-list-item-right">{{=it[j].levelName}}</div>
                 </div>
             </li>
-            </div>
             {{?}} {{}}} {{??}} {{for(var j=0;j
-            <it.length;j++){}} {{?it[j].levelMan===i+1}} <div class="aui-collapse-content">
-                <li class="aui-list-item" onclick="fnShowList()">
+            <it.length;j++){}} {{?it[j].levelMan===i+1}}
+                <li class="aui-list-item">
                     <div class="aui-list-item-inner">
                         <div class="aui-list-item-title">{{=it[j].trueName}}</div>
                         <div class="aui-list-item-right">{{=it[j].levelName}}</div>
                     </div>
                 </li>
-                </div>
-                {{?}} {{}}} {{?}} {{}}}
+                {{?}} {{}}} {{?}} </div>{{}}}
                 <!--
     {{for(var i=0;i
     <it[0].levelMax;i++){}} <li class="aui-list-header">
