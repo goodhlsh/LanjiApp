@@ -109,9 +109,9 @@
     <div class="ware ware-1">
         <div class="content">
             <div class="info">
-                <div class="name">账户金额:{{=value.JieYu}}</div>
+                <div class="name">账户总余额:{{=value.JieYu}}</div>
                 <div class="orderNo">单笔金额：{{=value.Balance}}</div>
-                <div class="orderNo">收支原因：{{=value.Froms}}</div>
+                <div class="orderNo">收支原因：{{=value.Note}}</div>
                 <div class="createDate">登记日期：{{=value.CreateTime}}</div>
             </div>
         </div>
@@ -189,7 +189,8 @@
             }
             //console.log(wareTypeList[api.pageParam.wareTypeIndex].Name);
             //params = $api.jsonToStr(params);
-        fnGet('Syswallet/GetList', filter, function(ret, err) {
+        fnGet('Syswallet/GetAllWalletByUserId', filter, function(ret, err) {
+//console.log(JSON.stringify(ret));
             if (ret) {
 
                 // 恢复下拉刷新的状态

@@ -31,13 +31,13 @@
         <div class="aui-list-item-inner">
             <div class="aui-list-item-title">{{=cvalue.Name}}</div>
             <div class="aui-list-item-right">
-                <i class="aui-iconfont aui-icon-down aui-collapse-arrow"></i>
+                <i class="aui-iconfont aui-icon-unfold"></i>
             </div>
         </div>
     </li>
     <div class="aui-collapse-content">
         {{~ cvalue.children:gvalue:gkey}}
-        <li class="aui-list-item" onclick="fnShowList('{{=gvalue.Id}}')">
+        <li class="aui-list-item" tapmode onclick="fnShowList('{{=gvalue.Id}}')">
             <div class="aui-list-item-inner">
                 <div class="aui-list-item-title">{{=gvalue.Name}}</div>
             </div>
@@ -68,7 +68,7 @@
             limit: 100
         }
         fnGet('MyArticle/GetCategoryList', filter, function(ret, err) {
-            //console.log(JSON.stringify(ret));
+          //  console.log(JSON.stringify(ret));
             if (ret) {
                 list = $api.byId('list');
                 fnUpdateList(ret);

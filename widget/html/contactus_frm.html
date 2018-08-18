@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            background: #f0f0f0;
+        }
+
+        section {
+            position: relative;
+            height: auto;
+
+
+            overflow: hidden;
+            background-color: #fff;
+        }
+
+        .row {
+            position: relative;
+            top: -1px;
+            box-sizing: borderbox;
+            height: 49px;
+            border-top: 1px solid #eee;
+        }
+
+        .title {
+            position: relative;
+            width: 100%;
+            height: 48px;
+            box-sizing: border-box;
+            padding-left: 16px;
+            padding-right: 48px;
+            font-size: 16px;
+            text-align: left;
+            line-height: 48px;
+        }
+
+        .value {
+            position: absolute;
+            top: 0;
+            right: 10px;
+            height: 48px;
+            font-size: 14px;
+            text-align: right;
+            line-height: 48px;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="aui-content-padded">
+        <div class="row">
+            <div class="title">公司电话</div>
+            <div id="tel" class="value">没有登记</div>
+        </div>
+        <div class="row">
+            <div class="title">Email</div>
+            <div id="email" class="value">没有登记</div>
+        </div>
+        <div class="row">
+            <div class="title">网址</div>
+            <div id="website" class="value">没有登记</div>
+        </div>
+        <div class="row">
+            <div class="title">公众号</div>
+            <div id="gzhh" class="value">没有登记</div>
+        </div>
+    </section>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        fnInit();
+    };
+
+    var tel,email,website,gzhh;
+
+    function fnInit(){
+      tel=$api.byId('tel');
+      email=$api.byId('email');
+      website=$api.byId('website');
+      gzhh=$api.byId('gzhh');
+      //读取后台配置信息
+      //fnGet()
+    }
+</script>
+
+</html>

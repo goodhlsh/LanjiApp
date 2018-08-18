@@ -6,9 +6,13 @@
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
     <title>等级情况</title>
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
     <style>
-
-
+        .right {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+        }
     </style>
 </head>
 
@@ -18,7 +22,16 @@
             <li class="aui-list-item">
                 <div class="aui-list-item-inner">
                     <div class="aui-list-item-label">
-                        会员类型
+                        当前等级
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <span id="mylevel"></span>
+                    </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        选择等级
                     </div>
                     <div class="aui-list-item-input">
                         <select id="level">
@@ -26,7 +39,9 @@
                                 <option>1314会员</option>
                                 <option>8800会员</option>
                             </select>
+
                     </div>
+                    <div class="right aui-iconfont aui-icon-unfold"></div>
                 </div>
             </li>
             <li class="aui-list-item">
@@ -35,7 +50,7 @@
                         注意：
                     </div>
                     <div class="aui-list-item-title">
-                        <i>级别增加后用户余额中会冻结相应级别的额度不得提现，但可以购物。</i>
+                        <i>等级提高后用户余额中会冻结相应级别的额度不得提现，但可以购物。</i>
                     </div>
             </li>
             <li class="aui-list-item">
@@ -53,30 +68,13 @@
 <script type="text/javascript">
     apiready = function() {
         fnInitUserInfo();
-        var isAuth = $api.getStorage('userInfo').IsAuth; //先验证后扫描
-
-        if (!isAuth) {
-            api.alert({
-                title: '帮助',
-                msg: '请先实名验证，验证后再充值入会金',
-            }, function(ret, err) {
-                if (ret) {
-                    //alert( JSON.stringify( ret ) );
-                    //打开验证窗口
-                    api.openWin({
-                        name: 'myauth',
-                        url: './myauth.html',
-                        pageParam: {
-                            userid: $api.getStorage('userInfo').Id
-                        }
-                    });
-                }
-            });
-        }
+        nowlevel = $api.getStorage('userInfo').Jibie;
+        var mylevel = $api.byId('mylevel');
+        mylevel.innerHTML = nowlevel;
         fnInitYuE();
     };
     //从后台更新本地存储
-      function fnInitUserInfo() {
+    function fnInitUserInfo() {
         var filter = {
             where: {
                 Id: $api.getStorage('userInfo').Id
@@ -89,10 +87,9 @@
                 $api.setStorage('userInfo', ret);
             }
         });
-      }
+    }
+
     function fnInitYuE() {
-
-
         var filter = {
             where: {
                 userid: $api.getStorage('userInfo').Id
@@ -112,10 +109,11 @@
             }
         });
     }
+    var nowlevel;
 
     function fnOk() {
+
         var level = $api.byId('level');
-        var mywall = $api.getStorage('currentwallet').JieYu;
         var mustwall, levelid;
         if (level.value == '8800会员') {
             mustwall = 8800;
@@ -127,6 +125,30 @@
             mustwall = 398;
             levelid = '1';
         }
+        var nowjibie;
+
+        if (nowlevel == '8800会员') {
+            nowjibie = 8800;
+        } else if (nowlevel == '1314会员') {
+            nowjibie = 1314;
+        } else if (nowlevel == '398会员') {
+            nowjibie = 398;
+        } else {
+            nowjibie = 0;
+        }
+        if (nowjibie >= mustwall) {
+            api.alert({
+                title: '敬告',
+                msg: '您选择的等级必须高于您现在的等级',
+            }, function(ret, err) {
+
+            });
+            return;
+        } else {
+        }
+        var mywall = $api.getStorage('currentwallet').JieYu;
+
+
         if (mywall >= mustwall) {
             api.alert({
                 title: '消息',
@@ -142,13 +164,16 @@
                         }
                         //判断是新入会还是老会员
                     fnGet('SysUser/GetByIdFromJiaPu', filter, function(ret2, err) {
-                        console.log(JSON.stringify(ret2));
+                        //console.log(JSON.stringify(ret2));
                         if (ret2) {
+                          var frozen=ret2.FrozenMoney>$api.getStorage('userInfo').CurrentFirst?ret2.FrozenMoney-$api.getStorage('userInfo').CurrentFirst:0;
+
                             var data = {
                                 body: JSON.stringify({
                                     UserId: $api.getStorage('userInfo').Id,
                                     FirstJinE: mustwall,
-                                    LevelId: levelid
+                                    LevelId: levelid,
+                                    FrozenMoney:frozen+mustwall
                                 })
                             };
                             fnPost('SysUser/EditJiaPu', data, 'application/json', false, false, function(ret3, err) {
@@ -203,21 +228,21 @@
     }
 
     function fnUpdateStorageUserInfo() {
-      var filter={
-        where: {
-            Id: $api.getStorage('userInfo').Id
-        },
-        skip: 0,
-        limit: 1
-      }
-      fnGet('SysUser/GetUserInfoById',filter,function(ret,err){
-        if (ret) {
-          $api.setStorage('userInfo', ret);
-          api.sendEvent({
-              name: 'setuserinfo'
-          });
+        var filter = {
+            where: {
+                Id: $api.getStorage('userInfo').Id
+            },
+            skip: 0,
+            limit: 1
         }
-      });
+        fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('userInfo', ret);
+                api.sendEvent({
+                    name: 'setuserinfo'
+                });
+            }
+        });
 
     }
     //关闭窗口
