@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        body {
+            width: 100%;
+        }
+
+        .contain {
+            border-radius: 5px;
+            margin-left: 12px;
+            margin-right: 12px;
+            padding: 10px 13px 10px 13px;
+            background-color: #f5d1d0;
+            position: relative;
+        }
+
+        .coupon {
+            position: relative;
+            color: #d3111a;
+            width: 100%;
+            height: 100px;
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .coupon:last-child {
+            margin-bottom: 0px;
+        }
+
+        .coupon:after {
+            content: ".";
+            display: block;
+            height: 0;
+            clear: both;
+            visibility: hidden;
+        }
+
+        .coupon-left {
+            text-align: left;
+            width: 80%;
+            background: white;
+            height: 95px;
+            font-size: 12px;
+            position: relative;
+            box-shadow: 0px 5px 0px #d4696e;
+            border-radius: 5px;
+        }
+
+        .coupon-right {
+            text-align: center;
+            width: 20%;
+            background: white;
+            height: 95px;
+            position: relative;
+            box-shadow: 0px 5px 0px #d4696e;
+            border-radius: 5px;
+        }
+
+        .coupon-inner {
+            padding: 10px 10px 10px 15px;
+            height: 75px;
+            position: relative;
+        }
+
+        .coupon-left-inner {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 10px 10px 15px;
+            width: 88%;
+        }
+
+        .coupon-money {
+            width: 70%;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .coupon-left-inner-top {
+            line-height: 32px;
+        }
+
+        .belongTo {
+            font-size: 18px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 100%;
+        }
+
+        .sum {
+            color: #b2b2b2;
+            font-size: 16px;
+        }
+
+        .coupon-condition {
+            line-height: 75px;
+            text-align: right;
+        }
+
+        .coupon-time {
+            line-height: 25px;
+            font-weight:bolder;
+            font-size: 20px;
+        }
+
+        .coupon-circle {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: #f5d1d0;
+            position: absolute;
+            left: -9px;
+            border-radius: 50%;
+            z-index: 20
+        }
+
+        .coupon-circle.top {
+            top: -8px;
+        }
+
+        .coupon-circle.bottom {
+            bottom: -28px;
+            height: 16px;
+            box-shadow: inset 0px 5px 0px #d4696e;
+        }
+
+        .center-circle {
+            display: inline-block;
+            width: 10px;
+            height: 95px;
+            position: absolute;
+            left: -6px;
+            top: 0px;
+            z-index: 10;
+        }
+
+        .center {
+            background: #d51d27;
+            background: radial-gradient(#d51d27 5px, transparent 5px, transparent 5px);
+            background-size: 15px 15px;
+            background-position: 13px 10px;
+        }
+
+        .center:before {
+            background-color: #d51d27;
+        }
+
+        @media screen and (max-width:374px) {
+            .coupon {
+                height: 90px;
+                display: flex;
+                justify-content: space-around;
+                margin-bottom: 10px;
+                overflow: hidden;
+            }
+            .coupon-left {
+                height: 85px;
+                font-size: 12px;
+            }
+            .coupon-right {
+                height: 85px;
+                border-radius: 5px;
+            }
+            .coupon-time {
+                line-height: 25px;
+                font-weight: bolder;
+                font-size: 16px;
+            }
+            .coupon-inner {
+                padding: 5px 10px 10px 15px;
+                height: 70px;
+                position: relative;
+            }
+            .coupon-circle.bottom {
+                bottom: -10px;
+            }
+            .coupon-circle.top {
+                top: -10px;
+            }
+            .center {
+                background: #d51d27;
+                background: radial-gradient(#d51d27 5px, transparent 5px, transparent 5px);
+                background-size: 15px 15px;
+                background-position: 13px 6px;
+            }
+
+        }
+        .splite{
+          height: 12px;
+          padding: 5px auto;
+        }
+        .fontcolor{
+          color: #f5d1d0;
+        }
+        .push-status {
+            width: 100%;
+            height: 40px;
+            font-size: 16px;
+            color: #888;
+            line-height: 40px;
+            text-align: center;
+
+        }
+    </style>
+</head>
+<body>
+  <div class="splite"></div>
+  <div id="list"></div>
+  <div class="push-status" id="pushStatus">上拉显示更多</div>
+</body>
+<script  type="text/template" id="template">
+{{~it:value:index}}
+    <div class="contain">
+        <div class="coupon" tapmode onclick="changecolor(this,'{{value.Id}}')">
+            <div class="coupon-left">
+                <div class="coupon-inner coupon-left-inner">
+                    <div class="coupon-money">
+                        <div class='coupon-left-inner-top belongTo' style="font-size: 16px">{{=value.YHPiCiName}}</div>
+                        <div class="sum " style="font-size:10px">有效期：{{=value.ValidDate}}</div>
+                    </div>
+                    <div class="coupon-condition">
+                        <span style="font-size: 30px">{{=value.DiscouMoney}}</span><span style="font-size: 12px">{{?value.DiscouMoney}}元{{?}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="coupon-right">
+                <div class="coupon-inner">
+                    <div class="coupon-time">
+                        优<br/>
+                        惠<br/>
+                        券
+                    </div>
+                    <i class="coupon-circle top"></i>
+                    <i class="coupon-circle bottom"></i>
+                    <div class="center-circle center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="splite"></div>
+{{~}}
+</script>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/doT.min.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        fnReady();
+        // 初始化事件监听
+        initEventListenter();
+        // 初始化下拉刷新
+        initRefresh();
+
+        // 获取商品列表
+        fnGetList(false);
+    };
+    var skip = 0,
+        LIMIT = 20;
+
+    function initEventListenter() {
+        // 监听滚动到Frame底部的事件
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra: {
+                threshold: 300 // 距离底部还有多少触发scrolltobottom事件
+            }
+        }, function(ret, err) {
+            // 获取更多的商品
+            fnGetList(true);
+        });
+    }
+
+    // 实现下拉刷新功能
+    function initRefresh() {
+        api.setRefreshHeaderInfo({
+            visible: true,
+            loadingImg: 'widget://image/refresh.png',
+            bgColor: '#fff',
+            textColor: '#e1017e',
+            showTime: true
+        }, function(ret, err) {
+            // 刷新商品列表
+            fnGetList(false);
+        });
+    }
+
+    function fnGetList(loadMore_) {
+        if (!loadMore_) {
+            // 显示加载状态对话框
+            api.hideProgress({
+                style: 'default',
+                animationType: 'fade',
+                title: '努力加载中...',
+                text: '请稍后...',
+                modal: false
+            });
+        }
+        // 如果是加载更多，需要实现分页
+        if (loadMore_) {
+            skip += LIMIT;
+        } else {
+            skip = 0;
+        }
+        // 优惠列表
+        var filter = {
+            where: {
+
+            },
+            skip: skip,
+            limit: LIMIT
+        }
+        fnGet('Spl_YouHui/GetList', filter, function(ret, err) {
+            if (ret) {
+                // 恢复下拉刷新的状态
+                api.refreshHeaderLoadDone();
+
+                // 在界面中更新商品列表显示
+                fnUpdateList(ret, loadMore_);
+
+            } else {
+                api.toast({
+                    msg: '没有加载数据',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+            // 隐藏加载状态对话框
+            api.hideProgress();
+        });
+    }
+
+    // 更新列表显示
+    function fnUpdateList(data_, loadMore_) {
+        var list = $api.byId('list');
+        // 编译模板函数
+        var tempFn = doT.template($api.byId('template').innerHTML);
+        // 使用模板函数生成HTML文本
+        var resultHTML = tempFn(data_);
+        // 判断是否是加载更多，如果是加载更多，则追加到list中
+        if (loadMore_) {
+
+            $api.append(list, resultHTML);
+            // 如果服务器端已经没有更多数据返回，更新提示信息
+            if (data_.length < LIMIT) {
+                var pushStatus = $api.byId('pushStatus');
+                pushStatus.innerHTML = "没有啦！";
+            }
+        } else {
+            // 否则，直接替换list中的内容
+            $api.html(list, resultHTML);
+        }
+
+        // 由于是动态的将元素添加到Dom树上，所以需要手动触发tapmode检查，列表中的元素才能实现点击加速的效果
+        api.parseTapmode();
+    }
+
+    function changecolor(id_,model_) {
+
+      if ($api.hasCls(id_, 'fontcolor')) {
+        return;
+      }
+        $api.addCls(id_, 'fontcolor');
+        var data = {
+            body: JSON.stringify({
+                uid:$api.getStorage('userInfo').Id,
+                yid: id_
+            })
+        };
+        fnPost('Spl_YouHui/PostYouHui', data, 'application/json', false, false, function(ret, err) {
+            if (ret) {
+              api.alert({
+                  title: '消息',
+                  msg: '恭喜亲获得该优惠券，请尽快使用！',
+              }, function(ret1, err1){                  
+              });
+
+            }
+          });
+
+    }
+</script>
+
+</html>

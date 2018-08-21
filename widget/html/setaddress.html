@@ -9,12 +9,7 @@
     <link rel="stylesheet" type="text/css" href="../css/aui.css" />
     <link rel="stylesheet" type="text/css" href="../css/aui-iconfont.css" />
     <style>
-        header {
-            position: relative;
-            width: 100%;
-            height: 50px;
-            background-color: #e3007f
-        }
+
 
         header .back {
             position: absolute;
@@ -88,8 +83,8 @@
                       })
                   };
                     fnPost('SysUser/DeletAddress', data, 'application/json', false, false,
-                        function(ret, err) {
-                            if (ret) {
+                        function(ret1, err1) {
+                            if (ret1) {
                                 alert('操作成功！');
                                 api.sendEvent({
                                     name: 'updateaddress'

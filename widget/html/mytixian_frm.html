@@ -169,10 +169,10 @@
                 } else if (ret.eventType == "change") {
                     UIInput.value({
                         id: moneycoutUIInputId
-                    }, function(ret, err) {
-                        if (ret) {
-                            if (ret.status) {
-                                moneycoutValue = ret.msg;
+                    }, function(ret1, err1) {
+                        if (ret1) {
+                            if (ret1.status) {
+                                moneycoutValue = ret1.msg;
                             }
                         }
                     });

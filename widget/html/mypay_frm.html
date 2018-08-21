@@ -244,7 +244,7 @@
                 title: '支付提醒',
                 msg: '是否选择微信支付？如继续点击确认',
                 buttons: ['确定', '取消']
-            }, function(ret0, err) {
+            }, function(ret0, err0) {
                 if (ret0.buttonIndex == 1 && order_one != null) {
                     fnPost('WxPay/GetAppPayInfo', {
                         body: JSON.stringify({
@@ -252,24 +252,24 @@
                             total_fee: order_one.DingDanKuan * 100,
                             out_trade_no: order_one.OrderNo
                         })
-                    }, 'application/json', false, false, function(ret, err) {
-                        console.log(JSON.stringify(ret));
-                        if (ret.sign != null) {
+                    }, 'application/json', false, false, function(ret1, err1) {
+                        console.log(JSON.stringify(ret1));
+                        if (ret1.sign != null) {
 
                             var wxPay = api.require('wxPay');
                             wxPay.payOrder({
-                                apiKey: ret.app_id,
-                                orderId: ret.prepay_id,
-                                mchId: ret.mch_id,
-                                nonceStr: ret.nonce,
-                                timeStamp: ret.time_stamp,
-                                package: ret.package,
-                                sign: ret.sign
-                            }, function(ret2, err) {
+                                apiKey: ret1.app_id,
+                                orderId: ret1.prepay_id,
+                                mchId: ret1.mch_id,
+                                nonceStr: ret1.nonce,
+                                timeStamp: ret1.time_stamp,
+                                package: ret1.package,
+                                sign: ret1.sign
+                            }, function(ret2, err2) {
                                 if (ret2.status) {
                                     fnShowSuccess();
                                 } else {
-                                    if (err.code == '-2') {
+                                    if (err2.code == '-2') {
                                         api.toast({
                                             msg: '用户取消'
                                         });
@@ -342,11 +342,11 @@
                                 timeStamp: ret.time_stamp,
                                 package: ret.package,
                                 sign: ret.sign
-                            }, function(ret2, err) {
+                            }, function(ret2, err2) {
                                 if (ret2.status) {
                                     fnShowSuccess();
                                 } else {
-                                    if (err.code == '-2') {
+                                    if (err2.code == '-2') {
                                         api.toast({
                                             msg: '用户取消'
                                         });
@@ -386,12 +386,12 @@
                         order_num: order_one.OrderNo,
                         order_price: order_one.DingDanKuan
                     })
-                }, 'application/json', false, false, function(ret2, err) {
+                }, 'application/json', false, false, function(ret2, err2) {
                     if (ret2) {
                         var aliPayPlus = api.require('aliPayPlus');
                         aliPayPlus.payOrder({
                             orderInfo: ret2.data,
-                        }, function(ret3, err) {
+                        }, function(ret3, err3) {
                             console.log(JSON.stringify(ret3));
                             if (ret3.code == '9000') {
                                 fnShowSuccess();
@@ -536,13 +536,21 @@
 
     function fnCreateOrder(status) {
         if ($api.getStorage('shoppingcart')) {
+          var wares = $api.getStorage('shoppingcart');
+          var data_ = [];
+          for (var i = 0, j = 0; i < wares.length; i++) {
+              if (wares[i].WareState != 'select select-off') {
+                  data_[j] = wares[i];
+                  j++;
+              }
+          }
             fnPost('Spl_Orders/PostOrder', {
                 body: JSON.stringify({
                     AddressId: $api.getStorage('AddressId'),
                     UserId: $api.getStorage('userInfo').Id,
                     Status: status,
                     DingDanKuan: parseFloat($api.getStorage('dingdankuan')),
-                    spl_Wares: $api.getStorage('shoppingcart'),
+                    spl_Wares: data_,
                     Description: '兰基优品-购物'
                 })
             }, 'application/json', false, false, function(ret, err) {

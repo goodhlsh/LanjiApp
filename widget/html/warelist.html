@@ -27,7 +27,7 @@
 </head>
 
 <body>
-    <header class="aui-bar aui-bar-nav  " id="aui-header">
+    <header class="aui-bar aui-bar-nav" id="aui-header">
         <div class="aui-title">分类</div>
     </header>
 
@@ -36,7 +36,7 @@
             <i class="aui-iconfont aui-icon-home"></i>
             <div class="aui-bar-tab-label">首页</div>
         </div>
-        <div id="tabbar1" class="aui-bar-tab-item  aui-active " tapmode>
+        <div id="tabbar1" class="aui-bar-tab-item  aui-active">
             <i class="aui-iconfont aui-icon-apps"></i>
             <div class="aui-bar-tab-label">分类</div>
         </div>
@@ -78,15 +78,12 @@
             $api.addCls(mydot, 'aui-dot');
         }
         NVNavigationBar = api.require('NVNavigationBar');
-        // 初始化商品分类列表
-        initWareTypeList();
 
         if ($api.getStorage('NVNavigationBar') != null) {
             fnClostMenu();
         }
-        //  fnReadyFrame();
-
-
+        // 初始化商品分类列表
+        initWareTypeList();
     };
     var headerH, footerHeight;
     var NVNavigationBar;
@@ -107,7 +104,7 @@
     }
 
     function fnInitMenu(index_) {
-
+        //console.log($api.getStorage('menuindex'));
         NVNavigationBar.open({
             rect: {
                 x: 0,
@@ -136,32 +133,45 @@
                 bg: '#FFE7BA',
                 bgSelected: '#ff00000'
             }],
-            selectedIndex: index_,
+            selectedIndex: 0,
             fixedOn: api.frameName,
             id: 'first'
         }, function(ret, err) {
             if (ret.eventType == 'show') {
                 $api.setStorage('NVNavigationBar', ret.id); //为判断导航条是否存在
-                fnSetNavMenuIndex(index_);
+
                 for (var i = 0; i < wareTypeList.length; i++) {
                     fnInsertMenu(wareTypeList[i].SonTypeName, i);
                 }
                 fnDeleteMenu(wareTypeList.length);
-                NVNavigationBar.setSelected({
-                    id: 'first',
-                    index: index_,
-                    selected: true
-                }, function(ret) {
-                    //alert(JSON.stringify(ret));
-                });
+
+                if (api.pageParam == null && $api.getStorage('menuindex')) {
+                    fnSetNavMenuIndex($api.getStorage('menuindex'));
+                    NVNavigationBar.setSelected({
+                        id: 'first',
+                        index: $api.getStorage('menuindex'),
+                        selected: true
+                    }, function(ret0) {
+                        //alert(JSON.stringify(ret));
+                    });
+                } else {
+                    fnSetNavMenuIndex(index_);
+                    NVNavigationBar.setSelected({
+                        id: 'first',
+                        index: index_,
+                        selected: true
+                    }, function(ret0) {
+                        //alert(JSON.stringify(ret));
+                    });
+                }
             } else {
                 fnSetNavMenuIndex(ret.index);
                 NVNavigationBar.setSelected({
                     id: 'first',
                     index: ret.index,
                     selected: true
-                }, function(ret) {
-                    //alert(JSON.stringify(ret));
+                }, function(ret0) {
+                    $api.setStorage('menuindex', ret.index);
                 });
             }
         });
@@ -185,8 +195,23 @@
     var wareTypeList;
     // 初始化商品分类列表
     function initWareTypeList() {
-        // 从服务器端更新商品分类列表
-        fnGetWareTypeList();
+        if ($api.getStorage('waretype')) {
+            wareTypeList = $api.getStorage('waretype');
+            var wt = [];
+            for (var i = 0; i < wareTypeList.length; i++) {
+                wt[i] = wareTypeList[i].Id;
+            }
+            var warelistId = api.pageParam == null ? '' : api.pageParam.warelistId;
+            var index = 0;
+
+            index = wt.indexOf(warelistId) !== -1 ? wt.indexOf(warelistId) : 0;
+
+            openFrames(index);
+            fnInitMenu(index);
+        } else {
+            // 从服务器端更新商品分类列表
+            fnGetWareTypeList();
+        }
     }
 
     // 从服务器端更新商品分类列表
@@ -198,8 +223,9 @@
             }
             //params = $api.jsonToStr(params);
         fnGet('spl_ProductCategory/GetList', filter, function(ret, err) {
-          //  console.log(JSON.stringify(ret));
+            //  console.log(JSON.stringify(ret));
             if (ret) {
+                $api.setStorage('waretype', ret);
                 wareTypeList = ret;
                 var wt = [];
                 for (var i = 0; i < ret.length; i++) {
@@ -207,16 +233,6 @@
                 }
                 var warelistId = api.pageParam == null ? '' : api.pageParam.warelistId;
                 var index = 0;
-                if (!Array.indexOf) {
-                    Array.prototype.indexOf = function(el) {
-                        for (var i = 0, n = this.length; i < n; i++) {
-                            if (this[i] === el) {
-                                return i;
-                            }
-                        }
-                        return -1;
-                    }
-                }
                 index = wt.indexOf(warelistId) !== -1 ? wt.indexOf(warelistId) : 0;
 
                 openFrames(index);
@@ -253,7 +269,7 @@
             },
             index: index_, // 默认显示第一个Frame
             frames: frames,
-            preload: frames.length // 预加载所有Frame
+            preload: 0 //frames.length // 预加载所有Frame
         }, function(ret, err) {
             // Frame切换完成的响应函数，更新分类菜单的选中状态
         });
@@ -273,9 +289,18 @@
         });
     }
 
-    function indexOf(arr, item) {
+    function indexOf(el) {
 
-        return arr.indexOf(item);
+        if (!Array.indexOf) {
+            Array.prototype.indexOf = function(el) {
+                for (var i = 0, n = this.length; i < n; i++) {
+                    if (this[i] === el) {
+                        return i;
+                    }
+                }
+                return -1;
+            }
+        }
 
     }
 </script>

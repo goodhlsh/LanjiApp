@@ -163,7 +163,7 @@
                             limit: 1
                         }
                         //判断是新入会还是老会员
-                    fnGet('SysUser/GetByIdFromJiaPu', filter, function(ret2, err) {
+                    fnGet('SysUser/GetByIdFromJiaPu', filter, function(ret2, err2) {
                         //console.log(JSON.stringify(ret2));
                         if (ret2) {
                           var frozen=ret2.FrozenMoney>$api.getStorage('userInfo').CurrentFirst?ret2.FrozenMoney-$api.getStorage('userInfo').CurrentFirst:0;
@@ -176,7 +176,7 @@
                                     FrozenMoney:frozen+mustwall
                                 })
                             };
-                            fnPost('SysUser/EditJiaPu', data, 'application/json', false, false, function(ret3, err) {
+                            fnPost('SysUser/EditJiaPu', data, 'application/json', false, false, function(ret3, err3) {
                                 if (ret3) {
                                     alert('变更成功！');
                                     fnUpdateStorageUserInfo();
@@ -189,7 +189,7 @@
                                     fje: mustwall
                                 })
                             };
-                            fnPost('SysUser/PutJiaPu', data, 'application/json', false, false, function(ret4, err) {
+                            fnPost('SysUser/PutJiaPu', data, 'application/json', false, false, function(ret4, err4) {
                                     console.log(JSON.stringify(ret4));
                                     if (ret4) {
                                         alert('操作成功！');

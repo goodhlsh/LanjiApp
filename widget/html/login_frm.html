@@ -137,10 +137,10 @@
                 } else if (ret.eventType == "change") {
                     UIInput.value({
                         id: usernameUIInputId
-                    }, function(ret, err) {
-                        if (ret) {
-                            if (ret.status) {
-                                usernameValue = ret.msg;
+                    }, function(ret1, err1) {
+                        if (ret1) {
+                            if (ret1.status) {
+                                usernameValue = ret1.msg;
                             }
                         }
                     });
@@ -178,10 +178,10 @@
                 if (ret.eventType == "change") {
                     UIInput.value({
                         id: passwordUIInputId
-                    }, function(ret, err) {
-                        if (ret) {
-                            if (ret.status) {
-                                passwordValue = ret.msg;
+                    }, function(ret1, err1) {
+                        if (ret1) {
+                            if (ret1.status) {
+                                passwordValue = ret1.msg;
                             }
                         }
                     });

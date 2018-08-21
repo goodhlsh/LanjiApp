@@ -178,10 +178,10 @@
                 } else if (ret.eventType == "change") {
                     UIInput.value({
                         id: newpasswdUIInputId
-                    }, function(ret, err) {
-                        if (ret) {
-                            if (ret.status) {
-                                newpasswdValue = ret.msg;
+                    }, function(ret1, err1) {
+                        if (ret1) {
+                            if (ret1.status) {
+                                newpasswdValue = ret1.msg;
                             }
                         }
                     });
@@ -218,10 +218,10 @@
                 if (ret.eventType == "change") {
                     UIInput.value({
                         id: codeUIInputId
-                    }, function(ret, err) {
-                        if (ret) {
-                            if (ret.status) {
-                                codeValue = ret.msg;
+                    }, function(ret1, err1) {
+                        if (ret1) {
+                            if (ret1.status) {
+                                codeValue = ret1.msg;
                             }
                         }
                     });
@@ -270,7 +270,7 @@
                 Md5 = ret.value;
                 console.log('密码是'+Md5);
             } else {
-                alert(JSON.stringify(err));
+            //    alert(JSON.stringify(err));
             }
         });
         if (Md5 != $api.getStorage('userInfo').password) {
@@ -399,8 +399,8 @@
                             NewPasswd: newpasswdValue
                         }),
                         'application/json', false, false,
-                        function(ret, err) {
-                            if (ret) {
+                        function(ret1, err1) {
+                            if (ret1) {
                                 api.toast({
                                     msg: '密码修改成功',
                                     duration: 2000,

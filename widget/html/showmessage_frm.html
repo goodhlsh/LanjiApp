@@ -59,7 +59,7 @@
                             'Id': api.pageParam.Id
                         })
                     };
-                    fnPost('SysMessage/UpdateMessage', data, 'application/json', false, false, function(ret2, err) {
+                    fnPost('SysMessage/UpdateMessage', data, 'application/json', false, false, function(ret2, err2) {
                         if (ret2) {
                             var num = $api.getStorage('newmessage') > 0 ? $api.getStorage('newmessage') : 1;
                             $api.setStorage('newmessage', num - 1);

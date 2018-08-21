@@ -482,7 +482,7 @@
         <table>
             <tr>
                 <td>
-                    <div class="box open-win" win="showcode" login="true">
+                    <div class="box open-win" win="extension" login="true">
                         <img class="ic" src="../image/home/tuiguang.png"></img>
                         <div>推广</div>
                     </div>
@@ -547,7 +547,7 @@
 
         </table>
     </div>
-    <div class="youhuidiv post"><img class="youhuilogo open-win" win="active" src="../image/home/youhui.png" /></div>
+    <div class="youhuidiv post"><img class="youhuilogo open-win" win="youhuiquan" src="../image/home/youhui.png" /></div>
     <div class="remaiheaddiv post"><img src="../image/home/remailogo.png" class="remailogo" /></div>
 
     <!--bootstrap 九宫格  <section class="aui-grid">
@@ -1076,7 +1076,7 @@
             fnscanner.open({
                 autorotation: true
             }, function(ret, err) {
-                console.log(JSON.stringify(ret));
+                //console.log(JSON.stringify(ret));
                 if (ret && 'success' == ret.eventType) {
                     //推广
                     if (ret.content.substr(0, 5) == 'tuigu') {
@@ -1091,8 +1091,8 @@
                                     tid: tid_
                                 })
                             };
-                            fnPost('SysUser/PostTuiGuang', data, 'application/json', false, false, function(ret, err) {
-                                if (ret) {
+                            fnPost('SysUser/PostTuiGuang', data, 'application/json', false, false, function(ret1, err1) {
+                                if (ret1) {
                                     api.alert({
                                         title: '消息',
                                         msg: '推荐成功!'
@@ -1113,8 +1113,8 @@
                             api.alert({
                                 title: '帮助',
                                 msg: '请先实名验证，验证后再扫描推荐人二维码',
-                            }, function(ret, err) {
-                                if (ret) {
+                            }, function(ret1, err1) {
+                                if (ret1) {
                                     //alert( JSON.stringify( ret ) );
                                     //打开验证窗口
                                     api.openWin({

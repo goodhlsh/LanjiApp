@@ -217,43 +217,43 @@
                         order_num: order_one.OrderNo,
                         order_price: JinEValue
                     })
-                }, 'application/json', false, false, function(ret, err) {
-                    if (ret) {
+                }, 'application/json', false, false, function(ret1, err1) {
+                    if (ret1) {
                         var aliPayPlus = api.require('aliPayPlus');
                         aliPayPlus.payOrder({
-                            orderInfo: ret.data,
-                        }, function(ret, err) {
-                            if (ret.code == '9000') {
+                            orderInfo: ret1.data,
+                        }, function(ret2, err2) {
+                            if (ret2.code == '9000') {
                                 //支付成功后操作
                                 fnShowSuccess();
-                            } else if (ret.code == '8000') {
+                            } else if (ret2.code == '8000') {
                                 api.alert({
                                     msg: '正在处理中，支付结果未知',
                                     buttons: ['确定']
                                 });
-                            } else if (ret.code == '4000') {
+                            } else if (ret2.code == '4000') {
                                 api.alert({
                                     msg: '充值支付失败',
                                     buttons: ['确定']
                                 }); //$("#alert-sign-fail").show();
-                            } else if (ret.code == '5000') {
+                            } else if (ret2.code == '5000') {
                                 api.alert({
                                     msg: '重复请求',
                                     buttons: ['确定']
                                 });
-                            } else if (ret.code == '6001') {
+                            } else if (ret2.code == '6001') {
                                 api.alert({
                                     msg: '用户中途取消操作',
                                     buttons: ['确定']
                                 });
 
-                            } else if (ret.code == '6002') {
+                            } else if (ret2.code == '6002') {
                                 api.alert({
                                     msg: '网络连接出错',
                                     buttons: ['确定']
                                 });
 
-                            } else if (ret.code == '6004') {
+                            } else if (ret2.code == '6004') {
                                 api.alert({
                                     msg: '结果未知',
                                     buttons: ['确定']
@@ -325,8 +325,8 @@
                         levelid: api.pageParam.levelid
                     })
                 };
-                fnPost('SysUser/EditJiaPu', data, 'application/json', false, false, function(ret, err) {
-                    if (ret) {
+                fnPost('SysUser/EditJiaPu', data, 'application/json', false, false, function(ret1, err1) {
+                    if (ret1) {
                         alert('会员变更成功！')
                         fnUpdateStorageUserInfo();
                     }
@@ -339,8 +339,8 @@
                         fje: mustwall
                     })
                 };
-                fnPost('SysUser/PutJiaPu', data, 'application/json', false, false, function(ret, err) {
-                        if (ret) {
+                fnPost('SysUser/PutJiaPu', data, 'application/json', false, false, function(ret2, err2) {
+                        if (ret2) {
                             alert('欢迎加入我们！')
                             fnUpdateStorageUserInfo();
                         }

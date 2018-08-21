@@ -105,12 +105,12 @@
                         targetWidth: 100,
                         targetHeight: 100,
                         saveToPhotoAlbum: false
-                    }, function(ret, err) {
-                        if (ret && ret.data) {
+                    }, function(ret1, err1) {
+                        if (ret1 && ret1.data) {
                             //$api.setStorage('avatar', ret.data);
                             //写入用户库
-                            avatar.src = ret.data;
-                            $api.setStorage('avatar', ret.data);
+                            avatar.src = ret1.data;
+                            $api.setStorage('avatar', ret1.data);
                             api.sendEvent({
                                 name: 'setuserinfo',
                                 extra: {
@@ -138,7 +138,7 @@
                         $api.setStorage('userInfo', ret);
                         fnSetInfo();
                     } else {
-                        alert(JSON.stringify(err));
+                  //      alert(JSON.stringify(err));
                     }
                 });
             }

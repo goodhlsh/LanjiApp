@@ -148,8 +148,8 @@
                         zmp15: zuname.value + zlr.value
                     })
                 };
-                fnPost('SysUser/PutJiaPu', data, 'application/json', false, false, function(ret, err) {
-                    if (ret&&ret.ret == 0) {
+                fnPost('SysUser/PutJiaPu', data, 'application/json', false, false, function(ret1, err1) {
+                    if (ret1&&ret1.ret == 0) {
                         api.execScript({
                             frameName: 'puterzi_frm',
                             script: 'fnGetUserList(\'' + false + '\');'

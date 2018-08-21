@@ -12,9 +12,14 @@
             width: 100%;
             height: auto;
         }
-        header{
-          width: 100%;
-          height: auto;
+        .push-status {
+            width: 100%;
+            height: 40px;
+            font-size: 16px;
+            color: #888;
+            line-height: 40px;
+            text-align: center;
+
         }
 
     </style>
@@ -49,7 +54,7 @@
         </ul>
 
     </div>
-
+<div class="push-status" id="pushStatus">上拉显示更多</div>
 </body>
 <script type="text/template" id="template">
 {{~it:cvalue:ckey}}
@@ -86,27 +91,77 @@ function clearbq(str) {
 }
     apiready = function() {
        fnReady();
-        header = $api.byId('aui-header');
-        cont = $api.byId('cont');
         api.parseTapmode();
-        fnGetContentList();
+        // 初始化事件监听
+        initEventListenter();
+        // 初始化下拉刷新
+        initRefresh();
+
+        // 获取商品列表
+        fnGetContentList(false);
     };
-    var header, cont;
-    function fnGetContentList() {
+    var skip = 0,
+        LIMIT = 10;
+
+    function initEventListenter() {
+        // 监听滚动到Frame底部的事件
+        api.addEventListener({
+            name: 'scrolltobottom',
+            extra: {
+                threshold: 300 // 距离底部还有多少触发scrolltobottom事件
+            }
+        }, function(ret, err) {
+            // 获取更多的商品
+            fnGetContentList(true);
+        });
+    }
+
+    // 实现下拉刷新功能
+    function initRefresh() {
+        api.setRefreshHeaderInfo({
+            visible: true,
+            loadingImg: 'widget://image/refresh.png',
+            bgColor: '#fff',
+            textColor: '#e1017e',
+            showTime: true
+        }, function(ret, err) {
+            // 刷新商品列表
+            fnGetContentList(false);
+        });
+    }
+
+    function fnGetContentList(loadMore_) {
+      if (!loadMore_) {
+          // 显示加载状态对话框
+          api.hideProgress({
+              style: 'default',
+              animationType: 'fade',
+              title: '努力加载中...',
+              text: '请稍后...',
+              modal: false
+          });
+      }
+      // 如果是加载更多，需要实现分页
+      if (loadMore_) {
+          skip += LIMIT;
+      } else {
+          skip = 0;
+      }
         var filter = {
             where: {
                 title:'',
                 categoryid:api.pageParam.categoryid
             },
             istype:'0',
-            skip: 0,
-            limit: 100
+            skip: skip,
+            limit: LIMIT
         }
         fnGet('MyArticle/GetListByCategoryID', filter, function(ret, err) {
-            console.log(JSON.stringify(ret));
+            //console.log(JSON.stringify(ret));
             if (ret) {
-                list = $api.byId('list');
-                fnUpdateList(ret);
+              // 恢复下拉刷新的状态
+              api.refreshHeaderLoadDone();
+                fnUpdateWareList(ret,loadMore_);
             } else {
                 api.toast({
                     msg: '加载数据失败',
@@ -118,12 +173,32 @@ function clearbq(str) {
             api.hideProgress();
         });
     }
-    var list;
-    function fnUpdateList(data_) {
-        var tempFn = doT.template($api.byId('template').text);
-        list.innerHTML = tempFn(data_);
+
+    function fnUpdateWareList(data_, loadMore_) {
+        var list = $api.byId('list');
+        // 编译模板函数
+        var tempFn = doT.template($api.byId('template').innerHTML);
+        // 使用模板函数生成HTML文本
+        var resultHTML = tempFn(data_);
+        // 判断是否是加载更多，如果是加载更多，则追加到list中
+        if (loadMore_) {
+          // 如果服务器端已经没有更多数据返回，更新提示信息
+          if (data_.length < LIMIT) {
+              var pushStatus = $api.byId('pushStatus');
+              pushStatus.innerHTML = "没有啦！";
+          }
+            $api.append(list, resultHTML);
+
+        } else {
+            // 否则，直接替换list中的内容
+            $api.html(list, resultHTML);
+        }
+
+        // 由于是动态的将元素添加到Dom树上，所以需要手动触发tapmode检查，列表中的元素才能实现点击加速的效果
         api.parseTapmode();
     }
+
+
 
     function fnShowContent(id_) {
       api.openFrame({

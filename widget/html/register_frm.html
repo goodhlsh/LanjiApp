@@ -164,10 +164,10 @@
                 } else if (ret.eventType == "change") {
                     UIInput.value({
                         id: usernameUIInputId
-                    }, function(ret, err) {
-                        if (ret) {
-                            if (ret.status) {
-                                usernameValue = ret.msg;
+                    }, function(ret1, err1) {
+                        if (ret1) {
+                            if (ret1.status) {
+                                usernameValue = ret1.msg;
                             }
                         }
                     });
@@ -205,10 +205,10 @@
                 if (ret.eventType == "change") {
                     UIInput.value({
                         id: passwordUIInputId
-                    }, function(ret, err) {
-                        if (ret) {
-                            if (ret.status) {
-                                passwordValue = ret.msg;
+                    }, function(ret1, err1) {
+                        if (ret1) {
+                            if (ret1.status) {
+                                passwordValue = ret1.msg;
                             }
                         }
                     });
@@ -245,10 +245,10 @@
                 if (ret.eventType == "change") {
                     UIInput.value({
                         id: passwordUIInputId2
-                    }, function(ret, err) {
-                        if (ret) {
-                            if (ret.status) {
-                                passwordValue2 = ret.msg;
+                    }, function(ret1, err1) {
+                        if (ret1) {
+                            if (ret1.status) {
+                                passwordValue2 = ret1.msg;
                             }
                         }
                     });
@@ -578,8 +578,8 @@
                             username: usernameValue,
                             password: passwordValue
                         })
-                    }, 'application/json', false, false, function(ret, err) {
-                        if (ret && ret.type) {
+                    }, 'application/json', false, false, function(ret1, err1) {
+                        if (ret1 && ret1.type) {
 
                             // 跨窗口执行Script, 将用户名传给登录页面
                             api.execScript({

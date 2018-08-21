@@ -142,7 +142,7 @@ update_widget();
                             api.download({
                                 url: ret.result.source,
                                 report: true
-                            }, function(retdownload, err) {
+                            }, function(retdownload, err2) {
                                 if (retdownload && 0 == retdownload.state) { /* 下载进度 */
                                     api.toast({
                                         msg: "正在下载应用" + retdownload.percent + "%",
