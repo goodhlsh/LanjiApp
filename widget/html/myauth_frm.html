@@ -127,6 +127,8 @@
         fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
             if (ret) {
                 $api.setStorage('userInfo', ret);
+            }else {
+              $api.rmStorage('userInfo');
             }
         });
       }
@@ -426,6 +428,8 @@
         if (isAuth) {
             return;
         }
+        alert("请如实填写信息和提交照片，一旦发现作假，会查封该用户，影响其使用的后果由用户承担！");
+        
         var userid = $api.getStorage('userInfo') == null ? null : $api.getStorage('userInfo').Id;
         if (realnameValue == null || $api.getStorage('shfzh') == null || $api.getStorage('shfzhbei') == null || telValue == null) {
             api.alert({
@@ -454,7 +458,7 @@
             },
             'application/json', false, false,
             function(ret, err) {
-                if (ret && ret.UserName) {
+                if (ret&&ret.type!=0 && ret.UserName) {
                     //  console.log(JSON.stringify(ret));
                     api.alert({
                         title: '消息',

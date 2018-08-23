@@ -134,7 +134,7 @@
                         Photo: avatarUrl_
                     })
                 }, 'application/json', false, true, function(ret, err) {
-                    if (ret) {
+                    if (ret&&ret.type!=0) {
                         $api.setStorage('userInfo', ret);
                         fnSetInfo();
                     } else {

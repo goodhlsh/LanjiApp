@@ -46,6 +46,16 @@
                         <i class="aui-iconfont aui-icon-wallet"></i>
                     </div>
                     <div class="aui-list-item-input">
+                        <span id="moneyketi">0.00元</span>
+                    </div>
+                </div>
+            </div>
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-wallet"></i>
+                    </div>
+                    <div class="aui-list-item-input">
                         <input id="moneycout" class="input" type="text" placeholder="请输入可提现的金额" />
                     </div>
                 </div>
@@ -57,57 +67,28 @@
                         <i class="aui-iconfont aui-icon-alipay"></i>
                     </div>
                     <div class="aui-list-item-input">
-                        <div class="aui-title"><input id="zfbbtn" class="aui-btn  aui-btn-primary  aui-btn-outlined" type="button" value=" 提现至支付宝 " onclick="fnTixian()" /></div>
+                        <div class="aui-title"><input id="zfbbtn" class="aui-btn  aui-btn-primary  aui-btn-outlined" type="button" value=" 提现至支付宝 " onclick="fnTixian('0')" /></div>
                     </div>
                 </div>
             </div>
 
-            <div class="aui-list-item">
+            <!--  <div class="aui-list-item">
                 <div class="aui-list-item-inner">
                     <div class="aui-list-item-label-icon">
                         <i class="aui-iconfont aui-icon-wxpay"></i>
                     </div>
                     <div class="aui-list-item-input">
-                        <div class="aui-title"><input id="wxbtn" class="aui-btn  aui-btn-primary  aui-btn-outlined" type="button" value="   提现至微信   " onclick="fnTixian()" /></div>
+                        <div class="aui-title"><input id="wxbtn" class="aui-btn  aui-btn-primary  aui-btn-outlined" type="button" value="   提现至微信   " onclick="fnTixian('1')" /></div>
                     </div>
                 </div>
-            </div>
-
-
+            </div>-->
         </div>
-
-
-
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/SHA1.js"></script>
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
-    //判断是否已验证
-    //若已验证，弹出toast
-    //若未验证，继续打开本页面
-    apiready = function() {
-        //console.log($api.getStorage('userInfo').Id.length);
-        fnInitYuE();
-        wallet = $api.getStorage('currentwallet');
-        //  console.log(isAuth);
-        if (!wallet) {
-            fnInitUIInput();
-        } else {
-            var moneycout = $api.byId('moneycout');
-            moneycout.placeholder = $api.getStorage('currentwallet') == null ? '没有余额可提' : $api.getStorage('currentwallet');
-            moneycoutValue = moneycout.placeholder;
-
-            api.toast({
-                msg: '您已通过验证',
-                duration: 2000,
-                location: 'bottom'
-            });
-        }
-    };
-    function fnInitYuE() {
-
-
+    function fnInitCurrFirst() {
         var filter = {
             where: {
                 userid: $api.getStorage('userInfo').Id
@@ -116,17 +97,33 @@
             limit: 1,
             skip: 0
         };
-        fnGet('Syswallet/GetWallet', filter, function(ret, err) {
+        fnGet('SysFirst/GetCurrentFirst', filter, function(ret, err) {
             if (ret) {
-                $api.setStorage('currentwallet', ret);
+                $api.setStorage('currentFirst', ret);
             } else {
-                api.alert({
-                    title: '消息',
-                    msg: '查不到余额',
-                });
+                $api.rmStorage('currentFirst');
             }
         });
     }
+    apiready = function() {
+        //console.log($api.getStorage('userInfo').Id.length);
+        fnInitYuE();
+        wallet = $api.getStorage('currentwallet');
+        fnInitCurrFirst();
+        fnInitUIInput();
+        moneycout = $api.byId('moneycout'); //可提金额
+        if ($api.getStorage('currentFirst') != null) {
+            ketiValue = $api.getStorage('currentwallet') != null && $api.getStorage('currentwallet').JieYu + $api.getStorage('currentFirst').CurrentFirst > $api.getStorage('userInfo').FrozenMoney ?
+                $api.getStorage('currentwallet').JieYu - $api.getStorage('userInfo').FrozenMoney + $api.getStorage('currentFirst').CurrentFirst : 0;
+        } else {
+            ketiValue = $api.getStorage('currentwallet') != null && $api.getStorage('currentwallet').JieYu > $api.getStorage('userInfo').FrozenMoney ?
+                $api.getStorage('currentwallet').JieYu - $api.getStorage('userInfo').FrozenMoney : 0;
+        }
+        var moneyketi=$api.byId('moneyketi');
+        moneyketi.innerHTML= '最多可提 '+ketiValue+' 元';
+    };
+    var moneycout;
+    var ketiValue;
     var UIInput;
     var moneycoutUIInputId;
     var moneycoutValue;
@@ -177,6 +174,115 @@
                         }
                     });
                 }
+            }
+        });
+    }
+
+    function fnInitYuE() {
+        var filter = {
+            where: {
+                userid: $api.getStorage('userInfo').Id
+            },
+            //order: "createAt DESC",
+            limit: 1,
+            skip: 0
+        };
+        fnGet('Syswallet/GetWallet', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('currentwallet', ret);
+            } else {
+                $api.rmStorage('currentwallet');
+            }
+        });
+    }
+
+    function fnTixian(type_) {
+        if (moneycoutValue == 0) {
+            return;
+        }
+        api.confirm({
+            title: '消息',
+            msg: '本次提现金额为' + moneycoutValue + '是否确定提现？',
+            buttons: ['确定', '取消']
+        }, function(ret, err) {
+            if (ret) {
+
+                if (type_ == '0') {
+                    fnCreateOrder('提现', moneycoutValue, '0');
+                }
+            } else {
+
+            }
+        });
+    }
+
+    function fnCreateOrder(status, jinE, type_) {
+        if (jinE > 0) {
+            fnPost('Spl_Orders/PostOrder', {
+                body: JSON.stringify({
+                    AddressId: '',
+                    UserId: $api.getStorage('userInfo').Id,
+                    Status: status,
+                    DingDanKuan: jinE,
+                    spl_Wares: '',
+                    Description: '兰基优品-提现'
+                })
+            }, 'application/json', false, false, function(ret, err) {
+                if (ret&&ret.type!=0) {
+                    order_one = ret;
+                    aliPay();
+                } else {
+                    api.alert({
+                        title: '故障报警',
+                        msg: '订单生成有误',
+                        buttons: ['确定']
+                    });
+                }
+            });
+        }
+    }
+
+    function aliPay() {
+        api.confirm({
+            title: '消息',
+            msg: '是否提现到支付宝？如继续点击确定',
+            buttons: ['确定', '取消']
+        }, function(ret, err) {
+            if (ret.buttonIndex == 1 && order_one != null) {
+                fnPost('AliPay/Refund', {
+                    body: JSON.stringify({
+                        orderId: order_one.OrderNo
+                    })
+                }, 'application/json', false, false, function(ret1, err1) {
+                    if (ret1) {
+
+                        //成功后操作
+                        //    fnShowSuccess();
+                        alert('aaaaa');
+
+                    } else {
+                        api.hideProgress();
+                    }
+                });
+
+            }
+
+        });
+    }
+
+    function fnShowSuccess() {
+        api.alert({
+            title: '开始充值',
+            msg: '请稍等片刻……',
+        }, function(ret, err) {
+            if (ret) {
+                //存入订单表
+                fnEditOrder('已完成');
+                fnUpdateWallet();
+                //升级会员转过来的需判定余额是否够
+                //  if (api.pageParam.mustwall && $api.getStorage('currentwallet').JieYu >= api.pageParam.mustwall) {
+                //      fnUpdateJiapu();
+                //  }
             }
         });
     }

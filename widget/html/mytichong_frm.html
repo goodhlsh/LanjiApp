@@ -100,10 +100,8 @@
                     userYuE.innerHTML = ret.JieYu;
                     $api.setStorage('currentwallet', ret);
                 } else {
-                    api.alert({
-                        title: '消息',
-                        msg: '查不到余额',
-                    });
+                  $api.rmStorage('currentwallet');
+                    
                 }
             });
         }

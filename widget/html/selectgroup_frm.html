@@ -107,7 +107,7 @@
             limit: 20
         };
         fnGet('SysUser/GetSons', filter, function(ret, err) {
-            if (ret) {
+            if (ret&&ret.type!=0) {
                 fnGetList(ret);
             } else {
                 //toast('')

@@ -824,7 +824,7 @@
             'limit': swipLIMIT
         }, function(ret, err) {
             //  console.log(JSON.stringify(ret));
-            if (ret) {
+            if (ret&&ret.type!=0) {
                 api.hideProgress();
                 api.refreshHeaderLoadDone();
                 fnShowSwipList(ret);
@@ -910,7 +910,7 @@
             'skip': skip,
             'limit': remaiLIMIT
         }, function(ret, err) {
-            if (ret) {
+            if (ret&&ret.type!=0) {
                 api.hideProgress();
                 api.refreshHeaderLoadDone();
                 fnShowRemaiList(ret);
@@ -942,7 +942,7 @@
         }, function(ret, err) {
             //console.log("//////////////////////////////");
             //  console.log(JSON.stringify(ret));
-            if (ret) {
+            if (ret&&ret.type!=0) {
                 api.hideProgress();
                 api.refreshHeaderLoadDone();
                 fnShowLikeList(ret);
@@ -1054,6 +1054,8 @@
         fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
             if (ret) {
                 $api.setStorage('userInfo', ret);
+            }else {
+              $api.rmStorage('userInfo');
             }
         });
     }

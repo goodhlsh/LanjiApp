@@ -154,6 +154,8 @@
         fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
             if (ret) {
                 $api.setStorage('userInfo', ret);
+            }else {
+              $api.rmStorage('userInfo');
             }
         });
     }

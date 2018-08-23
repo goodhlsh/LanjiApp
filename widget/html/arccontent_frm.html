@@ -67,7 +67,7 @@
         }
         fnGet('MyArticle/GetById', filter, function(ret, err) {
             //console.log(JSON.stringify(ret));
-            if (ret) {
+            if (ret&&ret.type!=0) {
                 fnUpdateContent(ret);
             } else {
                 api.toast({

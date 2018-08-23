@@ -353,6 +353,8 @@
         fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
             if (ret) {
                 $api.setStorage('userInfo', ret);
+            }else {
+              $api.rmStorage('userInfo');
             }
         });
     }
@@ -388,7 +390,7 @@
             skip: 0,
             limit: 1
         }, function(ret, err) {
-            if (ret) {
+            if (ret&&ret.type!=0) {
                 consignee.innerHTML = ret.TrueName;
                 mobile.innerHTML = ' ' + ret.Mobile;
                 switch (ret.Typs) {
@@ -419,7 +421,7 @@
             skip: 0,
             limit: 1
         }, function(ret, err) {
-            if (ret) {
+            if (ret&&ret.type!=0) {
                 consignee.innerHTML = ret.TrueName;
                 mobile.innerHTML = ' ' + ret.Mobile;
                 switch (ret.Typs) {

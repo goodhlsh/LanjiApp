@@ -173,6 +173,8 @@ var tixianvalue;
         fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
             if (ret) {
                 $api.setStorage('userInfo', ret);
+            }else {
+              $api.rmStorage('userInfo');
             }
         });
       }
@@ -196,6 +198,7 @@ var tixianvalue;
                 $api.setStorage('currentwallet', ret);
                 tixianvalue.innerHTML=ret.JieYu+'元';
             } else {
+              $api.rmStorage('currentwallet');
               tixianvalue.innerHTML='0.00 元';
             }
         });

@@ -79,15 +79,34 @@
 <script type="text/javascript">
     apiready = function() {
         fnInitYuE();
+        fnInitCurrFirst();
         fnInitUIInput();
-
     };
     var userYuE;
 
     var UIInput;
     var JinEUIInputId;
-    var JinEValue;
+    var JinEValue;  //输入的金额
 
+    function fnInitCurrFirst() {
+        var filter = {
+            where: {
+                userid: $api.getStorage('userInfo').Id
+            },
+            //order: "createAt DESC",
+            limit: 1,
+            skip: 0
+        };
+        fnGet('SysFirst/GetCurrrentFirst', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('currentFirst', ret);
+            } else {
+              $api.rmStorage('currentFirst');
+
+
+            }
+        });
+    }
 
     function fnInitYuE() {
 
@@ -109,10 +128,8 @@
                     $api.setStorage('currentwallet', ret);
 
                 } else {
-                    api.alert({
-                        title: '消息',
-                        msg: '查不到余额',
-                    });
+                  $api.rmStorage('currentwallet');
+
                 }
             });
         }
@@ -168,10 +185,23 @@
     }
 
     function fnPostWallet() {
+      if (api.pageParam==null) {
+        fnCreateOrder('待充值', JinEValue);
+      }else {
+
         //先充值
-        //if (JinEValue > api.pageParam.levelvalue) {
-        fnCreateOrder('待付款', JinEValue);
-        //}
+        if (JinEValue >= api.pageParam.levelvalue) {
+          fnCreateOrder('待充值', JinEValue);
+        }
+        else {
+          api.alert({
+              title: '消息',
+              msg: '充值的金额数不够',
+          }, function(ret, err){
+          });
+        }
+      }
+
         //服务器端判断收到款后写入wallet
     }
 
@@ -189,7 +219,7 @@
                     Description: '兰基优品-充值'
                 })
             }, 'application/json', false, false, function(ret, err) {
-                if (ret) {
+                if (ret&&ret.type!=0) {
                     order_one = ret;
                     aliPay();
                 } else {
@@ -213,7 +243,7 @@
                 fnPost('AliPay/GetAppTradeContent', {
                     body: JSON.stringify({
                         openId: order_one.Id,
-                        order_name: '余额充值',
+                        order_name: '充值',
                         order_num: order_one.OrderNo,
                         order_price: JinEValue
                     })
@@ -278,12 +308,9 @@
         }, function(ret, err) {
             if (ret) {
                 //存入订单表
-                fnEditOrder('已完成');
+                fnEditOrder('已充值');
                 fnUpdateWallet();
-                //升级会员转过来的需判定余额是否够
-                //  if (api.pageParam.mustwall && $api.getStorage('currentwallet').JieYu >= api.pageParam.mustwall) {
-                //      fnUpdateJiapu();
-                //  }
+
             }
         });
     }
@@ -307,7 +334,8 @@
         });
     }
 
-    function fnUpdateJiapu() {
+
+    function fnUpdateJiapu(mustwall) {
         var filter = {
                 where: {
                     'userId': $api.getStorage('userInfo').Id
@@ -317,16 +345,19 @@
             }
             //判断是新入会还是老会员
         fnGet('SysUser/GetByIdFromJiaPu', filter, function(ret, err) {
-            if (ret) {
+            if (ret&&ret.type!=0) {
+              var   frozen=ret.FrozenMoney>$api.getStorage('currentFirst').CurrentFirst?ret.FrozenMoney-$api.getStorage('currentFirst').CurrentFirst:0;
+
                 var data = {
                     body: JSON.stringify({
                         uid: $api.getStorage('userInfo').Id,
-                        fje: api.pageParam.mustwall,
-                        levelid: api.pageParam.levelid
+                        fje: mustwall,
+                        levelid: api.pageParam.levelid,
+                        FrozenMoney:frozen+mustwall
                     })
                 };
                 fnPost('SysUser/EditJiaPu', data, 'application/json', false, false, function(ret1, err1) {
-                    if (ret1) {
+                    if (ret1&&ret1.type!=0) {
                         alert('会员变更成功！')
                         fnUpdateStorageUserInfo();
                     }
@@ -340,7 +371,7 @@
                     })
                 };
                 fnPost('SysUser/PutJiaPu', data, 'application/json', false, false, function(ret2, err2) {
-                        if (ret2) {
+                        if (ret2&&ret2.type!=0) {
                             alert('欢迎加入我们！')
                             fnUpdateStorageUserInfo();
                         }
@@ -359,8 +390,10 @@
             limit: 1
         }
         fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
-            if (ret) {
+            if (ret&&ret.type!=0) {
                 $api.setStorage('userInfo', ret);
+            }else {
+              $api.rmStorage('userInfo');
             }
         });
     }
@@ -377,7 +410,7 @@
                 Note: $api.getStorage('currentwallet').TrueName + '充值 ' + JinEValue + ' 元'
             })
         }, 'application/json', false, false, function(ret, err) {
-            if (ret) {
+            if (ret&&ret.type!=0) {
                 api.toast({
                     msg: '充值成功！本次充值：' + JinEValue,
                     duration: 2000,
@@ -388,6 +421,10 @@
                 //初始化余额
                 //fnInitYuE();
                 userYuE.innerHTML = $api.getStorage('currentwallet') == null ? '0.0' : $api.getStorage('currentwallet').JieYu;
+                //升级会员转过来的需判定余额是否够
+                if (api.pageParam.mustwall && ret.JieYu >= api.pageParam.mustwall) {
+                     fnUpdateJiapu(api.pageParam.mustwall);
+                }
             }
         });
     }

@@ -579,7 +579,7 @@
                             password: passwordValue
                         })
                     }, 'application/json', false, false, function(ret1, err1) {
-                        if (ret1 && ret1.type) {
+                        if (ret1 && ret1.type!=0) {
 
                             // 跨窗口执行Script, 将用户名传给登录页面
                             api.execScript({

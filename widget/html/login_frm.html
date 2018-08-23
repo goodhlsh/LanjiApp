@@ -279,6 +279,8 @@
                     name: 'login'
                 });
             } else {
+              $api.rmStorage('userInfo');
+
                 api.alert({
                     title: '消息',
                     msg: '登录失败：' + ret.message
@@ -300,10 +302,8 @@
             if (ret) {
                 $api.setStorage('currentwallet', ret);
             } else {
-                api.alert({
-                    title: '消息',
-                    msg: '查不到余额',
-                });
+              $api.rmStorage('currentwallet');
+                
             }
         });
     }

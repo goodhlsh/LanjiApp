@@ -225,7 +225,7 @@
             }
 
         fnGet('Spl_Orders/GetOrderListByStatus', filter, function(ret, err) {
-            if (ret) {
+            if (ret&&ret.type!=0) {
 
                 // 恢复下拉刷新的状态
                 api.refreshHeaderLoadDone();

@@ -130,7 +130,7 @@
 <script type="text/javascript" src="../script/cutstr.js"></script>
 <script type="text/javascript">
     apiready = function() {
-    
+
         // 初始化事件监听
         initEventListenter();
         // 初始化下拉刷新
@@ -210,7 +210,7 @@
             limit: LIMIT
         }
         fnGet('Spl_Ware/GetListByCategoryID', filter, function(ret, err) {
-            if (ret) {
+            if (ret&&ret.type!=0) {
                 // 恢复下拉刷新的状态
                 api.refreshHeaderLoadDone();
 

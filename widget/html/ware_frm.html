@@ -253,12 +253,15 @@
             limit: 1
         }
         fnGet('Spl_Ware/GetByID', filter, function(ret, err) {
+          if (ret&&ret.type!=0) {
+
+
             //  console.log(JSON.stringify(ret));
             api.hideProgress();
             // 更新商品详情展示
             fnUpdateWareInfo(ret);
-
-            //console.log(JSON.stringify(ret));
+}
+            
         });
     }
 

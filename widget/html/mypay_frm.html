@@ -103,6 +103,9 @@
             <div class="text text-recommend">余额支付</div>
             <div class="text">（余额：¥<span id="YuE">0.0</span>）</div>
         </div>
+        <!--<div class="row row-unpay" onclick="unPay()">
+            <div class="text">银联支付</div>
+        </div>-->
         <div class="row row-wxpay" onclick="wxPay()">
             <div class="text">微信支付</div>
         </div>
@@ -129,10 +132,30 @@
         }
 
         fnReady();
+        fnInitCurrFirst();
         fnInitWallet();
     };
 
     var order_one;
+
+    function fnInitCurrFirst() {
+        var filter = {
+            where: {
+                userid: $api.getStorage('userInfo').Id
+            },
+            //order: "createAt DESC",
+            limit: 1,
+            skip: 0
+        };
+        fnGet('SysFirst/GetCurrrentFirst', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('currentFirst', ret);
+            } else {
+              $api.rmStorage('currentFirst');
+
+            }
+        });
+    }
 
     function fnInitWallet() {
         var userYuE = $api.byId('YuE');
@@ -153,10 +176,8 @@
                 userYuE.innerHTML = ret.JieYu;
                 $api.setStorage('currentwallet', ret);
             } else {
-                api.alert({
-                    title: '消息',
-                    msg: '查不到余额',
-                });
+              $api.rmStorage('currentwallet');
+
             }
         });
         //}
@@ -484,7 +505,6 @@
             if (ret) {
                 //存入订单表
                 fnEditOrder('待发货');
-                $api.rmStorage('dingdankuan');
 
                 //判断是否够二次消费门槛
                 var currentF = $api.getStorage('currentFirst');
@@ -493,20 +513,21 @@
 
                     if (jiebie == '8800会员') {
                         if (currentF.currentFirst >= 8800) {
-                            fnSaveErci();
+                            fnSaveErci($api.getStorage('dingdankuan'));
                         } else {
-                            fnSaveFirst();
+                            fnSaveFirst(currentF, $api.getStorage('dingdankuan'));
                         }
                     } else if (jiebie == '1314会员') {
                         if (currentF.currentFirst >= 1314) {
-                            fnSaveErci();
+                            fnSaveErci($api.getStorage('dingdankuan'));
                         } else {
-                            fnSaveFirst();
+                            fnSaveFirst(currentF, $api.getStorage('dingdankuan'));
                         }
                     } else {
-
+                        fnSaveFirst(currentF, $api.getStorage('dingdankuan'));
                     }
                 }
+                $api.rmStorage('dingdankuan');
                 api.closeWin({
                     name: 'mypay'
                 });
@@ -526,24 +547,73 @@
         });
     }
 
-    function fnSaveFirst() {
+    function fnSaveFirst(currentF, money) {
+        var data_ = {
+            body: JSON.stringify({
+                UserId : $api.getStorage('userInfo').Id,
+                OrderId : api.pageParam.orderId,
+                JinE : money,
+                CurrentFirst : currentF.CurrentFirst,
+                Note : '',
+                ShunXu : currentF.ShunXu
+            })
+        };
+        fnPost('SysFirst/PostFirst', data_, 'application/json', false, false, function(ret, err) {
+            if (ret&&ret.type!=0) {
+                api.toast({
+                    msg: '交易信息已添加',
+                    duration: 2000,
+                    location: 'bottom'
+                });
 
+            } else {
+                api.alert({
+                    title: '故障报警',
+                    msg: '记录有误',
+                    buttons: ['确定']
+                });
+            }
+        });
     }
 
-    function fnSaveErci() {
 
+    function fnSaveErci(money) {
+        var data_ = {
+            body: JSON.stringify({
+                UserId : $api.getStorage('userInfo').Id,
+                OrderId:api.pageParam.orderId,
+                JinE : money,
+                Note : ''
+            })
+        };
+        fnPost('SysErCi/PostCreate', data_, 'application/json', false, false, function(ret, err) {
+            if (ret&&ret.type!=0) {
+                api.toast({
+                    msg: '交易信息已添加',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+
+            } else {
+                api.alert({
+                    title: '故障报警',
+                    msg: '记录有误',
+                    buttons: ['确定']
+                });
+            }
+        });
     }
 
     function fnCreateOrder(status) {
         if ($api.getStorage('shoppingcart')) {
-          var wares = $api.getStorage('shoppingcart');
-          var data_ = [];
-          for (var i = 0, j = 0; i < wares.length; i++) {
-              if (wares[i].WareState != 'select select-off') {
-                  data_[j] = wares[i];
-                  j++;
-              }
-          }
+            var wares = $api.getStorage('shoppingcart');
+            var data_ = [];
+            for (var i = 0, j = 0; i < wares.length; i++) {
+                if (wares[i].WareState != 'select select-off') {
+                    data_[j] = wares[i];
+                    j++;
+                }
+            }
             fnPost('Spl_Orders/PostOrder', {
                 body: JSON.stringify({
                     AddressId: $api.getStorage('AddressId'),
@@ -554,7 +624,7 @@
                     Description: '兰基优品-购物'
                 })
             }, 'application/json', false, false, function(ret, err) {
-                if (ret) {
+                if (ret&&ret.type!=0) {
                     api.toast({
                         msg: '订单信息已添加，请付款',
                         duration: 2000,
@@ -593,7 +663,7 @@
                 Status: status
             })
         }, 'application/json', false, false, function(ret, err) {
-            if (ret) {
+            if (ret&&ret.type!=0) {
                 api.toast({
                     msg: '订单已生成，准备发货',
                     duration: 2000,

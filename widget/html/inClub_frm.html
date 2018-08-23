@@ -94,10 +94,8 @@
             if (ret) {
                 $api.setStorage('currentwallet', ret);
             } else {
-                api.alert({
-                    title: '消息',
-                    msg: '查不到余额',
-                });
+              $api.rmStorage('currentwallet');
+
             }
         });
     }
@@ -110,7 +108,7 @@
             limit: 1
         };
         fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
-            if (ret&&ret.Jibie!='普通会员') {
+            if (ret&&ret.type!=0&&ret.Jibie!='普通会员') {
                 tTrueName.innerHTML = '引荐人：' + ret.TrueName;
             } else {
                 alert('该引荐人不是会员，无法引荐别人');
@@ -130,7 +128,7 @@
                     buttons: ['确定', '取消']
                 }, function(ret, err) {
                     if (ret.buttonIndex == 1) {
-                      //  fnOK();
+                        fnOK();
                     } else {
                     }
                 });
@@ -185,7 +183,7 @@
                 })
             };
             fnPost('SysUser/PutJiaPuBefore', data, 'application/json', false, false, function(ret, err) {
-                if (ret.ret) {
+                if (ret&&ret.type!=0&&ret.ret) {
                     api.alert({
                         title: '消息',
                         msg: '推荐成功，等待推荐人批准，批准后才能成为正式会员'

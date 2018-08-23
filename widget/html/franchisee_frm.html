@@ -205,7 +205,7 @@
             //console.log(wareTypeList[api.pageParam.wareTypeIndex].Name);
             //params = $api.jsonToStr(params);
         fnGet('Spl_Franchisee/GetFranchiseeList', filter, function(ret, err) {
-            if (ret) {
+            if (ret&&ret.type!=0) {
                 // 恢复下拉刷新的状态
                 api.refreshHeaderLoadDone();
 

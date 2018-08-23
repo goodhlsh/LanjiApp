@@ -124,7 +124,7 @@
             limit: 1000
         }
         fnGet('SysUser/GetAllChildren', filter, function(ret, err) {
-            if (ret) {
+            if (ret&&ret.type!=0) {
               list = $api.byId('list');
                 fnUpdateList(ret);
                 var collapse = new auiCollapse({

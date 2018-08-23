@@ -475,7 +475,7 @@
             limit: wares.length
         }
         fnGet('Spl_Ware/GetAllByShopCart', filter, function(ret, err) {
-            if (ret) {
+            if (ret&&ret.type!=0) {
                 for (var i = 0; i < ret.length; i++) {
                     for (var j = 0; j < wareList_.length; j++) {
                         if (ret[i].Id == wareList_[j].wareId) {

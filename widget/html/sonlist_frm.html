@@ -66,7 +66,7 @@
             limit: 20
         };
         fnGet('SysUser/GetSons', filter, function(ret, err) {
-            if (ret) {
+            if (ret&&ret.type!=0) {
                 fnGetList(ret);
             } else {
                 //alert('没有推荐人，请查看问题');

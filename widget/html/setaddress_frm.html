@@ -372,7 +372,7 @@
         fnPost('SysUser/SetAddress', {
             body: addressInfo
         }, 'application/json', false, false, function(ret, err) {
-            if (ret) {
+            if (ret&&ret.type!=0) {
                 api.sendEvent({
                     name: 'updateaddress'
                 });

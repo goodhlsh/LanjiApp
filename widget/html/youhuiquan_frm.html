@@ -326,7 +326,7 @@
             limit: LIMIT
         }
         fnGet('Spl_YouHui/GetList', filter, function(ret, err) {
-            if (ret) {
+            if (ret&&ret.type!=0) {
                 // 恢复下拉刷新的状态
                 api.refreshHeaderLoadDone();
 
@@ -387,7 +387,7 @@
               api.alert({
                   title: '消息',
                   msg: '恭喜亲获得该优惠券，请尽快使用！',
-              }, function(ret1, err1){                  
+              }, function(ret1, err1){
               });
 
             }
