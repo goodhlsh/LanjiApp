@@ -43,7 +43,7 @@
             <div class="aui-list-item">
                 <div class="aui-list-item-inner">
                     <div class="aui-list-item-label-icon">
-                        <i class="aui-iconfont aui-icon-wallet"></i>
+                        <i class="aui-iconfont aui-icon-wallet">可提现金额：</i>
                     </div>
                     <div class="aui-list-item-input">
                         <span id="moneyketi">0.00元</span>
@@ -53,21 +53,39 @@
             <div class="aui-list-item">
                 <div class="aui-list-item-inner">
                     <div class="aui-list-item-label-icon">
-                        <i class="aui-iconfont aui-icon-wallet"></i>
+                        <i class="aui-iconfont aui-icon-wallet">金额：</i>
                     </div>
                     <div class="aui-list-item-input">
-                        <input id="moneycout" class="input" type="text" placeholder="请输入可提现的金额" />
+                        <input id="moneycout" class="input" type="text" placeholder="请输入提现的金额" />
                     </div>
                 </div>
             </div>
-
+            <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-wallet">姓名：</i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input id="realname" class="input" type="text" placeholder="请输入您的姓名" />
+                    </div>
+                </div>
+            </div><div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-wallet">支付宝账号：</i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input id="zaccout" class="input" type="text" placeholder="请输入支付宝账户" />
+                    </div>
+                </div>
+            </div>
             <div class="aui-list-item">
                 <div class="aui-list-item-inner">
                     <div class="aui-list-item-label-icon">
                         <i class="aui-iconfont aui-icon-alipay"></i>
                     </div>
                     <div class="aui-list-item-input">
-                        <div class="aui-title"><input id="zfbbtn" class="aui-btn  aui-btn-primary  aui-btn-outlined" type="button" value=" 提现至支付宝 " onclick="fnTixian('0')" /></div>
+                        <div class="aui-title"><input id="zfbbtn" class="aui-btn  aui-btn-primary  aui-btn-outlined" type="button" value=" 转账到支付宝 " onclick="fnTixian('0')" /></div>
                     </div>
                 </div>
             </div>
@@ -126,12 +144,12 @@
     var ketiValue;
     var UIInput;
     var moneycoutUIInputId;
-    var moneycoutValue;
+    var moneycoutValue,realnameValue,zaccoutValue;
     var wallet;
 
     function fnInitUIInput() {
-        // 用户名输入框模块
-        var moneycout = $api.byId('moneycout');
+        // 提现金额输入框模块
+         moneycout = $api.byId('moneycout');
         var moneycoutRect = $api.offset(moneycout);
         UIInput = api.require('UIInput');
         UIInput.open({
@@ -170,6 +188,100 @@
                         if (ret1) {
                             if (ret1.status) {
                                 moneycoutValue = ret1.msg;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        // 姓名输入框模块
+        var realname = $api.byId('realname');
+        var realnameRect = $api.offset(realname);
+        UIInput = api.require('UIInput');
+        UIInput.open({
+            rect: {
+                x: realnameRect.l,
+                y: realnameRect.t,
+                w: realnameRect.w,
+                h: realnameRect.h
+            },
+            styles: {
+                bgColor: '#fff',
+                size: 16,
+                color: '#000',
+                placeholder: {
+                    color: '#ccc'
+                }
+            },
+            autoFocus: false,
+            maxRows: 1,
+            placeholder: '请输入姓名',
+            keyboardType: 'default',
+            fixedOn: api.frameName
+        }, function(ret, err) {
+            if (ret) {
+                realnameUIInputId = ret.id;
+                if (ret && ret.eventType == "show") {
+                    setTimeout(function() {
+                        UIInput.popupKeyboard({
+                            id: realnameUIInputId
+                        });
+                    }, 200);
+                } else if (ret.eventType == "change") {
+                    UIInput.value({
+                        id: realnameUIInputId
+                    }, function(ret1, err1) {
+                        if (ret1) {
+                            if (ret1.status) {
+                                realnameValue = ret1.msg;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        // 支付宝账户输入框模块
+        var zaccout = $api.byId('zaccout');
+        var zaccoutRect = $api.offset(zaccout);
+        UIInput = api.require('UIInput');
+        UIInput.open({
+            rect: {
+                x: zaccoutRect.l,
+                y: zaccoutRect.t,
+                w: zaccoutRect.w,
+                h: zaccoutRect.h
+            },
+            styles: {
+                bgColor: '#fff',
+                size: 16,
+                color: '#000',
+                placeholder: {
+                    color: '#ccc'
+                }
+            },
+            autoFocus: false,
+            maxRows: 1,
+            placeholder: '请输入支付宝账号',
+            keyboardType: 'default',
+            fixedOn: api.frameName
+        }, function(ret, err) {
+            if (ret) {
+                zaccoutUIInputId = ret.id;
+                if (ret && ret.eventType == "show") {
+                    setTimeout(function() {
+                        UIInput.popupKeyboard({
+                            id: zaccoutUIInputId
+                        });
+                    }, 200);
+                } else if (ret.eventType == "change") {
+                    UIInput.value({
+                        id: zaccoutUIInputId
+                    }, function(ret1, err1) {
+                        if (ret1) {
+                            if (ret1.status) {
+                                zaccoutValue = ret1.msg;
                             }
                         }
                     });
@@ -245,20 +357,21 @@
     function aliPay() {
         api.confirm({
             title: '消息',
-            msg: '是否提现到支付宝？如继续点击确定',
+            msg: '是否提现？如继续点击确定',
             buttons: ['确定', '取消']
         }, function(ret, err) {
             if (ret.buttonIndex == 1 && order_one != null) {
-                fnPost('AliPay/Refund', {
+                fnPost('AliPay/FundTransfer', {
                     body: JSON.stringify({
-                        orderId: order_one.OrderNo
+                        PayeeAccount:zaccoutValue,
+                        PayeeRealName:realnameValue,
+                        Amount:moneycoutValue,
+                        Remark:'用户提现'
                     })
                 }, 'application/json', false, false, function(ret1, err1) {
-                    if (ret1) {
-
+                    if (ret1.ret) {
                         //成功后操作
-                        //    fnShowSuccess();
-                        alert('aaaaa');
+                        alert('提现成功！请到支付宝查看!');
 
                     } else {
                         api.hideProgress();

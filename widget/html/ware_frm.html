@@ -160,14 +160,18 @@
             margin: 0 auto;
         }
         /*滚动图片*/
-        #aui-slide {overflow: hidden;}
+
+        #aui-slide {
+            overflow: hidden;
+        }
+
         .aui-slide-node {
             width: 100%;
             height: 100%;
         }
 
         .aui-slide-node img {
-          margin: 0 auto;
+            margin: 0 auto;
             width: auto;
             height: auto;
             /*宽度 自适应*/
@@ -210,14 +214,36 @@
             <div id="discount" class="value">可参与</div>
         </div>
         <div class="picture">
-            <img id="pic3" src="" />
+            <img id="jiepic0" src="" />
         </div>
         <div class="picture">
-            <img id="pic4" src="" />
+            <img id="jiepic1" src="" />
         </div>
         <div class="picture">
-            <img id="pic5" src="" />
+            <img id="jiepic2" src="" />
         </div>
+        <div class="picture">
+            <img id="jiepic3" src="" />
+        </div>
+        <div class="picture">
+            <img id="jiepic4" src="" />
+        </div>
+        <div class="picture">
+            <img id="jiepic5" src="" />
+        </div>
+        <div class="picture">
+            <img id="jiepic6" src="" />
+        </div>
+        <div class="picture">
+            <img id="jiepic7" src="" />
+        </div>
+        <div class="picture">
+            <img id="jiepic8" src="" />
+        </div>
+        <div class="picture">
+            <img id="jiepic9" src="" />
+        </div>
+
 
         <!--  <div class="push">
             <div class="top">""</div>
@@ -253,15 +279,15 @@
             limit: 1
         }
         fnGet('Spl_Ware/GetByID', filter, function(ret, err) {
-          if (ret&&ret.type!=0) {
+            if (ret && ret.type != 0) {
 
 
-            //  console.log(JSON.stringify(ret));
-            api.hideProgress();
-            // 更新商品详情展示
-            fnUpdateWareInfo(ret);
-}
-            
+                //  console.log(JSON.stringify(ret));
+                api.hideProgress();
+                // 更新商品详情展示
+                fnUpdateWareInfo(ret);
+            }
+
         });
     }
 
@@ -299,40 +325,96 @@
         }
 
         //图片介绍
-        var pic3 = $api.byId('pic3');
-        var pic4 = $api.byId('pic4');
-        var pic5 = $api.byId('pic5');
+        var pic0 = $api.byId('jiepic0');
+        var pic1 = $api.byId('jiepic1');
+        var pic2 = $api.byId('jiepic2');
+        var pic3 = $api.byId('jiepic3');
+        var pic4 = $api.byId('jiepic4');
+        var pic5 = $api.byId('jiepic5');
+        var pic6 = $api.byId('jiepic6');
+        var pic7 = $api.byId('jiepic7');
+        var pic8 = $api.byId('jiepic8');
+        var pic9 = $api.byId('jiepic9');
 
-
-        if (ware_.Picture3) {
-            fnLoadImage(pic3, ware_.Picture3);
+        if (ware_.JiePic0) {
+            fnLoadImage(pic0, ware_.JiePic0);
+        } else {
+            pic4.display = 'none';
+        }
+        if (ware_.JiePic1) {
+            fnLoadImage(pic1, ware_.JiePic1);
+        } else {
+            pic4.display = 'none';
+        }
+        if (ware_.JiePic2) {
+            fnLoadImage(pic2, ware_.JiePic2);
+        } else {
+            pic4.display = 'none';
+        }
+        if (ware_.JiePic3) {
+            fnLoadImage(pic3, ware_.JiePic3);
             //pic3.src = ware_.Picture3;
         } else {
             pic3.display = 'none';
         }
-        if (ware_.Picture4) {
-            fnLoadImage(pic4, ware_.Picture4);
+        if (ware_.JiePic4) {
+            fnLoadImage(pic4, ware_.JiePic4);
         } else {
             pic4.display = 'none';
         }
-        if (ware_.Picture5) {
-            fnLoadImage(pic5, ware_.Picture5);
+        if (ware_.JiePic5) {
+            fnLoadImage(pic5, ware_.JiePic5);
+        } else {
+            pic5.display = 'none';
+        }
+        if (ware_.JiePic6) {
+            fnLoadImage(pic6, ware_.JiePic6);
+        } else {
+            pic5.display = 'none';
+        }
+        if (ware_.JiePic7) {
+            fnLoadImage(pic7, ware_.JiePic7);
+        } else {
+            pic5.display = 'none';
+        }
+        if (ware_.JiePic8) {
+            fnLoadImage(pic8, ware_.JiePic8);
+        } else {
+            pic5.display = 'none';
+        }
+        if (ware_.JiePic9) {
+            fnLoadImage(pic9, ware_.JiePic9);
         } else {
             pic5.display = 'none';
         }
         // 更新轮播图中的图片
-        if (ware_.Picture0) {
-            fnLoadOnlyImage(ware_.Picture0, function(path_, ret, err) {
+        if (ware_.MainPicture0) {
+            fnLoadOnlyImage(ware_.MainPicture0, function(path_, ret, err) {
                 getpath(path_);
             });
         }
-        if (ware_.Picture1) {
-            fnLoadOnlyImage(ware_.Picture1, function(path_, ret, err) {
+        if (ware_.MainPicture1) {
+            fnLoadOnlyImage(ware_.MainPicture1, function(path_, ret, err) {
                 getpath(path_);
             });
         }
-        if (ware_.Picture2) {
-            fnLoadOnlyImage(ware_.Picture2, function(path_, ret, err) {
+        if (ware_.MainPicture2) {
+            fnLoadOnlyImage(ware_.MainPicture2, function(path_, ret, err) {
+                getpath(path_);
+            });
+        }
+        if (ware_.MainPicture3) {
+            fnLoadOnlyImage(ware_.MainPicture3, function(path_, ret, err) {
+                getpath(path_);
+            });
+        }
+        if (ware_.MainPicture4) {
+            fnLoadOnlyImage(ware_.MainPicture4, function(path_, ret, err) {
+                getpath(path_);
+            });
+        }
+        if (ware_.MainPicture5) {
+            fnLoadOnlyImage(ware_.MainPicture5, function(path_, ret, err) {
                 getpath(path_);
             });
         }
