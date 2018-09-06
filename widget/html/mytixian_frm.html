@@ -85,7 +85,7 @@
                         <i class="aui-iconfont aui-icon-alipay"></i>
                     </div>
                     <div class="aui-list-item-input">
-                        <div class="aui-title"><input id="zfbbtn" class="aui-btn  aui-btn-primary  aui-btn-outlined" type="button" value=" 转账到支付宝 " onclick="fnTixian('0')" /></div>
+                        <div class="aui-title"><input id="zfbbtn" class="aui-btn  aui-btn-primary  aui-btn-outlined" type="button" value=" 确定转账 " onclick="fnTixian('0')" /></div>
                     </div>
                 </div>
             </div>
@@ -138,7 +138,8 @@
                 $api.getStorage('currentwallet').JieYu - $api.getStorage('userInfo').FrozenMoney : 0;
         }
         var moneyketi=$api.byId('moneyketi');
-        moneyketi.innerHTML= '最多可提 '+ketiValue+' 元';
+        //保留2位小数
+        moneyketi.innerHTML= ketiValue.toString().match(/^\d+(?:\.\d{0,2})?/)+' 元';
     };
     var moneycout;
     var ketiValue;

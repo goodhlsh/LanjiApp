@@ -172,25 +172,28 @@
 
         .remaidiv {
             width: 100%;
-            padding: 0 28px;
+            padding: 0 20px;
         }
+        .divinremaidiv{
 
+        }
         .matrix {
-            display: table;
+
+display: table;
             width: 100%;
             height: 100%;
-            border: solid 3px #e0e0e0;
-            /* box-shadow: #e0e0e0 3px 3px 10px 5px; //边框阴影
-           box-shadow：color  h-shadow  v-shadow blur spread  inset；
-                color：阴影颜色 ------------ 可选
+            border: solid 3px #ccc;
+box-shadow: #ddd 3px 3px;
+            /* box-shadow：color  h-shadow  v-shadow blur spread  inset；
+                color：阴影颜色 ------------可选
                 h-shadow ：水平偏移量 ----必选
                 v-shadow：垂直偏移量-----必选
                  blur：模糊距离 -------------可选
                  spread：阴影尺寸---------- 可选
                  inset：内阴影 --------------可选
                */
-            border-radius: 30px;
-            -webkit-border-radius: 30px;
+            border-radius: 20px;
+            -webkit-border-radius: 20px;
             background-color: #fff;
         }
 
@@ -441,6 +444,11 @@
             position: relative;
             top: -20px;
         }
+
+        .rightLoc {
+            position: absolute;
+            right: 8px;
+        }
     </style>
 </head>
 
@@ -538,7 +546,7 @@
                     </div>
                 </td>
                 <td>
-                    <div class="box open-win" win="" login="true">
+                    <div class="box" onclick="openurl()">
                         <img class="ic" src="../image/home/wuliu.png"></img>
                         <div>物流</div>
                     </div>
@@ -589,64 +597,6 @@
     <section class="aui-grid  post">
         <div class="aui-row activebg">
             <div id="remailist" class="remaidiv">
-                <div class="aui-col-xs-6 aui-padded-l-5 aui-padded-0">
-                    <div class="activebg open-win" win="active" param=''>
-                        <div class="matrix">
-                            <div class="matrixcell">
-                                <div class="aui-grid-label">
-                                    <img src="../image/home/remaitu_01.png">
-                                    <div class="aui-text-warning">商品名称</div>
-                                    <div class="info"><span class="rmb"><i>RMB</i></span> 330<i><span class="rmb">原价</span><span class="yuanjia">￥390</span></i></div>
-                                    <div class="ljgmdiv"><img class="btn" src="../image/home/ljgm.png" /></div>
-                                </div>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>
-                <div class="aui-col-xs-6 aui-padded-r-5 aui-padded-0 activebg">
-                    <div class="activebg open-win" win="active" param=''>
-                        <div class="matrix">
-                            <div class="matrixcell">
-                                <div class="aui-grid-label">
-                                    <img src="../image/home/remaitu_01.png">
-                                    <div class="aui-text-warning">商品名称</div>
-                                    <div class="info"><span class="rmb"><i>RMB</i></span> 330<i><span class="rmb">原价</span><span class="yuanjia">￥390</span></i></div>
-                                    <div class="ljgmdiv"><img class="btn" src="../image/home/ljgm.png" /></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="aui-col-xs-6 aui-padded-l-5 aui-padded-b-5 aui-padded-0 activebg">
-                    <div class="activebg open-win" win="active" param=''>
-                        <div class="matrix">
-                            <div class="matrixcell">
-                                <div class="aui-grid-label">
-                                    <img src="../image/home/remaitu_01.png">
-                                    <div class="aui-text-warning">商品名称</div>
-                                    <div class="info"><span class="rmb"><i>RMB</i></span> 330<i><span class="rmb">原价</span><span class="yuanjia">￥390</span></i></div>
-                                    <div class="ljgmdiv"><img class="btn" src="../image/home/ljgm.png" /></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="aui-col-xs-6 aui-padded-r-5 aui-padded-b-5 aui-padded-0 activebg">
-                    <div class="activebg open-win" win="active" param=''>
-                        <div class="matrix">
-                            <div class="matrixcell">
-                                <div class="aui-grid-label">
-                                    <img src="../image/home/remaitu_01.png">
-                                    <div class="aui-text-warning">商品名称</div>
-                                    <div class="info"><span class="rmb"><i>RMB</i></span> 330<i><span class="rmb">原价</span><span class="yuanjia">￥390</span></i></div>
-                                    <div class="ljgmdiv"><img class="btn" src="../image/home/ljgm.png" /></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -669,11 +619,11 @@
 </script>
 <script type="text/template" id="remaitemplate">
     {{~ it:data }}
-    <div class="aui-col-xs-6 aui-padded-0 open-win" win="ware" param='{"wareId":"{{= data.WareId }}"}'>
+    <div class="aui-col-xs-6 aui-margin-b-5 aui-padded-0 open-win" win="ware" param='{"wareId":"{{= data.WareId }}"}'>
         <div class="matrix">
             <div class="matrixcell">
                 <div class="aui-grid-label">
-                    <img onload="fnCacheImage(this)" src="../image/home/remaitu_01.png"  class="thum"  data-url="http://154.8.159.50:8080/{{= data.Thumbnail}}">
+                    <img onload="fnCacheImage(this)" src="../image/home/remaitu_01.png" class="thum" data-url="http://154.8.159.50:8080/{{= data.Thumbnail}}">
                     <div class="name">{{= data.WareName}}</div>
                     <div class="info"><span class="rmb"><i>RMB</i></span> {{= data.PromotionPrice }}<i><span class="rmb">原价</span><span class="yuanjia">￥{{= data.Price }}</span></i></div>
                     <div class="ljgmdiv">
@@ -688,7 +638,7 @@
     {{~ it:data }}
     <div class="item Fix hightitem open-win" win="ware" param='{"wareId":"{{= data.Id }}"}'>
         <div class="cnt">
-            <img onload="fnCacheImage(this)" src="../image/home/remaitu_01.png"  id="thumbnail_{{= data.Id }}" class="pic"  data-url="http://154.8.159.50:8080/{{= data.Thumbnail}}" />
+            <img onload="fnCacheImage(this)" src="../image/home/remaitu_01.png" id="thumbnail_{{= data.Id }}" class="pic" data-url="http://154.8.159.50:8080/{{= data.Thumbnail}}" />
             <div class="wrap">
                 <div class="wrap2">
                     <div class="content">
@@ -700,7 +650,7 @@
                             <span class="price">{{= data.Price }}</span>
                         </div>
                     </div>
-                    <div class="ljgmdiv2"><img class="btn" src="../image/home/ljgm.png" /></div>
+                    <div class="ljgmdiv2 rightLoc"><img class="btn" src="../image/home/ljgm.png" /></div>
                 </div>
             </div>
         </div>
@@ -729,7 +679,7 @@
             api.imageCache({
                 url: dataUrl
             }, function(ret, err) {
-              //console.log(JSON.stringify(ret));
+                //console.log(JSON.stringify(ret));
                 if (ret) {
                     ele_.src = ret.url;
                     //alert(ret.url);
@@ -804,8 +754,6 @@
                         keyword: keywords
                     }
                 });
-
-
             } else {
                 this.style.marginRight = "-" + this.offsetWidth + "px";
                 searchBarInput.value = '';
@@ -824,7 +772,7 @@
             'limit': swipLIMIT
         }, function(ret, err) {
             //  console.log(JSON.stringify(ret));
-            if (ret&&ret.type!=0) {
+            if (ret && ret.type != 0) {
                 api.hideProgress();
                 api.refreshHeaderLoadDone();
                 fnShowSwipList(ret);
@@ -869,7 +817,7 @@
             //      是否循环 滚动
             "loop": true,
             //      点的位置
-            "dotPosition": 'center',
+            "dotPosition": 'center'
         });
 
         //  获取总页数
@@ -899,6 +847,16 @@
     }
 
     /*幻灯片end*/
+    /*tools*/
+    function openurl() {
+        api.openWin({
+            name: 'wuliu',
+            url: 'https://www.kuaidi100.com',
+            pageParam: {
+                name: ''
+            }
+        });
+    }
     /*热卖begin*/
     var RemaiList;
 
@@ -910,7 +868,7 @@
             'skip': skip,
             'limit': remaiLIMIT
         }, function(ret, err) {
-            if (ret&&ret.type!=0) {
+            if (ret && ret.type != 0) {
                 api.hideProgress();
                 api.refreshHeaderLoadDone();
                 fnShowRemaiList(ret);
@@ -942,7 +900,7 @@
         }, function(ret, err) {
             //console.log("//////////////////////////////");
             //  console.log(JSON.stringify(ret));
-            if (ret&&ret.type!=0) {
+            if (ret && ret.type != 0) {
                 api.hideProgress();
                 api.refreshHeaderLoadDone();
                 fnShowLikeList(ret);
@@ -1054,8 +1012,8 @@
         fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
             if (ret) {
                 $api.setStorage('userInfo', ret);
-            }else {
-              $api.rmStorage('userInfo');
+            } else {
+                $api.rmStorage('userInfo');
             }
         });
     }

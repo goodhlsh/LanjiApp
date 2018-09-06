@@ -85,7 +85,7 @@
 
         userYuE = $api.byId('YuE');
         if ($api.getStorage('currentwallet')) {
-            userYuE.innerHTML = $api.getStorage('currentwallet') == null ? '0.0' : $api.getStorage('currentwallet').JieYu;
+            userYuE.innerHTML = $api.getStorage('currentwallet') == null ? '0.0' : $api.getStorage('currentwallet').JieYu.toString().match(/^\d+(?:\.\d{0,2})?/)+' 元';
         } else {
             var filter = {
                 where: {
@@ -101,7 +101,7 @@
                     $api.setStorage('currentwallet', ret);
                 } else {
                   $api.rmStorage('currentwallet');
-                    
+
                 }
             });
         }

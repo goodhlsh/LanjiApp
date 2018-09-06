@@ -39,6 +39,34 @@
             text-align: center;
             margin-top: 20px;
         }
+
+        .bg {
+            background: url('image/banner1.png');
+            height:408px;
+            text-align: center;
+            line-height: 408px;
+        }
+        .bg-blur {
+            float: left;
+            width: 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            -webkit-filter: blur(15px);
+            -moz-filter: blur(15px);
+            -o-filter: blur(15px);
+            -ms-filter: blur(15px);
+            filter: blur(15px);
+        }
+        .content-front {
+          position:absolute;
+          top:420px;
+          left: 20px;
+          right: 20px;
+          height:260px;
+          line-height: 260px;
+          margin: 0 auto;
+        }
     </style>
 </head>
 
@@ -79,9 +107,10 @@
     <div class="btnthird">
         <div class="aui-btn" tapmode="highlight" onclick="fnThirdLogin();"><span class="aui-iconfont aui-icon-wechat"></span></div>
     </div>
-
-
-
+    <div>
+    <div class="bg bg-blur"></div>
+    <div class="content content-front"><img src="image/banner1.png" class="imgshow"></div>
+  </div>
 </body>
 <script type="text/javascript" src="./script/api.js"></script>
 <script type="text/javascript" src="./script/common.js"></script>
@@ -265,7 +294,7 @@
             userName: usernameValue,
             password: passwordValue
         }, function(ret, err) {
-            if (ret.Id!=null) {
+            if (ret.Id != null) {
                 $api.setStorage('userInfo', ret);
                 fnInitYuE(ret.Id);
                 api.sendEvent({
@@ -281,14 +310,15 @@
                 });
 
             } else {
-              $api.rmStorage('userInfo');
+                $api.rmStorage('userInfo');
                 api.alert({
                     title: '消息',
-                    msg: '登录失败：'+ret.message
+                    msg: '登录失败：' + ret.message
                 });
             }
         });
     }
+
     function fnInitYuE(Id_) {
         var filter = {
             where: {
@@ -302,8 +332,8 @@
             if (ret) {
                 $api.setStorage('currentwallet', ret);
             } else {
-              $api.rmStorage('currentwallet');
-                
+                $api.rmStorage('currentwallet');
+
             }
         });
     }

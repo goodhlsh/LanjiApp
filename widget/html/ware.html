@@ -53,20 +53,23 @@
 
     <footer id="footer">
         <div class="aui-bar aui-bar-btn aui-bar-btn-full  aui-pull-left" type="count " id="demo">
-            <div class="aui-bar-btn-item aui-border aui-font-size-14" onclick="fnMinus()">
+          <div class="aui-bar-btn-item" onclick="fnQQLine()">
+            <img border="0" src="http://wpa.qq.com/pa?p=2:250074620:51" style="height:30px;width:100%;"/></a>
+          </div>
+
+            <div class="aui-bar-btn-item  aui-font-size-14" onclick="fnMinus()">
                 <i class="aui-iconfont aui-icon-move1"></i>
             </div>
-            <div class="aui-bar-btn-item aui-border">
+            <div class="aui-bar-btn-item">
                 <input type="number" class="aui-input aui-text-center" id="count" value="0">
             </div>
-            <div class="aui-bar-btn-item aui-border aui-font-size-14" onclick="fnAdd()">
+            <div class="aui-bar-btn-item aui-font-size-14" onclick="fnAdd()">
                 <i class="aui-iconfont aui-icon-add1"></i>
             </div>
-            <div class="aui-bar-btn-item aui-border  aui-btn-primary  aui-btn-outlined aui-font-size-14  open-win" login="true" win="shoppingcart" param="">
+            <div class="aui-bar-btn-item aui-btn-primary   aui-active aui-font-size-14  open-win" login="true" win="shoppingcart" param="">
                 加入购物车<i class="aui-iconfont aui-icon-cart aui-padded-l-5"></i>
             </div>
         </div>
-
     </footer>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
@@ -145,7 +148,16 @@
             });
         }
     }
+function fnQQLine() {
+  api.openWin({
+      name: 'QQLine',
+      url: 'http://wpa.qq.com/msgrd?v=3&uin=250074620&',
+      pageParam: {
+          name: ''
+      }
+  });
 
+}
     // 打开分享Frame
     function fnOpenShareFrame() {
         api.openFrame({
