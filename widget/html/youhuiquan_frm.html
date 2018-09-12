@@ -371,15 +371,14 @@
     }
 
     function changecolor(id_,model_) {
-
       if ($api.hasCls(id_, 'fontcolor')) {
         return;
       }
         $api.addCls(id_, 'fontcolor');
         var data = {
             body: JSON.stringify({
-                uid:$api.getStorage('userInfo').Id,
-                yid: id_
+                UserId:$api.getStorage('userInfo').Id,
+                YouHuiId: id_
             })
         };
         fnPost('Spl_YouHui/PostYouHui', data, 'application/json', false, false, function(ret, err) {
@@ -389,11 +388,8 @@
                   msg: '恭喜亲获得该优惠券，请尽快使用！',
               }, function(ret1, err1){
               });
-
             }
           });
-
     }
 </script>
-
 </html>

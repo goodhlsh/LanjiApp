@@ -498,7 +498,7 @@ box-shadow: #ddd 3px 3px;
                 <td>
                     <div class="box open-win" win="myfenxiao" login="true">
                         <img class="ic" src="../image/home/fenxiao.png"></img>
-                        <div>分销</div>
+                        <div>代理</div>
                     </div>
                 </td>
                 <td>
@@ -602,7 +602,7 @@ box-shadow: #ddd 3px 3px;
     </section>
 
     <div class="guesstitle  post">— 猜你喜欢 —</div>
-    <div id="list" class="home-like-list  post">
+    <div id="likelist" class="home-like-list  post">
     </div>
 </body>
 <script type="text/template" id="swiptemplate">
@@ -634,7 +634,7 @@ box-shadow: #ddd 3px 3px;
     </div>
     {{~}}
 </script>
-<script type="text/template" id="template">
+<script type="text/template" id="liketemplate">
     {{~ it:data }}
     <div class="item Fix hightitem open-win" win="ware" param='{"wareId":"{{= data.Id }}"}'>
         <div class="cnt">
@@ -699,8 +699,8 @@ box-shadow: #ddd 3px 3px;
 
         fnInitSwipList(0, 10); //首页滚动图片
 
-        fnInitRemaiList(0, 4); //首页活动内容
-        index_ = $api.getStorage('index_') != null ? $api.getStorage('index_') : 0;
+        fnInitRemaiList(0, 4); //首页热卖内容
+
         keyword = $api.getStorage('keyword') != null ? $api.getStorage('keyword') : "";
         //按最近一次搜索的商品给出喜欢的商品
         fnInitLikeList(keyword, 0, 20);
@@ -763,20 +763,20 @@ box-shadow: #ddd 3px 3px;
         /*搜索框--end*/
 
     /*幻灯片begin*/
-    function fnInitSwipList(skip, swipLIMIT) {
+    function fnInitSwipList(_skip, swipLIMIT) {
         fnGet('Spl_Ware/GetAllTop', {
             'where': {
                 'toTop': 'true'
             },
-            'skip': skip,
+            'skip': _skip,
             'limit': swipLIMIT
         }, function(ret, err) {
-            //  console.log(JSON.stringify(ret));
-            if (ret && ret.type != 0) {
+  //            console.log(JSON.stringify(ret));
+            if (ret) {
                 api.hideProgress();
                 api.refreshHeaderLoadDone();
                 fnShowSwipList(ret);
-                fnCacheImage2(ret, index_);
+
             } else {
                 console.log(JSON.stringify(err));
             }
@@ -860,19 +860,19 @@ box-shadow: #ddd 3px 3px;
     /*热卖begin*/
     var RemaiList;
 
-    function fnInitRemaiList(skip, remaiLIMIT) {
+    function fnInitRemaiList(_skip, remaiLIMIT) {
         fnGet('Spl_Ware/GetHotWare', {
             'where': {
                 'isShow': 'true'
             },
-            'skip': skip,
+            'skip': _skip,
             'limit': remaiLIMIT
         }, function(ret, err) {
-            if (ret && ret.type != 0) {
+//          console.log(JSON.stringify(ret));
+            if (ret) {
                 api.hideProgress();
                 api.refreshHeaderLoadDone();
                 fnShowRemaiList(ret);
-                fnCacheImage2(ret, index_);
             }
         });
     };
@@ -889,18 +889,17 @@ box-shadow: #ddd 3px 3px;
     /*热卖end*/
     /*猜我喜欢begin*/
     var keyword;
-
-    function fnInitLikeList(keyword, skip, likeLIMIT) {
+    function fnInitLikeList(keyword, _skip, likeLIMIT) {
         fnGet('Spl_Ware/GetAllLike', {
             'where': {
                 'likes': keyword != '' ? keyword : ''
             },
-            'skip': skip,
+            'skip': _skip,
             'limit': likeLIMIT
         }, function(ret, err) {
             //console.log("//////////////////////////////");
             //  console.log(JSON.stringify(ret));
-            if (ret && ret.type != 0) {
+            if (ret) {
                 api.hideProgress();
                 api.refreshHeaderLoadDone();
                 fnShowLikeList(ret);
@@ -911,33 +910,30 @@ box-shadow: #ddd 3px 3px;
     }
 
     function fnShowLikeList(datas) {
-        list = $api.byId('list');
-        var template = $api.byId('template');
+        likelist = $api.byId('likelist');
+        var template = $api.byId('liketemplate');
         if (template) {
             dotlike = doT.template(template.innerHTML);
         }
-        list.innerHTML = dotlike(datas);
+        likelist.innerHTML = dotlike(datas);
         fnReadyOpenWin();
     };
     /*猜我喜欢end*/
     //图片缓存本地
-    var index_;
-
-    function fnCacheImage2(datas, index) {
-        if (datas.length <= index) {
+    function fnCacheImage2(datas) {
+        if (datas.length <= 0) {
             return;
         }
+        for (var i = 0; i < datas.length; i++) {
         api.imageCache({
-            url: datas[index].Thumbnail //???????????????????
+            url: datas[i].PicShow
         }, function(ret, err) {
-            var thumbnail = $api.byId("thumbnail_" + datas[index].Id);
+            var thumbnail = $api.byId("thumbnail_" + datas[i].Id);
             if (thumbnail) {
-                thumbnail.src = datas[index].Thumbnail;
+                thumbnail.src = datas[i].PicShow;
             }
-            index_ = index + 1;
-            fnCacheImage2(datas, index_);
         });
-        $api.setStorage('index_', index_);
+      }
     };
     /*初始化事件*/
     function initEventListenter() {
@@ -989,8 +985,8 @@ box-shadow: #ddd 3px 3px;
             // 首页内容刷新
             fnInitSwipList(0, 10); //首页滚动图片
 
-            fnInitRemaiList(0, 4); //首页活动内容
-            index_ = $api.getStorage('index_') != null ? $api.getStorage('index_') : 0;
+            fnInitRemaiList(0, 4); //首页热卖内容
+
             keyword = $api.getStorage('keyword') != null ? $api.getStorage('keyword') : "";
             //按最近一次搜索的商品给出喜欢的商品
             fnInitLikeList(keyword, 0, 20);

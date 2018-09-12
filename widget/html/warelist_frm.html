@@ -210,7 +210,7 @@
             limit: LIMIT
         }
         fnGet('Spl_Ware/GetListByCategoryID', filter, function(ret, err) {
-            if (ret&&ret.type!=0) {
+            if (ret) {
                 // 恢复下拉刷新的状态
                 api.refreshHeaderLoadDone();
 

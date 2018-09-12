@@ -7,6 +7,9 @@ function cutstr(str, len) {
     var str_length = 0;
     var str_len = 0;
     str_cut = new String();
+    if (str==null) {
+      return;
+    }
     str_len = str.length;
     for (var i = 0; i < str_len; i++) {
         a = str.charAt(i);
