@@ -113,7 +113,7 @@
 
         .coupon-time {
             line-height: 25px;
-            font-weight:bolder;
+            font-weight: bolder;
             font-size: 20px;
         }
 
@@ -197,15 +197,17 @@
                 background-size: 15px 15px;
                 background-position: 13px 6px;
             }
+        }
 
+        .splite {
+            height: 12px;
+            padding: 5px auto;
         }
-        .splite{
-          height: 12px;
-          padding: 5px auto;
+
+        .fontcolor {
+            color: #f5d1d0;
         }
-        .fontcolor{
-          color: #f5d1d0;
-        }
+
         .push-status {
             width: 100%;
             height: 40px;
@@ -213,19 +215,19 @@
             color: #888;
             line-height: 40px;
             text-align: center;
-
         }
     </style>
 </head>
+
 <body>
-  <div class="splite"></div>
-  <div id="list"></div>
-  <div class="push-status" id="pushStatus">上拉显示更多</div>
+    <div class="splite"></div>
+    <div id="list"></div>
+    <div class="push-status" id="pushStatus">上拉显示更多</div>
 </body>
-<script  type="text/template" id="template">
-{{~it:value:index}}
+<script type="text/template" id="template">
+    {{~it:value:index}}
     <div class="contain">
-        <div class="coupon" tapmode onclick="changecolor(this,'{{value.Id}}')">
+        <div class="coupon" tapmode onclick="changecolor(this,'{{=value.Id}}')">
             <div class="coupon-left">
                 <div class="coupon-inner coupon-left-inner">
                     <div class="coupon-money">
@@ -240,9 +242,8 @@
             <div class="coupon-right">
                 <div class="coupon-inner">
                     <div class="coupon-time">
-                        优<br/>
-                        惠<br/>
-                        券
+                        优<br/> 惠
+                        <br/> 券
                     </div>
                     <i class="coupon-circle top"></i>
                     <i class="coupon-circle bottom"></i>
@@ -252,7 +253,7 @@
         </div>
     </div>
     <div class="splite"></div>
-{{~}}
+    {{~}}
 </script>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/common.js"></script>
@@ -326,7 +327,7 @@
             limit: LIMIT
         }
         fnGet('Spl_YouHui/GetList', filter, function(ret, err) {
-            if (ret&&ret.type!=0) {
+            if (ret ) {
                 // 恢复下拉刷新的状态
                 api.refreshHeaderLoadDone();
 
@@ -352,6 +353,7 @@
         var tempFn = doT.template($api.byId('template').innerHTML);
         // 使用模板函数生成HTML文本
         var resultHTML = tempFn(data_);
+
         // 判断是否是加载更多，如果是加载更多，则追加到list中
         if (loadMore_) {
 
@@ -370,26 +372,41 @@
         api.parseTapmode();
     }
 
-    function changecolor(id_,model_) {
-      if ($api.hasCls(id_, 'fontcolor')) {
-        return;
-      }
+    function changecolor(id_, model_) {
+        if ($api.getStorage('userInfo')==null) {
+          api.alert({
+              title: '消息',
+              msg: '您不是会员，请注册或登录后再来获取。',
+          }, function(ret, err){
+          });
+          return;
+        }
+        if ($api.hasCls(id_, 'fontcolor')) {
+            return;
+        }
         $api.addCls(id_, 'fontcolor');
         var data = {
             body: JSON.stringify({
-                UserId:$api.getStorage('userInfo').Id,
-                YouHuiId: id_
+                UserId: $api.getStorage('userInfo').Id,
+                YouHuiId: model_
             })
         };
         fnPost('Spl_YouHui/PostYouHui', data, 'application/json', false, false, function(ret, err) {
+console.log(JSON.stringify(ret));
             if (ret) {
+                api.alert({
+                    title: '消息',
+                    msg: '恭喜亲获得该优惠券，请尽快使用！',
+                }, function(ret1, err1) {});
+            }else{
               api.alert({
                   title: '消息',
-                  msg: '恭喜亲获得该优惠券，请尽快使用！',
-              }, function(ret1, err1){
+                  msg: '您已获得该优惠券',
+              }, function(ret, err){
               });
             }
-          });
+        });
     }
 </script>
+
 </html>
