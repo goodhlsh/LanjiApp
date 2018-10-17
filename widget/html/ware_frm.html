@@ -302,11 +302,11 @@
 
         // 商品价格
         var price = $api.byId('price');
-        price.innerHTML = '价格：￥ ' + ware_.Price;
+        price.innerHTML = '价格：￥ ' + ware_.PromotionPrice;
         //商品原价
         var originPrice = $api.byId('originPrice');
-        if (ware_.OriginPrice != null) {
-            originPrice.innerHTML = '原价：￥ ' + ware_.OriginPrice;
+        if (ware_.Price != null) {
+            originPrice.innerHTML = '原价：￥ ' + ware_.Price;
         }
 
         //销售
