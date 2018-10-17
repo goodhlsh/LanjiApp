@@ -608,13 +608,13 @@ box-shadow: #ddd 3px 3px;
 <script type="text/template" id="swiptemplate">
     {{~it:swipdata }} {{?swipdata.ttype==='0'}}
     <div class="aui-slide-node open-win" win="active" param='{"ActiveId":"{{= swipdata.Id }}"}'>
-        <img onload="fnCacheImage(this)" src="../image/home/banner1.png" id="picshow_{{= swipdata.Id }}" data-url="http://154.8.159.50:8080/{{= swipdata.PicShow}}" class="" /></div>
+        <img onload="fnCacheImage(this)" src="../image/home/banner1.png" id="picshow_{{= swipdata.Id }}" data-url="http://app.lanjiguoji:8088/{{= swipdata.PicShow}}" class="" /></div>
     {{??swipdata.ttype==='1'}}
     <div class="aui-slide-node open-win" win="ware" param='{"wareId":"{{= swipdata.Id }}"}'>
-        <img onload="fnCacheImage(this)" src="../image/home/banner1.png" id="picshow_{{= swipdata.Id }}" data-url="http://154.8.159.50:8080/{{= swipdata.PicShow}}" class="" /></div>
+        <img onload="fnCacheImage(this)" src="../image/home/banner1.png" id="picshow_{{= swipdata.Id }}" data-url="http://app.lanjiguoji:8088/{{= swipdata.PicShow}}" class="" /></div>
     {{??}}
     <div class="aui-slide-node open-win" win="warelist" param='{"warelistId":"{{= swipdata.Id }}"}'>
-        <img onload="fnCacheImage(this)" src="../image/home/banner1.png" id="picshow_{{= swipdata.Id }}" data-url="http://154.8.159.50:8080/{{= swipdata.PicShow}}" class="" /></div>
+        <img onload="fnCacheImage(this)" src="../image/home/banner1.png" id="picshow_{{= swipdata.Id }}" data-url="http://app.lanjiguoji:8088/{{= swipdata.PicShow}}" class="" /></div>
     {{?}} {{~}}
 </script>
 <script type="text/template" id="remaitemplate">
@@ -623,7 +623,7 @@ box-shadow: #ddd 3px 3px;
         <div class="matrix">
             <div class="matrixcell">
                 <div class="aui-grid-label">
-                    <img onload="fnCacheImage(this)" src="../image/home/remaitu_01.png" class="thum" data-url="http://154.8.159.50:8080/{{= data.Thumbnail}}">
+                    <img onload="fnCacheImage(this)" src="../image/home/remaitu_01.png" class="thum" data-url="http://app.lanjiguoji:8088/{{= data.Thumbnail}}">
                     <div class="name">{{= data.WareName}}</div>
                     <div class="info"><span class="rmb"><i>RMB</i></span> {{= data.PromotionPrice }}<i><span class="rmb">原价</span><span class="yuanjia">￥{{= data.Price }}</span></i></div>
                     <div class="ljgmdiv">
@@ -638,7 +638,7 @@ box-shadow: #ddd 3px 3px;
     {{~ it:data }}
     <div class="item Fix hightitem open-win" win="ware" param='{"wareId":"{{= data.Id }}"}'>
         <div class="cnt">
-            <img onload="fnCacheImage(this)" src="../image/home/remaitu_01.png" id="thumbnail_{{= data.Id }}" class="pic" data-url="http://154.8.159.50:8080/{{= data.Thumbnail}}" />
+            <img onload="fnCacheImage(this)" src="../image/home/remaitu_01.png" id="thumbnail_{{= data.Id }}" class="pic" data-url="http://app.lanjiguoji:8088/{{= data.Thumbnail}}" />
             <div class="wrap">
                 <div class="wrap2">
                     <div class="content">

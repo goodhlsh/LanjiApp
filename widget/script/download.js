@@ -14,7 +14,7 @@ function fnLoadOnlyImage(url_,callback) {
           callback(imgDir + '/'+imgSha1 + expname,ret,err);
         } else {
             api.download({
-                url: 'http://154.8.159.50:8080'+url_,
+                url: 'http://app.lanjiguoji.com:8088'+url_,
                 savePath: imgDir + '/'+imgSha1 + expname,
                 report: true,
                 cache: true,
@@ -47,7 +47,7 @@ function fnLoadImage(imgObj_, url_) {
         } else {
             api.download({
                 //url: 'http://154.8.159.50:1693'+url_,
-                url: 'http://154.8.159.50:8080'+url_,
+                url: 'http://app.lanjiguoji.com:8088'+url_,
                 savePath: imgDir + imgSha1 + expname,
                 report: true,
                 cache: true,

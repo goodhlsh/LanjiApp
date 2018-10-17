@@ -381,7 +381,7 @@
 
                           */
                     api.ajax({
-                        url: "http://154.8.159.50:1693/api/UploadServerApi/UploadImg",
+                        url: "http://app.lanjiguoji:1693/api/UploadServerApi/UploadImg",
                         method: "post",
                         dataType: 'json',
                         contentType: "application/x-www-form-urlencoded; charset=utf-8",
@@ -429,7 +429,7 @@
             return;
         }
         alert("请如实填写信息和提交照片，一旦发现作假，会查封该用户，影响其使用的后果由用户承担！");
-        
+
         var userid = $api.getStorage('userInfo') == null ? null : $api.getStorage('userInfo').Id;
         if (realnameValue == null || $api.getStorage('shfzh') == null || $api.getStorage('shfzhbei') == null || telValue == null) {
             api.alert({
