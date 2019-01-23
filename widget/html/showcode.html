@@ -24,44 +24,42 @@
             -webkit-box-orient: vertical;
             -webkit-flex-flow: column;
             flex-flow: column;
+        }
 
-          }
-          header{
+        header {
             height: 40px;
-          }
+        }
+
         section {
             -webkit-box-flex: 1;
             -webkit-flex: 1;
             flex: 1;
             overflow: auto;
-
         }
 
-
-
         .usertext {
-          position: absolute;
-          left:140px;
-          top:280px;
+            position: absolute;
+            left: 140px;
+            top: 280px;
             font-size: 18px;
             color: #ffffff;
             z-index: 2;
         }
 
         .card-extend {
-          position: absolute;
-          left: 85px;
-          top:340px;
-          text-align: center;
-          z-index: 3;
-        }
-        .card-extend img{
-          width: auto;
-          height: auto;
-          max-width: 100%;
-          max-height: 100%;
+            position: absolute;
+            left: 85px;
+            top: 340px;
+            text-align: center;
+            z-index: 3;
         }
 
+        .card-extend img {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+        }
     </style>
 </head>
 
@@ -87,23 +85,23 @@
 <script type="text/javascript" src="../script/SHA1.js"></script>
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
-  var tid;
-  //从后台更新本地存储
+    var tid;
+    //从后台更新本地存储
     function fnInitUserInfo() {
-      var filter = {
-          where: {
-              Id: $api.getStorage('userInfo').Id
-          },
-          skip: 0,
-          limit: 1
-      }
-      fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
-          if (ret) {
-              $api.setStorage('userInfo', ret);
-          }else {
-            $api.rmStorage('userInfo');
-          }
-      });
+        var filter = {
+            where: {
+                Id: $api.getStorage('userInfo').Id
+            },
+            skip: 0,
+            limit: 1
+        }
+        fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('userInfo', ret);
+            } else {
+                $api.rmStorage('userInfo');
+            }
+        });
     }
     apiready = function() {
         fnReady();
@@ -111,7 +109,20 @@
         api.parseTapmode();
 
         if ($api.getStorage('userInfo')) {
-            tid = $api.getStorage('userInfo').Id;
+            if ($api.getStorage('userInfo').Jibie != '普通会员') {
+                tid = $api.getStorage('userInfo').Id;
+            } else {
+              api.alert({
+                  title: '消息',
+                  msg: '请您成为分销会员后再推荐他人',
+              }, function(ret, err) {
+                  if (ret) {
+                      fnCloseWin();
+                  } else {
+                      // alert( JSON.stringify( err ) );
+                  }
+              });
+            }
         } else {
             api.alert({
                 title: '消息',
@@ -152,8 +163,8 @@
                 qr_image.src = ret.imgPath;
                 //$api.attr(qr_image, 'src', ret.imgPath);
                 var username = $api.byId('username');
-                var tmp=$api.getStorage('userInfo').UserName;
-                $api.html(username, tmp.substring(0,3)+'&nbsp;****&nbsp;' + tmp.substring(7,11));
+                var tmp = $api.getStorage('userInfo').UserName;
+                $api.html(username, tmp.substring(0, 3) + '&nbsp;****&nbsp;' + tmp.substring(7, 11));
             }
         });
         // inter =   window.setInterval(getDone(tid), 3000);
