@@ -226,7 +226,7 @@
             }
             //params = $api.jsonToStr(params);
         fnGet('spl_ProductCategory/GetList', filter, function(ret, err) {
-              console.log(JSON.stringify(ret));
+              //console.log(JSON.stringify(ret));
             if (ret) {
                 $api.setStorage('waretype', ret);
                 wareTypeList = ret;
