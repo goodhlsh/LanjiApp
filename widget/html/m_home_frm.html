@@ -449,6 +449,34 @@ box-shadow: #ddd 3px 3px;
             position: absolute;
             right: 8px;
         }
+
+        /*背景模糊*/
+        .bg {
+            background: url('image/banner1.png');
+            height:408px;
+            text-align: center;
+            line-height: 408px;
+        }
+        .bg-blur {
+            float: left;
+            width: 100%;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: cover;
+            -webkit-filter: blur(15px);
+            -moz-filter: blur(15px);
+            -o-filter: blur(15px);
+            -ms-filter: blur(15px);
+            filter: blur(15px);
+        }
+        .content-front {
+          position:absolute;
+          top:0px;
+          left: 20px;
+          right: 20px;
+          height:auto;
+          margin: 0 auto;
+        }
     </style>
 </head>
 
@@ -474,7 +502,7 @@ box-shadow: #ddd 3px 3px;
             <span class="aui-iconfont aui-icon-qrcode"></span>
         </div>
     </header>
-
+  <!--顶部滚动图-->
     <div id="aui-slide" class="post">
         <div id="swiplist" class="aui-slide-wrap">
             <div class="aui-slide-node open-win" win="ware">
@@ -485,7 +513,7 @@ box-shadow: #ddd 3px 3px;
             <!--分页容器-->
         </div>
     </div>
-
+  <!--各个模块导航-->
     <div id="cont" class="tools post">
         <table>
             <tr>
@@ -605,16 +633,29 @@ box-shadow: #ddd 3px 3px;
     <div id="likelist" class="home-like-list  post">
     </div>
 </body>
+  <!--顶部滚动图脚本-->
 <script type="text/template" id="swiptemplate">
     {{~it:swipdata }} {{?swipdata.ttype==='0'}}
     <div class="aui-slide-node open-win" win="active" param='{"ActiveId":"{{= swipdata.Id }}"}'>
+      <div class="bg-blur">
         <img onload="fnCacheImage(this)" src="../image/home/banner1.png" id="picshow_{{= swipdata.Id }}" data-url="http://app.lanjiguoji:8088/{{= swipdata.PicShow}}" class="" /></div>
+      <div class="content-front">
+         <img onload="fnCacheImage(this)" src="../image/home/banner1.png" id="picshow_{{= swipdata.Id }}" data-url="http://app.lanjiguoji:8088/{{= swipdata.PicShow}}" class="" /></div>
+    </div>
     {{??swipdata.ttype==='1'}}
     <div class="aui-slide-node open-win" win="ware" param='{"wareId":"{{= swipdata.Id }}"}'>
+      <div class="bg-blur">
         <img onload="fnCacheImage(this)" src="../image/home/banner1.png" id="picshow_{{= swipdata.Id }}" data-url="http://app.lanjiguoji:8088/{{= swipdata.PicShow}}" class="" /></div>
+      <div class="content-front">
+         <img onload="fnCacheImage(this)" src="../image/home/banner1.png" id="picshow_{{= swipdata.Id }}" data-url="http://app.lanjiguoji:8088/{{= swipdata.PicShow}}" class="" /></div>
+    </div>
     {{??}}
     <div class="aui-slide-node open-win" win="warelist" param='{"warelistId":"{{= swipdata.Id }}"}'>
+      <div class="bg-blur">
         <img onload="fnCacheImage(this)" src="../image/home/banner1.png" id="picshow_{{= swipdata.Id }}" data-url="http://app.lanjiguoji:8088/{{= swipdata.PicShow}}" class="" /></div>
+      <div class="content-front">
+         <img onload="fnCacheImage(this)" src="../image/home/banner1.png" id="picshow_{{= swipdata.Id }}" data-url="http://app.lanjiguoji:8088/{{= swipdata.PicShow}}" class="" /></div>
+    </div>
     {{?}} {{~}}
 </script>
 <script type="text/template" id="remaitemplate">
