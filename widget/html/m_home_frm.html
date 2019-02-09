@@ -470,8 +470,8 @@ box-shadow: #ddd 3px 3px;
             filter: blur(15px);
         }
         .content-front {
-          position:absolute;
-          top:0px;
+          position:relative;
+          top:2.25rem;
           left: 20px;
           right: 20px;
           height:auto;
@@ -1056,7 +1056,7 @@ box-shadow: #ddd 3px 3px;
     }
     /*扫描推荐begin*/
     //打开默认的二维码扫描
-    var isAuth;
+    var isAuth, tid_, mobile_ ;
 
     function fnOpenScanner() {
 
@@ -1080,22 +1080,34 @@ box-shadow: #ddd 3px 3px;
                         isAuth = $api.getStorage('userInfo').IsAuth; //先验证后扫描
 
                         if (!isAuth) {
-                            var tid_ = ret.content.substr(5);
-                            var userid_ = $api.getStorage('userInfo').Id;
-                            var data = {
-                                body: JSON.stringify({
-                                    uid: userid_,
-                                    tid: tid_
-                                })
-                            };
-                            fnPost('SysUser/PostTuiGuang', data, 'application/json', false, false, function(ret1, err1) {
-                                if (ret1) {
-                                    api.alert({
-                                        title: '消息',
-                                        msg: '推荐成功!'
-                                    });
-                                }
-                            });
+                          tid_ = ret.content.substr(5);
+                          api.prompt({
+                              buttons: ['确定', '取消']
+                          }, function(ret, err){
+                              if(ret&& ret.buttonIndex==1 ){
+
+                                mobile_ = ret.text;
+                                var data = {
+                                    body: JSON.stringify({
+                                        tid: tid_,
+                                        mobile: mobile_
+                                    })
+                                };
+                                fnPost('SysUser/PostTuiGuang', data, 'application/json', false, false, function(ret1, err1) {
+                                    if (ret1&&ret1.TuiCode!=null) {
+                                        api.alert({
+                                            title: '消息',
+                                            msg: '扫码成功,您的邀请码为'+ret1.TuiCode+'请注册完成推荐!'
+                                        });
+                                    }
+                                });
+                              }else{
+                                   //alert( JSON.stringify( err ) );
+                              }
+                          });
+
+
+
                         } else {
                             alert('该用户已是认证会员，不再参与推广！')
                         }

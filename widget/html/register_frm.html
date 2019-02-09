@@ -97,6 +97,16 @@
                 </div>
             </div>
             <div class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label-icon">
+                        <i class="aui-iconfont aui-icon-lock"></i>
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input id="yqm" class="input" type="text" placeholder="">
+                    </div>
+                </div>
+            </div>
+            <div class="aui-list-item">
                 <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
                     <div class="aui-btn  aui-btn-primary  aui-btn-outlined" tapmode="highlight" onclick="verify();">立即注册</div>
                 </div>
@@ -122,10 +132,12 @@
     var passwordUIInputId;
     var passwordUIInputId2;
     var codeUIInputId;
+    var yqmUIInputId;
     var usernameValue;
     var passwordValue;
     var passwordValue2;
     var codeValue;
+    var yqmValue;
 
     function fnInitUIInput() {
         // 用户名输入框模块
@@ -296,6 +308,52 @@
                         if (ret) {
                             if (ret.status) {
                                 codeValue = ret.msg;
+                            }
+                        }
+                    });
+                }
+            }
+        });
+        // 邀请码输入框模块
+        var yqmcode = $api.byId('yqm');
+        var yqmcodeRect = $api.offset(yqmcode);
+        UIInput = api.require('UIInput');
+        UIInput.open({
+            rect: {
+                x: yqmcodeRect.l,
+                y: yqmcodeRect.t,
+                w: yqmcodeRect.w ,
+                h: yqmcodeRect.h
+            },
+            styles: {
+                bgColor: '#fff',
+                size: 16,
+                color: '#000',
+                placeholder: {
+                    color: '#ccc'
+                }
+            },
+            autoFocus: false,
+            maxRows: 1,
+            placeholder: '请输入邀请码，若没有可不填',
+            keyboardType: 'default',
+            fixedOn: api.frameName
+        }, function(ret, err) {
+            if (ret) {
+                yqmUIInputId = ret.id;
+                if (ret && ret.eventType == "show") {
+                    setTimeout(function() {
+                        UIInput.popupKeyboard({
+                            id: yqmUIInputId
+                        });
+                    }, 200);
+                } else if (ret.eventType == "change") {
+                    UIInput.value({
+                        id: yqmUIInputId
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.status) {
+                                yqmValue = ret.msg;
                             }
                         }
                     });
