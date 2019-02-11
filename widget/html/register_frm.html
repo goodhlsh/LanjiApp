@@ -368,7 +368,7 @@
                 //console.log('注册成功');
             } else {
                 api.alert({
-                    msg: ' 注册失败'//err.code +
+                    msg: '初始化失败'//err.code +
                 });
             }
         });
@@ -619,7 +619,21 @@
             });
             return;
         }
+        //判断邀请码是否正确，不正确重新输入
+        if (yqmValue!=null) {
+          var filter = {
+              where: {
+                  'mobile': $api.getStorage('userInfo').mobile,
+                  'yqm':yqmValue
+              }
+          };
+          fnGet('SysTuiUser/GetValue', filter, function(ret, err) {
+              if (ret==null) {
+                  return;
+              }
+          });
 
+        }
         if (usernameValue.length == 11 && passwordValue.length >= 6) {
 
             smsVerify.verify({
