@@ -468,14 +468,14 @@ box-shadow: #ddd 3px 3px;
             -o-filter: blur(15px);
             -ms-filter: blur(15px);
             filter: blur(15px);
+            margin: 0 auto;
         }
         .content-front {
           position:relative;
-          top:2.25rem;
-          left: 20px;
-          right: 20px;
+          margin-top: 2.25rem;
+          margin-left: 20px;
+          margin-right: 20px;
           height:auto;
-          margin: 0 auto;
         }
     </style>
 </head>
@@ -638,23 +638,23 @@ box-shadow: #ddd 3px 3px;
     {{~it:swipdata }} {{?swipdata.ttype==='0'}}
     <div class="aui-slide-node open-win" win="active" param='{"ActiveId":"{{= swipdata.Id }}"}'>
       <div class="bg-blur">
-        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://app.lanjiguoji:8088/{{= swipdata.PicShow}}" class="" /></div>
+        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
       <div class="content-front">
-         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://app.lanjiguoji:8088/{{= swipdata.PicShow}}" class="" /></div>
+         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
     </div>
     {{??swipdata.ttype==='1'}}
     <div class="aui-slide-node open-win" win="ware" param='{"wareId":"{{= swipdata.Id }}"}'>
       <div class="bg-blur">
-        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://app.lanjiguoji:8088/{{= swipdata.PicShow}}" class="" /></div>
+        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
       <div class="content-front">
-         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://app.lanjiguoji:8088/{{= swipdata.PicShow}}" class="" /></div>
+         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
     </div>
     {{??}}
     <div class="aui-slide-node open-win" win="warelist" param='{"warelistId":"{{= swipdata.Id }}"}'>
       <div class="bg-blur">
-        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://app.lanjiguoji:8088/{{= swipdata.PicShow}}" class="" /></div>
+        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
       <div class="content-front">
-         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://app.lanjiguoji:8088/{{= swipdata.PicShow}}" class="" /></div>
+         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
     </div>
     {{?}} {{~}}
 </script>
@@ -664,7 +664,7 @@ box-shadow: #ddd 3px 3px;
         <div class="matrix">
             <div class="matrixcell">
                 <div class="aui-grid-label">
-                    <img onload="fnCacheImage(this)" src="../image/home/remaitu_01.png" class="thum" data-url="http://app.lanjiguoji:8088/{{= data.Thumbnail}}">
+                    <img onload="fnCacheImage(this)" src="../image/home/remaitu_01.png" class="thum" data-url="http://132.232.190.152:8088/{{= data.Thumbnail}}">
                     <div class="name">{{= data.WareName}}</div>
                     <div class="info"><span class="rmb"><i>RMB</i></span> {{= data.PromotionPrice }}<i><span class="rmb">原价</span><span class="yuanjia">￥{{= data.Price }}</span></i></div>
                     <div class="ljgmdiv">
@@ -679,7 +679,7 @@ box-shadow: #ddd 3px 3px;
     {{~ it:data }}
     <div class="item Fix hightitem open-win" win="ware" param='{"wareId":"{{= data.Id }}"}'>
         <div class="cnt">
-            <img onload="fnCacheImage(this)" src="../image/home/remaitu_01.png" id="thumbnail_{{= data.Id }}" class="pic" data-url="http://app.lanjiguoji:8088/{{= data.Thumbnail}}" />
+            <img onload="fnCacheImage(this)" src="../image/home/remaitu_01.png" id="thumbnail_{{= data.Id }}" class="pic" data-url="http://132.232.190.152:8088/{{= data.Thumbnail}}" />
             <div class="wrap">
                 <div class="wrap2">
                     <div class="content">
@@ -1060,7 +1060,7 @@ box-shadow: #ddd 3px 3px;
 
     function fnOpenScanner() {
 
-        if (!$api.getStorage('userInfo')) {
+      /*  if (!$api.getStorage('userInfo')) {
             api.openWin({
                 name: 'login',
                 url: 'login.html',
@@ -1068,7 +1068,7 @@ box-shadow: #ddd 3px 3px;
                     name: ''
                 }
             });
-        } else {
+        } else {*/
             var fnscanner = api.require('FNScanner');
             fnscanner.open({
                 autorotation: true
@@ -1116,6 +1116,15 @@ box-shadow: #ddd 3px 3px;
                     //先判断ret.content的用户是否存在jiapu表
                     //如果存在再将推荐用户存入jiapubefore表
                     if (ret.content.substr(0, 5) == 'lanji') {
+                      if (!$api.getStorage('userInfo')) {
+                            api.openWin({
+                                name: 'login',
+                                url: 'login.html',
+                                pageParam: {
+                                    name: ''
+                                }
+                            });
+                        } else{
                         isAuth = $api.getStorage('userInfo').IsAuth; //先验证后扫描
 
                         if (!isAuth) {
@@ -1156,9 +1165,10 @@ box-shadow: #ddd 3px 3px;
                             });
                         }
                     }
+                  }
                 }
             });
-        }
+        //}
     }
 
     /*扫描推荐end*/
