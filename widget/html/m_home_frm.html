@@ -469,13 +469,15 @@ box-shadow: #ddd 3px 3px;
             -ms-filter: blur(15px);
             filter: blur(15px);
             margin: 0 auto;
+            z-index: 10;
         }
         .content-front {
-          position:relative;
-          margin-top: 2.25rem;
-          margin-left: 20px;
-          margin-right: 20px;
+          position:absolute;;
+          top: 2.25rem;
+          left: 20px;
+          right: 20px;
           height:auto;
+          z-index: 0;
         }
     </style>
 </head>
@@ -645,9 +647,9 @@ box-shadow: #ddd 3px 3px;
     {{??swipdata.ttype==='1'}}
     <div class="aui-slide-node open-win" win="ware" param='{"wareId":"{{= swipdata.Id }}"}'>
       <div class="bg-blur">
-        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
+        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.MainPicture0}}" class="" /></div>
       <div class="content-front">
-         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
+         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.MainPicture0}}" class="" /></div>
     </div>
     {{??}}
     <div class="aui-slide-node open-win" win="warelist" param='{"warelistId":"{{= swipdata.Id }}"}'>
