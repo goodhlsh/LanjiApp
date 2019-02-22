@@ -214,34 +214,34 @@
             <div id="discount" class="value">可参与</div>
         </div>
         <div id="jiepic0" class="picture">
-            <img  src="" />
+            <img  src="../image/default_square.png" />
         </div>
         <div id="jiepic1" class="picture">
-            <img  src="" />
+            <img  src="../image/default_square.png" />
         </div>
         <div id="jiepic2"  class="picture">
-            <img src="" />
+            <img src="../image/default_square.png" />
         </div>
         <div id="jiepic3" class="picture">
-            <img src="" />
+            <img src="../image/default_square.png" />
         </div>
         <div id="jiepic4"  class="picture">
-            <img src="" />
+            <img src="../image/default_square.png" />
         </div>
         <div id="jiepic5" class="picture">
-            <img src="" />
+            <img src="../image/default_square.png" />
         </div>
         <div id="jiepic6" class="picture">
-            <img src="" />
+            <img src="../image/default_square.png" />
         </div>
         <div id="jiepic7" class="picture">
-            <img src="" />
+            <img src="../image/default_square.png" />
         </div>
         <div  id="jiepic8" class="picture">
-            <img src="" />
+            <img src="../image/default_square.png" />
         </div>
         <div  id="jiepic9" class="picture">
-            <img src="" />
+            <img src="../image/default_square.png" />
         </div>
 
 
@@ -334,56 +334,56 @@
         var pic8 = $api.byId('jiepic8');
         var pic9 = $api.byId('jiepic9');
 
-        if (ware_.JiePic0) {
+        if (ware_.JiePic0!=null) {
             fnLoadImage(pic0, ware_.JiePic0);
         } else {
-            pic4.display = 'none';
+            pic0.display = 'none';
         }
-        if (ware_.JiePic1) {
+        if (ware_.JiePic1!=null) {
             fnLoadImage(pic1, ware_.JiePic1);
         } else {
-            pic4.display = 'none';
+            pic1.display = 'none';
         }
-        if (ware_.JiePic2) {
+        if (ware_.JiePic2!=null) {
             fnLoadImage(pic2, ware_.JiePic2);
         } else {
-            pic4.display = 'none';
+            pic2.display = 'none';
         }
-        if (ware_.JiePic3) {
+        if (ware_.JiePic3!=null) {
             fnLoadImage(pic3, ware_.JiePic3);
             //pic3.src = ware_.Picture3;
         } else {
             pic3.display = 'none';
         }
-        if (ware_.JiePic4) {
+        if (ware_.JiePic4!=null) {
             fnLoadImage(pic4, ware_.JiePic4);
         } else {
             pic4.display = 'none';
         }
-        if (ware_.JiePic5) {
+        if (ware_.JiePic5!=null) {
             fnLoadImage(pic5, ware_.JiePic5);
         } else {
             pic5.display = 'none';
         }
-        if (ware_.JiePic6) {
+        if (ware_.JiePic6!=null) {
             fnLoadImage(pic6, ware_.JiePic6);
         } else {
-            pic5.display = 'none';
+            pic6.display = 'none';
         }
-        if (ware_.JiePic7) {
+        if (ware_.JiePic7!=null) {
             fnLoadImage(pic7, ware_.JiePic7);
         } else {
-            pic5.display = 'none';
+            pic7.display = 'none';
         }
-        if (ware_.JiePic8) {
+        if (ware_.JiePic8!=null) {
             fnLoadImage(pic8, ware_.JiePic8);
         } else {
-            pic5.display = 'none';
+            pic8.display = 'none';
         }
-        if (ware_.JiePic9) {
+        if (ware_.JiePic9!=null) {
             fnLoadImage(pic9, ware_.JiePic9);
         } else {
-            pic5.display = 'none';
+            pic9.display = 'none';
         }
         // 更新轮播图中的图片
         if (ware_.MainPicture0) {
