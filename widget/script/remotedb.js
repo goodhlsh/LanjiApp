@@ -6,12 +6,13 @@
  function fnGetDataUrl() {
      if (false) {
          //return "http://app.lanjiguoji.com:1693/api/";
-         return "http://132.232.190.152:1693/api/";
+         //return "http://132.232.190.152:1693/api/";
+         return "http://192.168.0.203:1693/api/";
      } else {
-         return "http://132.232.190.152:1693/api/";
+         //return "http://132.232.190.152:1693/api/";
          //return "http://app.lanjiguoji.com:1693/api/";
          //return "http://192.168.0.128:1693/api/";
-         //return "http://192.168.0.203:1693/api/";
+         return "http://192.168.0.203:1693/api/";
          //return "http://172.31.244.108:1693/api/";
      }
  };
