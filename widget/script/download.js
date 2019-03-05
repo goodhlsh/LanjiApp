@@ -41,7 +41,8 @@ function fnLoadImage(imgObj_, url_) {
         path: imgDir + '/'+imgSha1 + expname
     }, function(ret, err) {
         if (ret.exist) {
-            $api.attr(imgObj_, "src", imgDir + '/'+imgSha1 + expname);
+            $api.attr(imgObj_, 'src', imgDir + '/'+imgSha1 + expname);
+            //alert(imgDir + '/'+imgSha1 + expname);
         } else {
             api.download({
                 url: 'http://192.168.0.203:8088'+url_,
@@ -52,7 +53,7 @@ function fnLoadImage(imgObj_, url_) {
                 allowResume: true
             }, function(ret, err) {
                 if (ret.state == 1) {
-                    //  alert('下载成功！')
+                      //alert('下载成功！')
                     $api.attr(imgObj_, "src", ret.savePath);
                 }else {
                 }

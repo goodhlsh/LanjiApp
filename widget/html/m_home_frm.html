@@ -646,16 +646,16 @@ box-shadow: #ddd 3px 3px;
     {{??swipdata.ttype==='1'}}
     <div class="aui-slide-node open-win" win="ware" param='{"wareId":"{{= swipdata.Id }}"}'>
       <div class="bg-blur">
-        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
+        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://192.168.0.203:8088/{{= swipdata.PicShow}}" class="" /></div>
       <div class="content-front">
-         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
+         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://192.168.0.203:8088/{{= swipdata.PicShow}}" class="" /></div>
     </div>
     {{??}}
     <div class="aui-slide-node open-win" win="warelist" param='{"warelistId":"{{= swipdata.Id }}"}'>
       <div class="bg-blur">
-        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
+        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://192.168.0.203:8088/{{= swipdata.PicShow}}" class="" /></div>
       <div class="content-front">
-         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
+         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://192.168.0.203:8088/{{= swipdata.PicShow}}" class="" /></div>
     </div>
     {{?}} {{~}}
 </script>
@@ -665,7 +665,7 @@ box-shadow: #ddd 3px 3px;
         <div class="matrix">
             <div class="matrixcell">
                 <div class="aui-grid-label">
-                    <img onload="fnCacheImage(this)" src="../image/home/remaitu_01.png" class="thum" data-url="http://132.232.190.152:8088/{{= data.Thumbnail}}">
+                    <img onload="fnCacheImage(this)" src="../image/home/remaitu_01.png" class="thum" data-url="http://192.168.0.203:8088/{{= data.Thumbnail}}">
                     <div class="name">{{= data.WareName}}</div>
                     <div class="info"><span class="rmb"><i>RMB</i></span> {{= data.PromotionPrice }}<i><span class="rmb">原价</span><span class="yuanjia">￥{{= data.Price }}</span></i></div>
                     <div class="ljgmdiv">
@@ -748,9 +748,10 @@ box-shadow: #ddd 3px 3px;
         fnInitLikeList(keyword, 0, 20);
         // 初始化事件监听
         initEventListenter();
-        // 初始化下拉刷新
+        // 初始化设置下拉刷新
         initRefresh();
-        //api.refreshHeaderLoading();
+        //自动设置为下拉刷新
+        api.refreshHeaderLoading();
     };
     /*搜索框--begin*/
     var searchBar = document.querySelector(".aui-searchbar");
@@ -813,10 +814,10 @@ box-shadow: #ddd 3px 3px;
             'skip': _skip,
             'limit': swipLIMIT
         }, function(ret, err) {
-  //            console.log(JSON.stringify(ret));
+            // console.log(JSON.stringify(ret));
             if (ret) {
                 api.hideProgress();
-                api.refreshHeaderLoadDone();
+              //  api.refreshHeaderLoadDone();
                 fnShowSwipList(ret);
 
             } else {
@@ -913,7 +914,7 @@ box-shadow: #ddd 3px 3px;
 //          console.log(JSON.stringify(ret));
             if (ret) {
                 api.hideProgress();
-                api.refreshHeaderLoadDone();
+                //api.refreshHeaderLoadDone();
                 fnShowRemaiList(ret);
             }
         });
@@ -943,7 +944,7 @@ box-shadow: #ddd 3px 3px;
             //  console.log(JSON.stringify(ret));
             if (ret) {
                 api.hideProgress();
-                api.refreshHeaderLoadDone();
+                //api.refreshHeaderLoadDone();
                 fnShowLikeList(ret);
             } else {
                 console.log(JSON.stringify(err));
@@ -1032,10 +1033,14 @@ box-shadow: #ddd 3px 3px;
             keyword = $api.getStorage('keyword') != null ? $api.getStorage('keyword') : "";
             //按最近一次搜索的商品给出喜欢的商品
             fnInitLikeList(keyword, 0, 20);
+
+
             //用户信息更新
             if ($api.getStorage('userInfo')) {
                 fnInitUserInfo();
             }
+            //第一次加载完毕
+            api.refreshHeaderLoadDone();
         });
     }
     //从后台更新本地存储
