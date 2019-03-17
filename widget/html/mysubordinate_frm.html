@@ -25,9 +25,10 @@
   </section>
 </body>
 <script type="text/template" id="template">
+   <!--只显示下级两层-->
     {{for(var i=0;i
-    <it[0].levelMax;i++){}}
-    <li class="aui-list-item aui-collapse-header" tapmode>
+    <2;i++){}}
+      <li class="aui-list-item aui-collapse-header" tapmode>
         <div class="aui-list-item-inner">
             <div class="aui-list-item-title">{{=i+1}}级下属</div>
             <div class="aui-list-item-right">
@@ -35,7 +36,7 @@
             </div>
         </div>
         </li>
-        <div class="aui-collapse-content">
+      <div class="aui-collapse-content">
         {{?i===0}} {{for(var j=0;j
         <it.length;j++){}} {{?it[j].levelMan===i+1}}
             <li class="aui-list-item" tapmode onclick="fnShowList()">
@@ -44,7 +45,9 @@
                     <div class="aui-list-item-right">{{=it[j].levelName}}</div>
                 </div>
             </li>
-            {{?}} {{}}} {{??}} {{for(var j=0;j
+            {{?}} {{}}}
+            {{??}}
+            {{for(var j=0;j
             <it.length;j++){}} {{?it[j].levelMan===i+1}}
                 <li class="aui-list-item">
                     <div class="aui-list-item-inner">
@@ -52,7 +55,37 @@
                         <div class="aui-list-item-right">{{=it[j].levelName}}</div>
                     </div>
                 </li>
-                {{?}} {{}}} {{?}} </div>{{}}}
+                {{?}} {{}}} {{?}}
+      </div>
+    {{}}}
+              <!--  {{for(var i=0;i
+                <it[0].levelMax;i++){}}
+                <li class="aui-list-item aui-collapse-header" tapmode>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-title">{{=i+1}}级下属</div>
+                        <div class="aui-list-item-right">
+                            <i class="aui-iconfont aui-icon-unfold"></i>
+                        </div>
+                    </div>
+                    </li>
+                    <div class="aui-collapse-content">
+                    {{?i===0}} {{for(var j=0;j
+                    <it.length;j++){}} {{?it[j].levelMan===i+1}}
+                        <li class="aui-list-item" tapmode onclick="fnShowList()">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-title">{{=it[j].trueName}}</div>
+                                <div class="aui-list-item-right">{{=it[j].levelName}}</div>
+                            </div>
+                        </li>
+                        {{?}} {{}}} {{??}} {{for(var j=0;j
+                        <it.length;j++){}} {{?it[j].levelMan===i+1}}
+                            <li class="aui-list-item">
+                                <div class="aui-list-item-inner">
+                                    <div class="aui-list-item-title">{{=it[j].trueName}}</div>
+                                    <div class="aui-list-item-right">{{=it[j].levelName}}</div>
+                                </div>
+                            </li>
+                            {{?}} {{}}} {{?}} </div>{{}}} -->
                 <!--
     {{for(var i=0;i
     <it[0].levelMax;i++){}} <li class="aui-list-header">

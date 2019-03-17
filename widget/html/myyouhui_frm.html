@@ -226,8 +226,9 @@
 </body>
 <script type="text/template" id="template">
     {{~it:value:index}}
+    {{?it.UseStatus}}
     <div class="contain">
-        <div class="coupon" tapmode onclick="changecolor(this,'{{=value.Id}}')">
+        <div class="coupon fontcolor">
             <div class="coupon-left">
                 <div class="coupon-inner coupon-left-inner">
                     <div class="coupon-money">
@@ -253,6 +254,35 @@
         </div>
     </div>
     <div class="splite"></div>
+    {{??}}
+    <div class="contain">
+        <div class="coupon">
+            <div class="coupon-left">
+                <div class="coupon-inner coupon-left-inner">
+                    <div class="coupon-money">
+                        <div class='coupon-left-inner-top belongTo' style="font-size: 16px">{{=value.YHPiCiName}}</div>
+                        <div class="sum " style="font-size:10px">有效期：{{=value.ValidDate}}</div>
+                    </div>
+                    <div class="coupon-condition">
+                        <span style="font-size: 30px">{{=value.DiscouMoney}}</span><span style="font-size: 12px">{{=value.TypeName}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="coupon-right">
+                <div class="coupon-inner">
+                    <div class="coupon-time">
+                        优<br/> 惠
+                        <br/> 券
+                    </div>
+                    <i class="coupon-circle top"></i>
+                    <i class="coupon-circle bottom"></i>
+                    <div class="center-circle center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="splite"></div>
+    {{?}}
     {{~}}
 </script>
 <script type="text/javascript" src="../script/api.js"></script>
@@ -264,15 +294,14 @@
     apiready = function() {
         fnReady();
         // 初始化事件监听
-        initEventListenter();
+        //initEventListenter();
         // 初始化下拉刷新
-        initRefresh();
+        //initRefresh();
 
-        // 获取商品列表
+        // 获取券列表
         fnGetList(false);
     };
-    var skip = 0,
-        LIMIT = 20;
+
 
     function initEventListenter() {
         // 监听滚动到Frame底部的事件
@@ -282,7 +311,7 @@
                 threshold: 300 // 距离底部还有多少触发scrolltobottom事件
             }
         }, function(ret, err) {
-            // 获取更多的商品
+            // 获取更多的
             fnGetList(true);
         });
     }
@@ -312,24 +341,17 @@
                 modal: false
             });
         }
-        // 如果是加载更多，需要实现分页
-        if (loadMore_) {
-            skip += LIMIT;
-        } else {
-            skip = 0;
-        }
+
         // 优惠列表
         var filter = {
             where: {
-
-            },
-            skip: skip,
-            limit: LIMIT
+                Id: $api.getStorage('userInfo').Id
+            }
         }
-        fnGet('Spl_YouHui/GetList', filter, function(ret, err) {
+        fnGet('Spl_YouHui/GetMyList', filter, function(ret, err) {
             if (ret ) {
                 // 恢复下拉刷新的状态
-                api.refreshHeaderLoadDone();
+                //api.refreshHeaderLoadDone();
 
                 // 在界面中更新商品列表显示
                 fnUpdateList(ret, loadMore_);
@@ -385,27 +407,7 @@
             return;
         }
         $api.addCls(id_, 'fontcolor');
-        var data = {
-            body: JSON.stringify({
-                UserId: $api.getStorage('userInfo').Id,
-                YouHuiId: model_
-            })
-        };
-        fnPost('Spl_YouHui/PostYouHui', data, 'application/json', false, false, function(ret, err) {
-console.log(JSON.stringify(ret));
-            if (ret) {
-                api.alert({
-                    title: '消息',
-                    msg: '恭喜亲获得该优惠券，请尽快使用！',
-                }, function(ret1, err1) {});
-            }else{
-              api.alert({
-                  title: '消息',
-                  msg: '您已获得该优惠券',
-              }, function(ret, err){
-              });
-            }
-        });
+
     }
 </script>
 
