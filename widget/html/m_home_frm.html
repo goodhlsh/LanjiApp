@@ -472,11 +472,16 @@ box-shadow: #ddd 3px 3px;
         }
         .content-front {
           position:absolute;;
-          top: 80px;
+          top: 72px;
           left: 20px;
           right: 20px;
+          width: auto;
           height:auto;
           z-index: 0;
+        }
+        .content-front img{
+          width: 100%;
+          height: auto;
         }
     </style>
 </head>
@@ -646,16 +651,16 @@ box-shadow: #ddd 3px 3px;
     {{??swipdata.ttype==='1'}}
     <div class="aui-slide-node open-win" win="ware" param='{"wareId":"{{= swipdata.Id }}"}'>
       <div class="bg-blur">
-        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://192.168.0.203:8088/{{= swipdata.PicShow}}" class="" /></div>
+        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
       <div class="content-front">
-         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://192.168.0.203:8088/{{= swipdata.PicShow}}" class="" /></div>
+         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
     </div>
     {{??}}
     <div class="aui-slide-node open-win" win="warelist" param='{"warelistId":"{{= swipdata.Id }}"}'>
       <div class="bg-blur">
-        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://192.168.0.203:8088/{{= swipdata.PicShow}}" class="" /></div>
+        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
       <div class="content-front">
-         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://192.168.0.203:8088/{{= swipdata.PicShow}}" class="" /></div>
+         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
     </div>
     {{?}} {{~}}
 </script>
@@ -665,7 +670,7 @@ box-shadow: #ddd 3px 3px;
         <div class="matrix">
             <div class="matrixcell">
                 <div class="aui-grid-label">
-                    <img onload="fnCacheImage(this)" src="../image/home/remaitu_01.png" class="thum" data-url="http://192.168.0.203:8088/{{= data.Thumbnail}}">
+                    <img onload="fnCacheImage(this)" src="../image/home/remaitu_01.png" class="thum" data-url="http://132.232.190.152:8088/{{= data.Thumbnail}}">
                     <div class="name">{{= data.WareName}}</div>
                     <div class="info"><span class="rmb"><i>RMB</i></span> {{= data.PromotionPrice }}<i><span class="rmb">原价</span><span class="yuanjia">￥{{= data.Price }}</span></i></div>
                     <div class="ljgmdiv">
@@ -747,7 +752,7 @@ box-shadow: #ddd 3px 3px;
         //按最近一次搜索的商品给出喜欢的商品
         fnInitLikeList(keyword, 0, 20);
         // 初始化事件监听
-        initEventListenter();
+      //  initEventListenter();
         // 初始化设置下拉刷新
         initRefresh();
         //自动设置为下拉刷新
@@ -988,10 +993,12 @@ box-shadow: #ddd 3px 3px;
             }
         }, function(ret, err) {
             // 获取更多的商品
-            if (skip > 10) {
+            if (skip >=0 && skip<=30) {
+              console.log(skip);
                 skip = skip + limit;
-                limit += 10;
+                //limit += 10;
             }
+            console.log(skip);
             fnInitLikeList(keyword, skip, limit);
         });
 
@@ -1046,11 +1053,11 @@ box-shadow: #ddd 3px 3px;
     //从后台更新本地存储
     function fnInitUserInfo() {
         var filter = {
-            where: {
+            'where': {
                 Id: $api.getStorage('userInfo').Id
             },
-            skip: 0,
-            limit: 1
+            'skip': 0,
+            'limit': 1
         }
         fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
             if (ret) {

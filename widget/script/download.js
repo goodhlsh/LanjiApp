@@ -14,8 +14,8 @@ function fnLoadOnlyImage(url_,callback) {
           callback(imgDir + '/'+imgSha1 + expname,ret,err);
         } else {
             api.download({
-                //url: 'http://132.232.190.152:8088'+url_,
-                url: 'http://192.168.0.203:8088'+url_,
+                url: 'http://132.232.190.152:8088'+url_,
+                //url: 'http://192.168.0.203:8088'+url_,
                 savePath: imgDir + '/'+imgSha1 + expname,
                 report: true,
                 cache: true,
@@ -45,8 +45,8 @@ function fnLoadImage(imgObj_, url_) {
             //alert(imgDir + '/'+imgSha1 + expname);
         } else {
             api.download({
-                url: 'http://192.168.0.203:8088'+url_,
-                //url: 'http://132.232.190.152:8088'+url_,
+                //url: 'http://192.168.0.203:8088'+url_,
+                url: 'http://132.232.190.152:8088'+url_,
                 savePath: imgDir + '/'+imgSha1 + expname,
                 report: true,
                 cache: true,
