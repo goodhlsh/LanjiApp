@@ -13,7 +13,7 @@
             height: 100%;
             background-position: center;
             background-repeat: no-repeat;
-            background-image: url('../image/my/mingpian.png');
+            background-image: url('../image/my/softdown.png');
             background-size: cover;
         }
 
@@ -83,7 +83,7 @@
     </header>
     <section>
         <div id="extCore" class="card-extend">
-            <img id="qrCore" src="" width="200" height="200" srcs="http://app.lanjiguoji.com:1693/iis-85.png" class="imgCache"  ontouchstart="gtouchstart(this)" ontouchmove="gtouchmove()" ontouchend="gtouchend()"></img>
+            <img id="qrCore" src="" width="200" height="200" srcs="http://132.232.190.152:1693/lanjiapp.png" class="imgCache"  ontouchstart="gtouchstart(this)" ontouchmove="gtouchmove()" ontouchend="gtouchend()"></img>
         </div>
     </section>
 </body>
@@ -96,7 +96,7 @@
         fnReady();
         //  fnLoadImage();
         qrCore = $api.byId('qrCore');
-        fnLoadImage(qrCore,'/iis-85.png');
+        fnLoadImage(qrCore,'/lanjiapp.png');
         //IMGcache();
     }
     var qrCore;
@@ -105,16 +105,16 @@
         var imgDir = "fs://images/";
         var extCore = $api.byId('extCore');
         var srcs = $api.domAll(extCore, 'img.imgCache');
-        console.log(srcs.length);
+        //console.log(srcs.length);
         if (srcs.length > 0) {
             var imgObj = $api.first(extCore, 'img.imgCache'); // srcs.first();
             var imgUrl = $api.attr(imgObj, "srcs");
 
             var imgSha1 = sha1(imgUrl);
-            console.log(imgSha1);
-            console.log($api.getStorage("imgcache" + imgSha1));
+            //console.log(imgSha1);
+            //.log($api.getStorage("imgcache" + imgSha1));
             if ($api.getStorage("imgcache" + imgSha1) == undefined) {
-                console.log(imgUrl);
+              //  console.log(imgUrl);
 
                 api.download({
                     url: imgUrl,
@@ -122,14 +122,14 @@
                     cache: false,
                     allowResume: true
                 }, function(ret, err) {
-                    console.log(JSON.stringify(ret));
+                    //console.log(JSON.stringify(ret));
                     if (ret.state == 1) {
                         var trans = api.require('trans');
                         trans.decodeImgToBase64({
                             imgPath: ret.savePath
                         }, function(ret1, err1) {
                             if (ret1.status) {
-                                console.log(ret1.base64Str);
+                            //    console.log(ret1.base64Str);
                                 $api.attr(imgObj, "src", "data:image/png;base64," + ret1.base64Str);
                                 $api.removeCls(imgObj, "imgCache");
                                 $api.setStorage("imgcache" + imgSha1, "data:image/png;base64," + ret1.base64Str);

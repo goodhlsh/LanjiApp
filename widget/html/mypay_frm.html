@@ -147,7 +147,7 @@
             limit: 1,
             skip: 0
         };
-        fnGet('SysFirst/GetCurrrentFirst', filter, function(ret, err) {
+        fnGet('SysFirst/GetCurrentFirst', filter, function(ret, err) {
             if (ret) {
                 $api.setStorage('currentFirst', ret);
             } else {
@@ -632,6 +632,7 @@
                     });
                     order_one = ret;
                     $api.rmStorage('shoppingcart');
+                    //清除本地购物车表中已购商品
                     $db.delete_true('shoppingCart', 'select');
                 } else {
                     api.alert({

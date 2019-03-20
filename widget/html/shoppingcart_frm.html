@@ -103,7 +103,7 @@
         }
 
         .ware .info .price-tag .unit {
-            padding:2px 5px;
+            padding: 2px 5px;
             border-radius: 15px;
             box-shadow: 0 1px 1px 1px #eee;
             color: #fff;
@@ -316,9 +316,10 @@
             text-align: right;
             line-height: 14px;
         }
-        .splite_1{
-          height: 1px;
-          background: #eee;
+
+        .splite_1 {
+            height: 1px;
+            background: #eee;
         }
     </style>
 </head>
@@ -356,12 +357,12 @@
     <div id="ware_{{=value.Id}}" class="ware">
         <div class="content" tapmode onclick="fnOpenWareWin('{{=value.Id}}');">
             <div id="select_{{=value.Id}}" class="{{=value.WareState}}" onclick="fnSetSelect('{{=value.Id}}');"></div>
-            <img  onload="fnLoadImage(this,'{{=value.Thumbnail}}')" class="thumbnail" src="{{=value.Thumbnail}}">
+            <img onload="fnLoadImage(this,'{{=value.Thumbnail}}')" class="thumbnail" src="{{=value.Thumbnail}}">
             <div class="info">
                 <div class="name">{{=value.Name}}</div>
                 <div class="price-tag">
                     <span class="name">￥{{=value.Price}} 元</span>
-                    <div class="price">优惠情况：<span  class="unit">{{? value.YHPiCiName}}有{{??}}{{?}}</span></div>
+                    <div class="price">优惠情况：<span class="unit">{{? value.YHPiCiName}}有{{??}}{{?}}</span></div>
                 </div>
             </div>
         </div>
@@ -406,7 +407,6 @@
             fnShowWareList(false);
             //购物车没有商品
             fnSetWareCountAndAmount(0, 0);
-
         }
     }
     //存放购物车内商品
@@ -466,7 +466,6 @@
                 wares.push(wareList_[i].wareId);
             }
         }
-
         var filter = {
             where: {
                 'id': JSON.stringify(wares) //多个商品id
@@ -475,7 +474,7 @@
             limit: wares.length
         }
         fnGet('Spl_Ware/GetAllByShopCart', filter, function(ret, err) {
-            if (ret&&ret.type!=0) {
+            if (ret && ret.type != 0) {
                 for (var i = 0; i < ret.length; i++) {
                     for (var j = 0; j < wareList_.length; j++) {
                         if (ret[i].Id == wareList_[j].wareId) {
@@ -485,19 +484,20 @@
                     }
                 }
                 api.hideProgress();
-
                 // 显示出购物车中的商品列表
                 fnUpdateWareListByShoppingCart(ret);
-
                 // 保存为当前页面的购物车信息，便于在当前页面中添加或删除商品时操作，
                 //商品数量为0时，会从购物车表中删除数据，此变量需重新赋值
                 curShoppingCart = ret;
                 $api.setStorage('shoppingcart', ret);
-
                 // 计算购物车中的商品总数及总金额
                 fnGetShoppingCartAmount(ret);
             } else {
-
+                api.toast({
+                    msg: '数据加载失败！',
+                    duration: 2000,
+                    location: 'bottom'
+                });
             }
         });
     }

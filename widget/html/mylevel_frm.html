@@ -101,7 +101,7 @@
             limit: 1,
             skip: 0
         };
-        fnGet('SysFirst/GetCurrrentFirst', filter, function(ret, err) {
+        fnGet('SysFirst/GetCurrentFirst', filter, function(ret, err) {
             if (ret) {
                 $api.setStorage('currentFirst', ret);
             } else {
@@ -125,7 +125,7 @@
                 $api.setStorage('currentwallet', ret);
             } else {
                 $api.rmStorage('currentwallet');
-                
+
             }
         });
     }

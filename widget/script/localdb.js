@@ -93,7 +93,8 @@
                 sql: 'DELETE FROM ' + tableName + ' WHERE wareId=\"' + wareId_ + '\"'
             });
         }
-        u.delete_true=function(tableName,wareState_){
+        //完成购买的商品从表中删除
+    u.delete_true=function(tableName,wareState_){
           u.init();
           return db.executeSqlSync({
               name: dbName,

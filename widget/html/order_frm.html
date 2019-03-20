@@ -290,7 +290,7 @@
                 <input id="youhuicode" class="input" type="text" placeholder="">
             </div>
             <div id="youhuiother" class="value value-1">0</div>
-            <div id="youhuiqueren" class="aui-btn aui-btn-info  r20" tapmode="highlight" onclick="IsOkWare();">验证券码</div>
+            <div id="youhuiqueren" class="aui-btn aui-btn-info  r20" tapmode="highlight" onclick="IsOkWare()">验证券码</div>
         </div>
 
         <div class="row">
@@ -308,12 +308,13 @@
         <div class="row-1">
             <div class="value value-2">实付款：&nbsp;¥<span class="color" id="shifu">0.0</span></div>
         </div>
-    </section>
-    <div class="aui-bar aui-bar-btn ">
-        <div class="aui-bar-btn-item  aui-btn-primary    aui-font-size-14  open-win" win="mypay" param='{"flagIndex":"ok"}'>
-            确认订单<i class="aui-iconfont aui-icon-sponsor aui-padded-l-5 aui-font-size-20"></i>
+
+        <div class="aui-bar aui-bar-btn ">
+            <div class="aui-bar-btn-item  aui-btn-primary    aui-font-size-14  open-win" win="mypay" param='{"flagIndex":"ok"}'>
+                确认订单<i class="aui-iconfont aui-icon-sponsor aui-padded-l-5 aui-font-size-20"></i>
+            </div>
         </div>
-    </div>
+    </section>
 </body>
 <script type="text/template" id="template">
     {{~it:value:index}}
@@ -410,209 +411,204 @@
             }
         }
         fnGet('Spl_YouHui/GetByCode', filter, function(ret, err) {
-                    if (ret) {
-                        youhuivalue = ret.DiscouMoney;
-                        api.sendEvent({
-                            name: 'setyouhuiother',
-                            extra: {
-                                yhvalue: youhuivalue
-                            }
-                        });
+            if (ret) {
+                youhuivalue = ret.DiscouMoney;
+                api.sendEvent({
+                    name: 'setyouhuiother',
+                    extra: {
+                        yhvalue: youhuivalue
                     }
+                });
+            }
+        });
+    }
+    //从后台更新本地存储
+    function fnInitUserInfo() {
+        var filter = {
+            where: {
+                Id: $api.getStorage('userInfo').Id
+            },
+            skip: 0,
+            limit: 1
+        }
+        fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('userInfo', ret);
+            } else {
+                $api.rmStorage('userInfo');
+            }
+        });
+    }
+
+    function fnInitEvent() {
+        api.addEventListener({
+            name: 'setyouhuiother'
+        }, function(ret, err) {
+            if (ret) {
+                fnSetYouOther(ret.value.yhvalue);
+            } else {
+
+            }
+        });
+    }
+
+    function fnSetYouOther(val) {
+        $api.html(youhuiother, val);
+        //优惠根据政策
+        //实付=商品金额*优惠折扣+运费-优惠券优惠的金额
+        shifu.innerHTML = parseFloat(amount.innerText) * parseFloat(youhui.innerText) + parseFloat(yunfei.innerText) - parseFloat(youhuiother.innerText);
+        $api.setStorage('dingdankuan', shifu.innerHTML);
+    }
+    var consignee, mobile, type, address, currentF;
+
+    function fnInitAddress() {
+        consignee = $api.byId('consignee');
+        mobile = $api.byId('mobile');
+        type = $api.byId('type');
+        address = $api.byId('address');
+
+        fnGet('SysUser/GetDefaultAddress', {
+            where: {
+                userId: $api.getStorage('userInfo').Id,
+                Id: ''
+            },
+            skip: 0,
+            limit: 1
+        }, function(ret, err) {
+            if (ret && ret.type != 0) {
+                consignee.innerHTML = ret.TrueName;
+                mobile.innerHTML = ' ' + ret.Mobile;
+                switch (ret.Typs) {
+                    case '0':
+                        type.innerHTML = "【公司】";
+                        break;
+                    case '1':
+                        type.innerHTML = "【住宅】";
+                        break;
+                    case '2':
+                        type.innerHTML = "【学校】";
+                        break;
+                    default:
+                        type.innerHTML = "【其他地址】";
+                }
+                address.innerHTML = ret.Province + ret.City + ret.Street + '-' + ret.House;
+                $api.setStorage('AddressId', ret.Id);
+            }
+        });
+    }
+    // 被setaddressdetail_frame中调用
+    function setAddress(Id_) {
+        fnGet('SysUser/GetDefaultAddress', {
+            where: {
+                userId: $api.getStorage('userInfo').Id,
+                Id: Id_
+            },
+            skip: 0,
+            limit: 1
+        }, function(ret, err) {
+            if (ret && ret.type != 0) {
+                consignee.innerHTML = ret.TrueName;
+                mobile.innerHTML = ' ' + ret.Mobile;
+                switch (ret.Typs) {
+                    case '0':
+                        type.innerHTML = "【公司】";
+                        break;
+                    case '1':
+                        type.innerHTML = "【住宅】";
+                        break;
+                    case '2':
+                        type.innerHTML = "【学校】";
+                        break;
+                    default:
+                        type.innerHTML = "【其他地址】";
+                }
+                address.innerHTML = ret.Province + ret.City + ret.Street + '-' + ret.House;
+                $api.setStorage('AddressId', ret.Id);
+            }
+        });
+    }
+
+    var shifu, youhui, yunfei, jibie, youhuiother;
+    var isOk;
+
+    function fnInitOrder() {
+        if ($api.getStorage('shoppingcart')) {
+            var list = $api.byId('list');
+            // 编译模板函数
+            var tempFn = doT.template($api.byId('template').innerHTML);
+            var wares = $api.getStorage('shoppingcart');
+            var data_ = [];
+            for (var i = 0, j = 0; i < wares.length; i++) {
+                if (wares[i].WareState != 'select select-off') {
+                    data_[j] = wares[i];
+                    j++;
                 }
             }
-        //从后台更新本地存储
-        function fnInitUserInfo() {
-            var filter = {
-                where: {
-                    Id: $api.getStorage('userInfo').Id
-                },
-                skip: 0,
-                limit: 1
+
+            // 使用模板函数生成HTML文本
+            var resultHTML = tempFn(data_);
+            $api.html(list, resultHTML);
+
+            var count = $api.byId('count');
+            var amount = $api.byId('amount');
+            var amountValue = 0;
+            var countValue = 0;
+
+            for (var i = 0; i < data_.length; i++) {
+                countValue += parseInt(data_[i].WareCount);
+                amountValue += parseFloat(data_[i].Price) * parseInt(data_[i].WareCount);
             }
-            fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
-                if (ret) {
-                    $api.setStorage('userInfo', ret);
-                } else {
-                    $api.rmStorage('userInfo');
-                }
-            });
-        }
+            //amountValue = Math.round(amountValue * 10) / 10;
+            count.innerHTML = '总计：' + countValue + ' 件';
+            amount.innerHTML = amountValue;
 
-        function fnInitEvent() {
-            api.addEventListener({
-                name: 'setyouhuiother'
-            }, function(ret, err) {
-                if (ret) {
-                    fnSetYouOther(ret.value.yhvalue);
-                } else {
-
-                }
-            });
-        }
-
-        function fnSetYouOther(val) {
-            $api.html(youhuiother, val);
-        }
-        var consignee, mobile, type, address, currentF;
-
-        function fnInitAddress() {
-            consignee = $api.byId('consignee');
-            mobile = $api.byId('mobile');
-            type = $api.byId('type');
-            address = $api.byId('address');
-
-            fnGet('SysUser/GetDefaultAddress', {
-                where: {
-                    userId: $api.getStorage('userInfo').Id,
-                    Id: ''
-                },
-                skip: 0,
-                limit: 1
-            }, function(ret, err) {
-                if (ret && ret.type != 0) {
-                    consignee.innerHTML = ret.TrueName;
-                    mobile.innerHTML = ' ' + ret.Mobile;
-                    switch (ret.Typs) {
-                        case '0':
-                            type.innerHTML = "【公司】";
-                            break;
-                        case '1':
-                            type.innerHTML = "【住宅】";
-                            break;
-                        case '2':
-                            type.innerHTML = "【学校】";
-                            break;
-                        default:
-                            type.innerHTML = "【其他地址】";
-                    }
-                    address.innerHTML = ret.Province + ret.City + ret.Street + '-' + ret.House;
-                    $api.setStorage('AddressId', ret.Id);
-                }
-            });
-        }
-        // 被setaddressdetail_frame中调用
-        function setAddress(Id_) {
-            fnGet('SysUser/GetDefaultAddress', {
-                where: {
-                    userId: $api.getStorage('userInfo').Id,
-                    Id: Id_
-                },
-                skip: 0,
-                limit: 1
-            }, function(ret, err) {
-                if (ret && ret.type != 0) {
-                    consignee.innerHTML = ret.TrueName;
-                    mobile.innerHTML = ' ' + ret.Mobile;
-                    switch (ret.Typs) {
-                        case '0':
-                            type.innerHTML = "【公司】";
-                            break;
-                        case '1':
-                            type.innerHTML = "【住宅】";
-                            break;
-                        case '2':
-                            type.innerHTML = "【学校】";
-                            break;
-                        default:
-                            type.innerHTML = "【其他地址】";
-                    }
-                    address.innerHTML = ret.Province + ret.City + ret.Street + '-' + ret.House;
-                    $api.setStorage('AddressId', ret.Id);
-                }
-            });
-        }
-
-        var shifu, youhui, yunfei, jibie, youhuiother;
-        var isOkWare;
-
-        function fnInitOrder() {
-            if ($api.getStorage('shoppingcart')) {
-                var list = $api.byId('list');
-                // 编译模板函数
-                var tempFn = doT.template($api.byId('template').innerHTML);
-                var wares = $api.getStorage('shoppingcart');
-                var data_ = [];
-                for (var i = 0, j = 0; i < wares.length; i++) {
-                    if (wares[i].WareState != 'select select-off') {
-                        data_[j] = wares[i];
-                        j++;
-                    }
-                }
-
-                // 使用模板函数生成HTML文本
-                var resultHTML = tempFn(data_);
-                $api.html(list, resultHTML);
-
-                var count = $api.byId('count');
-                var amount = $api.byId('amount');
-                var amountValue = 0;
-                var countValue = 0;
-
-                for (var i = 0; i < data_.length; i++) {
-                    countValue += parseInt(data_[i].WareCount);
-                    amountValue += parseFloat(data_[i].Price) * parseInt(data_[i].WareCount);
-                }
-                //amountValue = Math.round(amountValue * 10) / 10;
-                count.innerHTML = '总计：' + countValue + ' 件';
-                amount.innerHTML = amountValue;
-
-                yunfei = $api.byId('yunfei');
-                shifu = $api.byId('shifu');
-                youhui = $api.byId('youhui');
-                jibie = $api.getStorage('userInfo').Jibie;
-                youhuiother = $api.byId('youhuiother');
-                currentF = $api.getStorage('currentFirst');
-                isOkWare = false; //全部商品满足优惠类型
-                if (currentF != null) {
-                    if (jibie == '8800会员') {
-                        if (currentF.currentFirst >= 8800) {
-                            $api.html(youhui, '0.5');
-                        } else {
-                            $api.html(youhui, '1.0');
-                        }
-                    } else if (jibie == '1314会员') {
-                        if (currentF.currentFirst >= 1314) {
-                            $api.html(youhui, '0.8');
-                        } else {
-                            $api.html(youhui, '1.0');
-                        }
+            yunfei = $api.byId('yunfei');
+            shifu = $api.byId('shifu');
+            youhui = $api.byId('youhui');
+            jibie = $api.getStorage('userInfo').Jibie;
+            youhuiother = $api.byId('youhuiother');
+            currentF = $api.getStorage('currentFirst');
+            isOk = false; //全部商品满足优惠类型
+            if (currentF != null) {
+                if (jibie == '8800会员') {
+                    if (currentF.currentFirst >= 8800) {
+                        $api.html(youhui, '0.5');
                     } else {
                         $api.html(youhui, '1.0');
-                        //判断首单
-                        if (currentF.currentFirst == 0 && currentF.updatetime == null) {
-                            if (isOkWare)) {
+                    }
+                } else if (jibie == '1314会员') {
+                    if (currentF.currentFirst >= 1314) {
+                        $api.html(youhui, '0.8');
+                    } else {
+                        $api.html(youhui, '1.0');
+                    }
+                } else {
+                    $api.html(youhui, '1.0');
+                    //判断首单
+                    if (currentF.currentFirst == 0 && currentF.updatetime == null) {
+                        if (isOk) {
                             var yh = $api.byId('yhother');
                             yh.style.display = 'block';
                         } else {
-                            api.toast({
-                                msg: '您选购的商品有不符合优惠类型要求的！',
-                                duration: 2000,
-                                location: 'bottom'
-                            });
                             fnSetYouOther(0);
                         }
                     }
                 }
             } else {
                 $api.html(youhui, '1.0');
-                if (isOkWare)) {
-                var yh = $api.byId('yhother');
-                yh.style.display = 'block';
-            } else {
-                api.toast({
-                    msg: '您选购的商品有不符合优惠类型要求的！',
-                    duration: 2000,
-                    location: 'bottom'
-                });
-                fnSetYouOther(0);
+                if (isOk) {
+                    var yh = $api.byId('yhother');
+                    yh.style.display = 'block';
+                } else {
+
+                    fnSetYouOther(0);
+                }
             }
+            //优惠根据政策
+            //实付=商品金额*优惠折扣+运费-优惠券优惠的金额
+            shifu.innerHTML = parseFloat(amountValue) * parseFloat(youhui.innerText) + parseFloat(yunfei.innerText) - parseFloat(youhuiother.innerText);
+            $api.setStorage('dingdankuan', shifu.innerHTML);
         }
-        //优惠根据政策
-        //实付=商品金额*优惠折扣+运费-优惠券优惠的金额
-        shifu.innerHTML = parseFloat(amountValue) * parseFloat(youhui.innerText) + parseFloat(yunfei.innerText) - parseFloat(youhuiother.innerText);
-        $api.setStorage('dingdankuan', shifu.innerHTML);
-    }
     }
 </script>
 
