@@ -546,6 +546,9 @@
                     j++;
                 }
             }
+            if (data==null) {
+              return;
+            }
 
             // 使用模板函数生成HTML文本
             var resultHTML = tempFn(data_);

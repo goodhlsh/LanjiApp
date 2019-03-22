@@ -107,8 +107,9 @@
         fnReady();
         if ($api.getStorage('userInfo') == null) {
             fnInitUserInfo();
-        } else {
-            if ($api.getStorage('userInfo').Jibie != '普通会员') {
+        }
+        if ($api.getStorage('userInfo')) {
+          if ($api.getStorage('userInfo').Jibie != '普通会员') {
                 tid = $api.getStorage('userInfo').Id;
             } else {
                 api.alert({

@@ -606,6 +606,13 @@
 
     function fnCreateOrder(status) {
         if ($api.getStorage('shoppingcart')) {
+          api.showProgress({
+              style: 'default',
+              animationType: 'fade',
+              title: '努力加载中...',
+              text: '请稍候...',
+              modal: false
+          });
             var wares = $api.getStorage('shoppingcart');
             var data_ = [];
             for (var i = 0, j = 0; i < wares.length; i++) {
@@ -630,6 +637,8 @@
                         duration: 2000,
                         location: 'bottom'
                     });
+                    api.hideProgress();
+                    
                     order_one = ret;
                     $api.rmStorage('shoppingcart');
                     //清除本地购物车表中已购商品
