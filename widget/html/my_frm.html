@@ -196,8 +196,8 @@
         trueName = $api.byId('truename');
         userName = $api.byId('username');
         fnReadyOpenWin();
-        if ($api.getStorage('userInfo')) {
-          fnInitUserInfo();
+        if ($api.getStorage('userInfo')==null) {
+            fnInitUserInfo();
         }
         fnInit();
         fnInitEvent();
@@ -217,7 +217,7 @@
             if (ret) {
                 $api.setStorage('userInfo', ret);
             }else {
-              $api.rmStorage('userInfo');
+              //$api.rmStorage('userInfo');
             }
         });
       }

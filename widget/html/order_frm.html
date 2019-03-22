@@ -342,7 +342,9 @@
     apiready = function() {
         fnReady();
         fnInitUIInput();
-        fnInitUserInfo();
+        if ($api.getStorage('userInfo')==null) {
+          fnInitUserInfo();
+        }
         fnInitEvent();
         fnInitAddress();
         //从本地存储中获取商品信息
@@ -435,7 +437,7 @@
             if (ret) {
                 $api.setStorage('userInfo', ret);
             } else {
-                $api.rmStorage('userInfo');
+                //$api.rmStorage('userInfo');
             }
         });
     }
@@ -609,7 +611,13 @@
             shifu.innerHTML = parseFloat(amountValue) * parseFloat(youhui.innerText) + parseFloat(yunfei.innerText) - parseFloat(youhuiother.innerText);
             $api.setStorage('dingdankuan', shifu.innerHTML);
         }
+        else {
+          api.toast({
+              msg: '购物车空的，去填满她吧',
+              duration: 2000,
+              location: 'bottom'
+          });
+        }
     }
 </script>
-
 </html>

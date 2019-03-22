@@ -153,10 +153,10 @@ var tixianvalue;
     apiready = function() {
       tixianvalue=$api.byId('tixianvalue');
         fnReadyOpenWin();
-        if ($api.getStorage('userInfo')) {
+        if ($api.getStorage('userInfo')==null) {
           fnInitUserInfo();
         }
-        if ($api.getStorage('currentwallet')) {
+        if ($api.getStorage('currentwallet')==null) {
           fnInitYuE();
         }
         fnInit();
@@ -174,7 +174,7 @@ var tixianvalue;
             if (ret) {
                 $api.setStorage('userInfo', ret);
             }else {
-              $api.rmStorage('userInfo');
+            //  $api.rmStorage('userInfo');
             }
         });
       }

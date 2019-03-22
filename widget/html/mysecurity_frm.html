@@ -43,6 +43,7 @@
         .highlight {
             opacity: 0.7;
         }
+
         .r20 {
             margin-right: 20px;
             width: 180px;
@@ -100,7 +101,9 @@
 var smsVerify = null;
 var isExist = null;
     apiready = function() {
+      if ($api.getStorage('userInfo')==null) {
         fnInitUserInfo();
+      }
         init();
         fnInitUIInput();
         smsVerify = api.require('smsVerify');
@@ -120,7 +123,7 @@ var isExist = null;
             if (ret) {
                 $api.setStorage('userInfo', ret);
             }else {
-              $api.rmStorage('userInfo');
+              //$api.rmStorage('userInfo');
             }
         });
       }

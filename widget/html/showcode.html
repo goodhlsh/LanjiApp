@@ -99,29 +99,28 @@
             if (ret) {
                 $api.setStorage('userInfo', ret);
             } else {
-                $api.rmStorage('userInfo');
+                //$api.rmStorage('userInfo');
             }
         });
     }
     apiready = function() {
         fnReady();
-        fnInitUserInfo();
-        api.parseTapmode();
-
-        if ($api.getStorage('userInfo')) {
+        if ($api.getStorage('userInfo') == null) {
+            fnInitUserInfo();
+        } else {
             if ($api.getStorage('userInfo').Jibie != '普通会员') {
                 tid = $api.getStorage('userInfo').Id;
             } else {
-              api.alert({
-                  title: '消息',
-                  msg: '请您成为分销会员后再推荐他人',
-              }, function(ret, err) {
-                  if (ret) {
-                      fnCloseWin();
-                  } else {
-                      // alert( JSON.stringify( err ) );
-                  }
-              });
+                api.alert({
+                    title: '消息',
+                    msg: '请您成为分销会员后再推荐他人',
+                }, function(ret, err) {
+                    if (ret) {
+                        fnCloseWin();
+                    } else {
+                        // alert( JSON.stringify( err ) );
+                    }
+                });
             }
         } else {
             api.alert({
@@ -136,7 +135,7 @@
             });
 
         }
-
+        api.parseTapmode();
         api.addEventListener({
             name: 'longpress'
         }, function(ret, err) {

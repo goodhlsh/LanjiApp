@@ -67,12 +67,18 @@
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
+      if ($api.getStorage('userInfo')==null) {
         fnInitUserInfo();
+      }
         nowlevel = $api.getStorage('userInfo').Jibie;
         var mylevel = $api.byId('mylevel');
         mylevel.innerHTML = nowlevel;
+      if ($api.getStorage('currentwallet')==null) {
         fnInitYuE();
-        fnInitCurrFirst();
+      }
+        if ($api.getStorage('currentFirst')==null) {
+          fnInitCurrFirst();
+        }
     };
     //从后台更新本地存储
     function fnInitUserInfo() {
@@ -87,7 +93,7 @@
             if (ret) {
                 $api.setStorage('userInfo', ret);
             } else {
-                $api.rmStorage('userInfo');
+              //  $api.rmStorage('userInfo');
             }
         });
     }
@@ -191,7 +197,7 @@ api.toast({
                     }
                     //判断是新入会还是老会员
                 fnGet('SysUser/GetByIdFromJiaPu', filter, function(ret2, err2) {
-                    console.log(JSON.stringify(ret2));
+                    //console.log(JSON.stringify(ret2));
                     if (ret2&&ret2.type!=0) {
                         var frozen =$api.getStorage('currentFirst')!=null&& ret2.FrozenMoney > $api.getStorage('currentFirst').CurrentFirst ? ret2.FrozenMoney - $api.getStorage('currentFirst').CurrentFirst : 0;
                         if (mywall - frozen >= mustwall) {
@@ -237,7 +243,7 @@ api.toast({
                             })
                         };
                         fnPost('SysUser/PutJiaPu', data, 'application/json', false, false, function(ret4, err4) {
-                            console.log(JSON.stringify(ret4));
+                      //      console.log(JSON.stringify(ret4));
                             if (ret4) {
                                 alert('操作成功！');
                                 fnUpdateStorageUserInfo();
@@ -264,7 +270,7 @@ api.toast({
                     name: 'setuserinfo'
                 });
             } else {
-                $api.rmStorage('userInfo');
+                //$api.rmStorage('userInfo');
             }
         });
 

@@ -822,11 +822,11 @@ box-shadow: #ddd 3px 3px;
             // console.log(JSON.stringify(ret));
             if (ret) {
                 api.hideProgress();
-              //  api.refreshHeaderLoadDone();
-                fnShowSwipList(ret);
 
+                fnShowSwipList(ret);
+                api.refreshHeaderLoadDone();
             } else {
-                console.log(JSON.stringify(err));
+                //console.log(JSON.stringify(err));
             }
         });
 
@@ -919,8 +919,8 @@ box-shadow: #ddd 3px 3px;
 //          console.log(JSON.stringify(ret));
             if (ret) {
                 api.hideProgress();
-                //api.refreshHeaderLoadDone();
                 fnShowRemaiList(ret);
+                api.refreshHeaderLoadDone();
             }
         });
     };
@@ -949,10 +949,10 @@ box-shadow: #ddd 3px 3px;
             //  console.log(JSON.stringify(ret));
             if (ret) {
                 api.hideProgress();
-                //api.refreshHeaderLoadDone();
                 fnShowLikeList(ret);
+                api.refreshHeaderLoadDone();
             } else {
-                console.log(JSON.stringify(err));
+                //console.log(JSON.stringify(err));
             }
         });
     }
@@ -1041,32 +1041,11 @@ box-shadow: #ddd 3px 3px;
             //按最近一次搜索的商品给出喜欢的商品
             fnInitLikeList(keyword, 0, 20);
 
-
-            //用户信息更新
-            if ($api.getStorage('userInfo')) {
-                fnInitUserInfo();
-            }
             //第一次加载完毕
             api.refreshHeaderLoadDone();
         });
     }
-    //从后台更新本地存储
-    function fnInitUserInfo() {
-        var filter = {
-            'where': {
-                Id: $api.getStorage('userInfo').Id
-            },
-            'skip': 0,
-            'limit': 1
-        }
-        fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
-            if (ret) {
-                $api.setStorage('userInfo', ret);
-            } else {
-                $api.rmStorage('userInfo');
-            }
-        });
-    }
+
     /*扫描推荐begin*/
     //打开默认的二维码扫描
     var isAuth, tid_, mobile_ ;

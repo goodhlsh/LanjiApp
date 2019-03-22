@@ -104,7 +104,9 @@
       sfz=$api.byId('sfz');
       mobile=$api.byId('mobile');
       jibie=$api.byId('jibie');
-      fnInitUserInfo();
+      if ($api.getStorage('userInfo')==null) {
+        fnInitUserInfo();
+      }
       //console.log(JSON.stringify($api.getStorage('userInfo')));
       //读取本地存储赋值
       realname.innerHTML=$api.getStorage('userInfo').TrueName || '没有登记';
@@ -125,7 +127,7 @@
             if (ret) {
                 $api.setStorage('userInfo', ret);
             }else {
-              $api.rmStorage('userInfo');
+            //  $api.rmStorage('userInfo');
             }
         });
       }
