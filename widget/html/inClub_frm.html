@@ -69,6 +69,7 @@
 <script type="text/javascript" src="../script/SHA1.js"></script>
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
+    var level, yue, tid, fJE, tTrueName, flag = 0;
     apiready = function() {
         var uTrueName = $api.byId('uTrueName');
         tTrueName = $api.byId('tTrueName');
@@ -80,7 +81,6 @@
         fnInit();
     };
 
-    var level, yue, tid, fJE, tTrueName, flag = 0;
     function fnInitYuE() {
         var filter = {
             where: {
@@ -95,7 +95,6 @@
                 $api.setStorage('currentwallet', ret);
             } else {
               $api.rmStorage('currentwallet');
-
             }
         });
     }

@@ -135,7 +135,7 @@
         fnInitCurrFirst();
         fnInitWallet();
     };
-
+    
     var order_one;
 
     function fnInitCurrFirst() {
@@ -642,7 +642,7 @@
                     order_one = ret;
                     $api.rmStorage('shoppingcart');
                     //清除本地购物车表中已购商品
-                    $db.delete_true('shoppingCart', 'select');
+                    $db.delete_true('shoppingCart', $api.getStorage('userInfo').Id，'select');
                 } else {
                     api.alert({
                         title: '故障报警',

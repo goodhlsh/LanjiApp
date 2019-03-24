@@ -60,7 +60,7 @@
     apiready = function() {
         initEventListenner();
     };
-    var userId = $api.getStorage('userInfo')==null?null:$api.getStorage('userInfo').Id;
+
     // 初始化事件监听
     function initEventListenner() {
         // 监听tap事件，打开购物车Window
@@ -76,16 +76,16 @@
         }, function(ret, err) {
             if (ret) {
                 if (ret.value.wareCount > 0) {
-                    var result = $db.select('shoppingCart',userId, ret.value.wareId);
+                    var result = $db.select('shoppingCart',ret.value.userId, ret.value.wareId);
                     if (result&&result.data.length>0) {
-                        $db.update_count('shoppingCart',ret.value.wareId, ret.value.wareCount);
+                        $db.update_count('shoppingCart',ret.value.userId, ret.value.wareId, ret.value.wareCount);
                     } else {
-                        $db.insert('shoppingCart',userId, ret.value.wareId, ret.value.wareCount,"select");
+                        $db.insert('shoppingCart',ret.value.userId, ret.value.wareId, ret.value.wareCount,"select");
                     }
                 } else {
-                    var result = $db.select('shoppingCart',userId, ret.value.wareId);
+                    var result = $db.select('shoppingCart',ret.value.userId, ret.value.wareId);
                     if (result) {
-                        $db.delete('shoppingCart',ret.value.wareId);
+                        $db.delete('shoppingCart',ret.value.userId, ret.value.wareId);
                     }
                 }
             } else {

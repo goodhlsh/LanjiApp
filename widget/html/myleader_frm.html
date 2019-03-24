@@ -42,29 +42,10 @@
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
-        if ($api.getStorage('userInfo')==null) {
-          fnInitUserInfo();
-        }
 
         fnInit();
     };
-    //从后台更新本地存储
-      function fnInitUserInfo() {
-        var filter = {
-            where: {
-                Id: $api.getStorage('userInfo').Id
-            },
-            skip: 0,
-            limit: 1
-        }
-        fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
-            if (ret) {
-                $api.setStorage('userInfo', ret);
-            }else {
-              //$api.rmStorage('userInfo');
-            }
-        });
-      }
+  
     function fnInit() {
 
         var PID = $api.getStorage('userInfo').PId;
@@ -74,7 +55,7 @@
               duration: 2000,
               location: 'bottom'
           });
-          return;          
+          return;
         }
         var filter = {
             where: {

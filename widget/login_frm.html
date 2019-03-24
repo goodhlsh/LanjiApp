@@ -122,7 +122,7 @@
     apiready = function() {
         fnInitUIInput();
     };
-
+    //登录后会记录下用户信息和余额信息
 
     var UIInput;
     var usernameUIInputId;
@@ -334,7 +334,7 @@
             if (ret) {
                 $api.setStorage('currentwallet', ret);
             } else {
-                //$api.rmStorage('currentwallet');
+                $api.rmStorage('currentwallet');
                 api.toast({
                     msg: '获取余额失败！',
                     duration: 2000,

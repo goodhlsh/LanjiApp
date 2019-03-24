@@ -135,6 +135,9 @@
 <script type="text/javascript">
     apiready = function() {
       statusIndex=api.pageParam.statusIndex;
+      if ($api.getStorage('userInfo')==null) {
+        fnInitUserInfo();
+      }
         // 初始化事件监听
         initEventListenter();
         // 初始化下拉刷新
@@ -144,7 +147,23 @@
     };
     var statusIndex, skip = 0,
         LIMIT = 8;
-
+        //从后台更新本地存储
+        function fnInitUserInfo() {
+            var filter = {
+                where: {
+                    Id: $api.getStorage('userInfo').Id
+                },
+                skip: 0,
+                limit: 1
+            }
+            fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
+                if (ret) {
+                    $api.setStorage('userInfo', ret);
+                } else {
+                    //$api.rmStorage('userInfo');
+                }
+            });
+        }
     function initEventListenter() {
         // 监听滚动到Frame底部的事件
         api.addEventListener({

@@ -58,18 +58,18 @@
     */
 
     // 更新操作，更新购物车中指定ID的商品数量
-    u.update_count = function(tableName, wareId_, wareCount_) {
+    u.update_count = function(tableName, userId_, wareId_, wareCount_) {
         u.init();
-        var sql= 'UPDATE ' + tableName + ' SET wareCount=\'' + wareCount_ + '\' WHERE wareId=\"' + wareId_ + '\"';
+        var sql= 'UPDATE ' + tableName + ' SET wareCount=\'' + wareCount_ + '\' WHERE wareId=\"' + wareId_ + '\" and userId=\"'+userId+'\"';
         return db.executeSqlSync({
             name: dbName,
             sql:sql
         });
     }
     // 更新操作，更新购物车中指定ID的商品状态
-    u.update_state = function(tableName, wareId_, wareState_) {
+    u.update_state = function(tableName, userId_, wareId_, wareState_) {
         u.init();
-        var sql= 'UPDATE ' + tableName + ' SET wareState=\''+wareState_+'\' WHERE wareId=\"' + wareId_ + '\"';
+        var sql= 'UPDATE ' + tableName + ' SET wareState=\''+wareState_+'\' WHERE wareId=\"' + wareId_ + '\" and userId=\"'+userId+'\"';
         return db.executeSqlSync({
             name: dbName,
             sql: sql
@@ -86,19 +86,19 @@
 
         }
         //删除已结算的商品
-    u.delete = function(tableName,wareId_) {
+    u.delete = function(tableName,userId_, wareId_) {
             u.init();
             return db.executeSqlSync({
                 name: dbName,
-                sql: 'DELETE FROM ' + tableName + ' WHERE wareId=\"' + wareId_ + '\"'
+                sql: 'DELETE FROM ' + tableName + ' WHERE wareId=\"' + wareId_ + '\" and userId=\"'+userId+'\"'
             });
         }
         //完成购买的商品从表中删除
-    u.delete_true=function(tableName,wareState_){
+    u.delete_true=function(tableName,userId_, wareState_){
           u.init();
           return db.executeSqlSync({
               name: dbName,
-              sql: 'DELETE FROM ' + tableName + ' WHERE WareState=\"' + wareState_ + '\"'
+              sql: 'DELETE FROM ' + tableName + ' WHERE WareState=\"' + wareState_ + '\" and userId=\"'+userId+'\"'
           });
 
         }

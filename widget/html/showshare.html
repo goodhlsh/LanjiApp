@@ -88,28 +88,9 @@
 <script type="text/javascript">
     apiready = function() {
         fnReady();
-
         api.parseTapmode();
-        var usid;
-        if ($api.getStorage('userInfo') == null) {
-            fnUpdateStorageUserInfo();
-            if ($api.getStorage('userInfo')) {
-                usid = $api.getStorage('userInfo').Id;
-            } else {
-                api.alert({
-                    title: '消息',
-                    msg: '未登录，二维码生成失败',
-                }, function(ret, err) {
-                    if (ret) {
-                        fnCloseWin();
-                    } else {
-                        // alert( JSON.stringify( err ) );
-                    }
-                });
-            }
-        } else {
-            usid = $api.getStorage('userInfo').Id;
-        }
+        fnUpdateStorageUserInfo();
+        var usid = $api.getStorage('userInfo').Id;
         api.addEventListener({
             name: 'longpress'
         }, function(ret, err) {

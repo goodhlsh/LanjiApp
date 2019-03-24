@@ -106,25 +106,9 @@
 <script type="text/javascript" src="../script/SHA1.js"></script>
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
-    function fnInitCurrFirst() {
-        var filter = {
-            where: {
-                userid: $api.getStorage('userInfo').Id
-            },
-            //order: "createAt DESC",
-            limit: 1,
-            skip: 0
-        };
-        fnGet('SysFirst/GetCurrentFirst', filter, function(ret, err) {
-            if (ret) {
-                $api.setStorage('currentFirst', ret);
-            } else {
-                $api.rmStorage('currentFirst');
-            }
-        });
-    }
     apiready = function() {
         //console.log($api.getStorage('userInfo').Id.length);
+        fnInitUserInfo();
         fnInitYuE();
         wallet = $api.getStorage('currentwallet');
         fnInitCurrFirst();
@@ -147,7 +131,23 @@
     var moneycoutUIInputId;
     var moneycoutValue,realnameValue,zaccoutValue;
     var wallet;
-
+    //从后台更新本地存储
+    function fnInitUserInfo() {
+        var filter = {
+            where: {
+                Id: $api.getStorage('userInfo').Id
+            },
+            skip: 0,
+            limit: 1
+        }
+        fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('userInfo', ret);
+            } else {
+                //$api.rmStorage('userInfo');
+            }
+        });
+    }
     function fnInitUIInput() {
         // 提现金额输入框模块
          moneycout = $api.byId('moneycout');
@@ -290,7 +290,23 @@
             }
         });
     }
-
+    function fnInitCurrFirst() {
+        var filter = {
+            where: {
+                userid: $api.getStorage('userInfo').Id
+            },
+            //order: "createAt DESC",
+            limit: 1,
+            skip: 0
+        };
+        fnGet('SysFirst/GetCurrentFirst', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('currentFirst', ret);
+            } else {
+                $api.rmStorage('currentFirst');
+            }
+        });
+    }
     function fnInitYuE() {
         var filter = {
             where: {

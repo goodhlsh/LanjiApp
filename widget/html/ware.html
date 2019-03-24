@@ -55,7 +55,7 @@
     <footer id="footer">
         <div class="aui-bar aui-bar-btn aui-bar-btn-full  aui-pull-left" type="count " id="demo">
         <!--  <div class="aui-bar-btn-item" onclick="fnQQLine()">
-            <img border="0" src="http://wpa.qq.com/pa?p=2:250074620:51" style="height:30px;width:100%;"/></a>
+            <img border="0" src="http://wpa.qq.com/pa?p=2:1293214863:51" style="height:30px;width:100%;"/></a>
           </div>
         -->
             <div class="aui-bar-btn-item  aui-font-size-14" onclick="fnMinus()">
@@ -104,11 +104,22 @@
         });
         fnReadyFrame();
     };
+    function fnUserInfoIsNull() {
+      if (!$api.getStorage('userInfo')) {
+        api.openWin({
+            name: 'login',
+            url: 'login.html',
+            pageParam: {
+                name: ''
+            }
+        });
+      }
+    }
     var count;
 
     // 添加到购物车按钮的监听函数
     function fnAdd() {
-
+        fnUserInfoIsNull();
         // 更新商品数量及显示状态
         var wareCount = parseInt(count.value);
         wareCount += 1;
@@ -118,6 +129,7 @@
         api.sendEvent({
             name: 'updateShoppingCart',
             extra: {
+                userId: $api.getStorage('userInfo').Id,
                 wareId: api.pageParam.wareId,
                 wareCount: wareCount,
                 wareState:'select'
@@ -127,7 +139,7 @@
 
     // 从购物车删除按钮的监听函数
     function fnMinus() {
-
+        fnUserInfoIsNull();
         // 更新商品数量及显示状态
         var wareCount = parseInt(count.value);
         if (wareCount > 0) {
@@ -139,6 +151,7 @@
             api.sendEvent({
                 name: 'updateShoppingCart',
                 extra: {
+                  userId:$api.getStorage('userInfo').Id,
                     wareId: api.pageParam.wareId,
                     wareCount: wareCount,
                     wareState:'select'
@@ -149,7 +162,7 @@
 function fnQQLine() {
   api.openWin({
       name: 'QQLine',
-      url: 'http://wpa.qq.com/msgrd?v=3&uin=250074620&',
+      url: 'http://wpa.qq.com/msgrd?v=3&uin=1293214863&',
       pageParam: {
           name: ''
       }

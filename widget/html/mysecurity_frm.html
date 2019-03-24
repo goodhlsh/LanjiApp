@@ -101,32 +101,13 @@
 var smsVerify = null;
 var isExist = null;
     apiready = function() {
-      if ($api.getStorage('userInfo')==null) {
-        fnInitUserInfo();
-      }
         init();
         fnInitUIInput();
         smsVerify = api.require('smsVerify');
         // 短信模块初始化
         registerSms();
     };
-    //从后台更新本地存储
-      function fnInitUserInfo() {
-        var filter = {
-            where: {
-                Id: $api.getStorage('userInfo').Id
-            },
-            skip: 0,
-            limit: 1
-        }
-        fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
-            if (ret) {
-                $api.setStorage('userInfo', ret);
-            }else {
-              //$api.rmStorage('userInfo');
-            }
-        });
-      }
+
     function init() {
         username = $api.byId('username');
         $api.html(username, $api.getStorage('userInfo').TrueName);

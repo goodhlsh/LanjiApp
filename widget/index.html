@@ -81,10 +81,11 @@
         fnReadyOpenWin();
         fnInitListener();
         fnInit();
-        initDatabase();
-        initPushGeTui();
         var homeid = $api.byId('tabbar0');
         fnChange(homeid, 0);
+        initDatabase();
+        initPushGeTui();
+
         //}
     };
 
@@ -117,7 +118,7 @@
                     }
                 });
                 //退出系统时要清除的本地存储
-                
+
                 //fnRmStorage();
             }
         });
@@ -128,14 +129,6 @@
     function fnInit() {
         footer = $api.byId('aui-footer');
         footerHeight = $api.offset(footer).h;
-
-        //设置我的小红点
-        var num = $api.getStorage('newmessage') == null ? 0 : $api.getStorage('newmessage');
-
-        if (num > 0) {
-            var mydot = $api.byId('mydot');
-            $api.addCls(mydot, 'aui-dot');
-        }
     }
 
     //初始化首页
@@ -151,7 +144,7 @@
         currindex = index;
         api.openFrame({
             name: frames[currindex],
-            url: './html/' + frames[currindex] + '.html',
+            url: './html/m_home_frm.html',
             rect: {
                 x: 0,
                 y: 0,//
@@ -199,9 +192,7 @@
     }
     // 初始化第三方推送模块，个推
     function initPushGeTui() {
-
         var pushGeTui = api.require('pushGeTui');
-
         // 注册设备和应用信息到个推
         pushGeTui.initialize(function(ret) {
             var value = "";
@@ -210,7 +201,6 @@
                 // 返回个推平台上的ID
                 case 'cid':
                     value = 'cid:' + ret.cid;
-
                     break;
                     // 返回消息内容
                 case 'payload':

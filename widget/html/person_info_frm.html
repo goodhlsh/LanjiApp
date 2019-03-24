@@ -66,6 +66,7 @@
         <script type="text/javascript">
             apiready = function() {
                 fnReadyOpenWin();
+
                 fnInit();
                 fnSetInfo();
             };
@@ -74,7 +75,7 @@
             function fnInit() {
                 avatar = $api.byId('avatar');
             };
-
+            
             var flag = false;
             function fnSetInfo() {
                 if (!flag) {

@@ -120,31 +120,12 @@
     apiready = function() {
         fnReady();
         api.parseTapmode();
-        if ($api.getStorage('userInfo') == null) {
-            fnInitUserInfo();
-        }
+
         if ($api.getStorage('userInfo').Id) {
             fnGetChildren($api.getStorage('userInfo').Id);
         }
     };
-
-    function fnInitUserInfo() {
-        var filter = {
-            where: {
-                Id: $api.getStorage('userInfo').Id
-            },
-            skip: 0,
-            limit: 1
-        }
-        fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
-            if (ret) {
-                $api.setStorage('userInfo', ret);
-            } else {
-                //  $api.rmStorage('userInfo');
-            }
-        });
-    }
-
+    
     function fnShowList() {
         api.openFrame({
             name: 'sonlist_frm',

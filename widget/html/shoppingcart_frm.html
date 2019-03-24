@@ -386,7 +386,15 @@
 <script type="text/javascript">
     apiready = function() {
         fnReady();
-
+        if (!$api.getStorage('userInfo')) {
+            api.openWin({
+                name: 'login',
+                url: 'login.html',
+                pageParam: {
+                    name: ''
+                }
+            });
+        }
         // 读取本地库，显示购物车内容Frame
         getWareListFromDB();
 
@@ -394,8 +402,9 @@
 
         initWareStateEventListener();
     };
+    var userId = $api.getStorage('userInfo') == null ? null : $api.getStorage('userInfo').Id;
 
-
+    //从后台更新本地存储
     function getWareListFromDB() {
         var ret = $db.select('shoppingCart', userId);
         // 本地库购物车表中有商品，则显示商品列表
@@ -411,7 +420,6 @@
     }
     //存放购物车内商品
     var curShoppingCart;
-    var userId = $api.getStorage('userInfo') == null ? null : $api.getStorage('userInfo').Id;
 
     function initEventListener() {
         // 监听购物车更新事件(自定义事件)，同步更新列表展示中选定商品的数量
@@ -427,13 +435,13 @@
                     // 更新商品数量及显示状态
                     ware.style.display = 'block';
                     count.innerHTML = ret.value.wareCount;
-                    $db.update_count('shoppingCart', ret.value.wareId, ret.value.wareCount);
+                    $db.update_count('shoppingCart', userId, ret.value.wareId, ret.value.wareCount);
                 }
             } else {
                 ware.style.display = 'none';
                 var result = $db.select('shoppingCart', userId, ret.value.wareId);
                 if (result && result.data.length > 0) {
-                    $db.delete('shoppingCart', ret.value.wareId);
+                    $db.delete('shoppingCart', userId, ret.value.wareId);
                 }
             }
             getWareListFromDB();
@@ -445,7 +453,7 @@
         api.addEventListener({
             name: 'updateWareState'
         }, function(ret, err) {
-            $db.update_state('shoppingCart', ret.value.wareId, ret.value.wareState);
+            $db.update_state('shoppingCart', userId, ret.value.wareId, ret.value.wareState);
             getWareListFromDB();
         });
     }

@@ -94,7 +94,7 @@
             width: 100%;
             height: auto;
             margin: 0 auto;
-            background-color: #eee;
+            background-color: #fff;
             text-align: center;
             padding: 0px;
         }
@@ -118,10 +118,23 @@
             height: 40px;
             line-height: 40px;
             display: inline-block;
-            background: #eee;
+            background: #fff;
             color: #000;
             font-size: 0.5rem;
             text-align: center;
+            /*添加阴影*/
+            box-shadow: #eee 2px 2px;
+            /* box-shadow：color  h-shadow  v-shadow blur spread  inset；
+                color：阴影颜色 ------------可选
+                h-shadow ：水平偏移量 ----必选
+                v-shadow：垂直偏移量-----必选
+                 blur：模糊距离 -------------可选
+                 spread：阴影尺寸---------- 可选
+                 inset：内阴影 --------------可选
+               */
+            border-radius: 2px;
+            -webkit-border-radius: 2px;
+            background-color: #fff;
         }
 
         table tr td .box .ic {
@@ -136,7 +149,7 @@
             height: 40px;
             margin: 0 auto;
             padding: 0px;
-            background-color: #eee;
+            background-color: #fff;
         }
 
         .youhuidiv .youhuilogo {
@@ -150,14 +163,14 @@
         /*热卖 2X2样式 */
 
         .activebg {
-            background-color: #eee;
+            background-color: #fff;
         }
 
         .remaiheaddiv {
             width: 100%;
             height: 32px;
             margin: 0 auto;
-            background-color: #eee;
+            background-color: #fff;
             padding: 0 0;
         }
 
@@ -174,16 +187,15 @@
             width: 100%;
             padding: 0 20px;
         }
-        .divinremaidiv{
 
-        }
+        .divinremaidiv {}
+
         .matrix {
-
-display: table;
+            display: table;
             width: 100%;
             height: 100%;
             border: solid 3px #ccc;
-box-shadow: #ddd 3px 3px;
+            box-shadow: #ddd 3px 3px;
             /* box-shadow：color  h-shadow  v-shadow blur spread  inset；
                 color：阴影颜色 ------------可选
                 h-shadow ：水平偏移量 ----必选
@@ -277,7 +289,7 @@ box-shadow: #ddd 3px 3px;
             vertical-align: top;
             font-size: 16px;
             color: #222;
-            background-color: #eee;
+            background-color: #fff;
             border-bottom: 1px solid #e0e0e0;
             text-align: center;
         }
@@ -449,14 +461,15 @@ box-shadow: #ddd 3px 3px;
             position: absolute;
             right: 8px;
         }
-
         /*背景模糊*/
+
         .bg {
             background: url('image/banner1.png');
-            height:408px;
+            height: 408px;
             text-align: center;
             line-height: 408px;
         }
+
         .bg-blur {
             float: left;
             width: 100%;
@@ -470,18 +483,21 @@ box-shadow: #ddd 3px 3px;
             filter: blur(15px);
             margin: 0 auto;
         }
+
         .content-front {
-          position:absolute;;
-          top: 85px;
-          left: 20px;
-          right: 20px;
-          width: auto;
-          height:auto;
-          z-index: 0;
+            position: absolute;
+            ;
+            top: 85px;
+            left: 20px;
+            right: 20px;
+            width: auto;
+            height: auto;
+            z-index: 0;
         }
-        .content-front img{
-          width: 100%;
-          height: auto;
+
+        .content-front img {
+            width: 100%;
+            height: auto;
         }
     </style>
 </head>
@@ -508,7 +524,7 @@ box-shadow: #ddd 3px 3px;
             <span class="aui-iconfont aui-icon-qrcode"></span>
         </div>
     </header>
-  <!--顶部滚动图-->
+    <!--顶部滚动图-->
     <div id="aui-slide" class="post">
         <div id="swiplist" class="aui-slide-wrap">
             <div class="aui-slide-node open-win" win="ware">
@@ -519,7 +535,7 @@ box-shadow: #ddd 3px 3px;
             <!--分页容器-->
         </div>
     </div>
-  <!--各个模块导航-->
+    <!--各个模块导航-->
     <div id="cont" class="tools post">
         <table>
             <tr>
@@ -589,7 +605,7 @@ box-shadow: #ddd 3px 3px;
 
         </table>
     </div>
-    <div class="youhuidiv post"><img class="youhuilogo open-win" win="youhuiquan"   src="../image/home/youhui.png" /></div>
+    <div class="youhuidiv post"><img class="youhuilogo open-win" win="youhuiquan" src="../image/home/youhui.png" /></div>
     <div class="remaiheaddiv post"><img src="../image/home/remailogo.png" class="remailogo" /></div>
 
     <!--bootstrap 九宫格  <section class="aui-grid">
@@ -639,28 +655,28 @@ box-shadow: #ddd 3px 3px;
     <div id="likelist" class="home-like-list  post">
     </div>
 </body>
-  <!--顶部滚动图脚本-->
+<!--顶部滚动图脚本-->
 <script type="text/template" id="swiptemplate">
     {{~it:swipdata }} {{?swipdata.ttype==='0'}}
     <div class="aui-slide-node open-win" win="active" param='{"ActiveId":"{{= swipdata.Id }}"}'>
-      <div class="bg-blur">
-        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
-      <div class="content-front">
-         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
+        <div class="bg-blur">
+            <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
+        <div class="content-front">
+            <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
     </div>
     {{??swipdata.ttype==='1'}}
     <div class="aui-slide-node open-win" win="ware" param='{"wareId":"{{= swipdata.Id }}"}'>
-      <div class="bg-blur">
-        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
-      <div class="content-front">
-         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
+        <div class="bg-blur">
+            <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
+        <div class="content-front">
+            <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
     </div>
     {{??}}
     <div class="aui-slide-node open-win" win="warelist" param='{"warelistId":"{{= swipdata.Id }}"}'>
-      <div class="bg-blur">
-        <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
-      <div class="content-front">
-         <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
+        <div class="bg-blur">
+            <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
+        <div class="content-front">
+            <img onload="fnCacheImage(this)" src="../image/home/banner2.png" id="picshow_{{= swipdata.Id }}" data-url="http://132.232.190.152:8088/{{= swipdata.PicShow}}" class="" /></div>
     </div>
     {{?}} {{~}}
 </script>
@@ -714,11 +730,6 @@ box-shadow: #ddd 3px 3px;
 
 
 <script type="text/javascript">
-    function fnLoadImage2(this_) {
-        console.log('load load load ');
-
-    }
-
     function fnCacheImage(ele_) {
         var dataUrl = $api.attr(ele_, 'data-url');
         //            alert(fnLoadImage)
@@ -752,7 +763,7 @@ box-shadow: #ddd 3px 3px;
         //按最近一次搜索的商品给出喜欢的商品
         fnInitLikeList(keyword, 0, 20);
         // 初始化事件监听
-      //  initEventListenter();
+        //  initEventListenter();
         // 初始化设置下拉刷新
         initRefresh();
         //自动设置为下拉刷新
@@ -916,7 +927,7 @@ box-shadow: #ddd 3px 3px;
             'skip': _skip,
             'limit': remaiLIMIT
         }, function(ret, err) {
-//          console.log(JSON.stringify(ret));
+            //          console.log(JSON.stringify(ret));
             if (ret) {
                 api.hideProgress();
                 fnShowRemaiList(ret);
@@ -937,6 +948,7 @@ box-shadow: #ddd 3px 3px;
     /*热卖end*/
     /*猜我喜欢begin*/
     var keyword;
+
     function fnInitLikeList(keyword, _skip, likeLIMIT) {
         fnGet('Spl_Ware/GetAllLike', {
             'where': {
@@ -973,15 +985,15 @@ box-shadow: #ddd 3px 3px;
             return;
         }
         for (var i = 0; i < datas.length; i++) {
-        api.imageCache({
-            url: datas[i].PicShow
-        }, function(ret, err) {
-            var thumbnail = $api.byId("thumbnail_" + datas[i].Id);
-            if (thumbnail) {
-                thumbnail.src = datas[i].PicShow;
-            }
-        });
-      }
+            api.imageCache({
+                url: datas[i].PicShow
+            }, function(ret, err) {
+                var thumbnail = $api.byId("thumbnail_" + datas[i].Id);
+                if (thumbnail) {
+                    thumbnail.src = datas[i].PicShow;
+                }
+            });
+        }
     };
     /*初始化事件*/
     function initEventListenter() {
@@ -993,8 +1005,8 @@ box-shadow: #ddd 3px 3px;
             }
         }, function(ret, err) {
             // 获取更多的商品
-            if (skip >=0 && skip<=30) {
-              console.log(skip);
+            if (skip >= 0 && skip <= 30) {
+                console.log(skip);
                 skip = skip + limit;
                 //limit += 10;
             }
@@ -1048,75 +1060,82 @@ box-shadow: #ddd 3px 3px;
 
     /*扫描推荐begin*/
     //打开默认的二维码扫描
-    var isAuth, tid_, mobile_ ;
+    var isAuth, tid_, mobile_;
 
     function fnOpenScanner() {
 
-      /*  if (!$api.getStorage('userInfo')) {
-            api.openWin({
-                name: 'login',
-                url: 'login.html',
-                pageParam: {
-                    name: ''
-                }
-            });
-        } else {*/
-            var fnscanner = api.require('FNScanner');
-            fnscanner.open({
-                autorotation: true
-            }, function(ret, err) {
-                //console.log(JSON.stringify(ret));
-                if (ret && 'success' == ret.eventType) {
-                    //推广
-                    if (ret.content.substr(0, 5) == 'tuigu') {
-                        isAuth = $api.getStorage('userInfo').IsAuth; //先验证后扫描
-
+        /*  if (!$api.getStorage('userInfo')) {
+              api.openWin({
+                  name: 'login',
+                  url: 'login.html',
+                  pageParam: {
+                      name: ''
+                  }
+              });
+          } else {*/
+        var fnscanner = api.require('FNScanner');
+        fnscanner.open({
+            autorotation: true
+        }, function(ret, err) {
+            //console.log(JSON.stringify(ret));
+            if (ret && 'success' == ret.eventType) {
+                //推广
+                if (ret.content.substr(0, 5) == 'tuigu') {
+                    if (!$api.getStorage('userInfo')) {
+                        api.openWin({
+                            name: 'login',
+                            url: 'login.html',
+                            pageParam: {
+                                name: ''
+                            }
+                        });
+                    } else {
+                        isAuth = $api.getStorage('userInfo').IsAuth;
+                        //先验证用户是否认证然后判断扫描是否成功
                         if (!isAuth) {
-                          tid_ = ret.content.substr(5);
-                          api.prompt({
-                              buttons: ['确定', '取消']
-                          }, function(ret, err){
-                              if(ret&& ret.buttonIndex==1 ){
-
-                                mobile_ = ret.text;
-                                var data = {
-                                    body: JSON.stringify({
-                                        tid: tid_,
-                                        mobile: mobile_
-                                    })
-                                };
-                                fnPost('SysUser/PostTuiGuang', data, 'application/json', false, false, function(ret1, err1) {
-                                    if (ret1&&ret1.TuiCode!=null) {
-                                        api.alert({
-                                            title: '消息',
-                                            msg: '扫码成功,您的邀请码为'+ret1.TuiCode+'请注册完成推荐!'
-                                        });
-                                    }
-                                });
-                              }else{
-                                   //alert( JSON.stringify( err ) );
-                              }
-                          });
-
-
+                            tid_ = ret.content.substr(5);
+                            api.prompt({
+                                buttons: ['确定', '取消']
+                            }, function(ret, err) {
+                                if (ret && ret.buttonIndex == 1) {
+                                    mobile_ = ret.text;
+                                    var data = {
+                                        body: JSON.stringify({
+                                            tid: tid_,
+                                            mobile: mobile_
+                                        })
+                                    };
+                                    fnPost('SysUser/PostTuiGuang', data, 'application/json', false, false, function(ret1, err1) {
+                                        if (ret1 && ret1.TuiCode != null) {
+                                            api.alert({
+                                                title: '消息',
+                                                msg: '扫码成功,您的邀请码为' + ret1.TuiCode + '请注册完成推荐!'
+                                            });
+                                        }
+                                    });
+                                } else {
+                                    //alert( JSON.stringify( err ) );
+                                }
+                            });
 
                         } else {
                             alert('该用户已是认证会员，不再参与推广！')
                         }
                     }
-                    //ret.content为pid，应已在jiapu表中
-                    //先判断ret.content的用户是否存在jiapu表
-                    //如果存在再将推荐用户存入jiapubefore表
-                    if (ret.content.substr(0, 5) == 'lanji') {
-                      if (!$api.getStorage('userInfo')) {
-                            api.openWin({
-                                name: 'login',
-                                url: 'login.html',
-                                pageParam: {
-                                    name: ''
-                                }
-                            });
-                        } else{
+                }
+                //ret.content为pid，应已在jiapu表中
+                //先判断ret.content的用户是否存在jiapu表
+                //如果存在再将推荐用户存入jiapubefore表
+                if (ret.content.substr(0, 5) == 'lanji') {
+                    if (!$api.getStorage('userInfo')) {
+                        api.openWin({
+                            name: 'login',
+                            url: 'login.html',
+                            pageParam: {
+                                name: ''
+                            }
+                        });
+                    } else {
                         isAuth = $api.getStorage('userInfo').IsAuth; //先验证后扫描
 
                         if (!isAuth) {
@@ -1157,9 +1176,9 @@ box-shadow: #ddd 3px 3px;
                             });
                         }
                     }
-                  }
                 }
-            });
+            }
+        });
         //}
     }
 

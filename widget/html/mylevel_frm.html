@@ -67,9 +67,6 @@
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
     apiready = function() {
-      if ($api.getStorage('userInfo')==null) {
-        fnInitUserInfo();
-      }
         nowlevel = $api.getStorage('userInfo').Jibie;
         var mylevel = $api.byId('mylevel');
         mylevel.innerHTML = nowlevel;
@@ -80,23 +77,7 @@
           fnInitCurrFirst();
         }
     };
-    //从后台更新本地存储
-    function fnInitUserInfo() {
-        var filter = {
-            where: {
-                Id: $api.getStorage('userInfo').Id
-            },
-            skip: 0,
-            limit: 1
-        }
-        fnGet('SysUser/GetUserInfoById', filter, function(ret, err) {
-            if (ret) {
-                $api.setStorage('userInfo', ret);
-            } else {
-              //  $api.rmStorage('userInfo');
-            }
-        });
-    }
+
 
     function fnInitCurrFirst() {
         var filter = {
