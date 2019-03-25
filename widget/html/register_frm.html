@@ -623,12 +623,18 @@
         if (yqmValue!=null) {
           var filter = {
               where: {
-                  'mobile': $api.getStorage('userInfo').mobile,
+                  'mobile': usernameValue,
                   'yqm':yqmValue
               }
           };
           fnGet('SysTuiUser/GetValue', filter, function(ret, err) {
               if (ret==null) {
+                api.toast({
+                    msg: '邀请码不正确或者输入的手机号不对！',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+
                   return;
               }
           });

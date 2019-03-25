@@ -1077,6 +1077,17 @@
         fnscanner.open({
             autorotation: true
         }, function(ret, err) {
+          api.alert({
+              title: 'ret',
+              msg: ret.content,
+          }, function(ret, err){
+              if( ret ){
+                   alert( JSON.stringify( ret ) );
+              }else{
+                   alert( JSON.stringify( err ) );
+              }
+          });
+
             //console.log(JSON.stringify(ret));
             if (ret && 'success' == ret.eventType) {
                 //推广
@@ -1090,7 +1101,7 @@
                         if (ret && ret.buttonIndex == 1) {
                             mobile_ = ret.text;
                             //判定电话是不是已注册电话，是不再参与推广
-                            //？？？？                               
+                            //？？？？
                             var data = {
                                 body: JSON.stringify({
                                     tid: tid_,
