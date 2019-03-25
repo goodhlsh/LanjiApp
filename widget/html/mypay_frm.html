@@ -125,6 +125,17 @@
         var flag = api.pageParam.flagIndex;
         var orderNo = api.pageParam.orderId;
         if (flag == 'ok') {
+          api.alert({
+              title: 'createorder',
+              msg: 'createorder',
+          }, function(ret, err){
+              if( ret ){
+                   alert( JSON.stringify( ret ) );
+              }else{
+                   alert( JSON.stringify( err ) );
+              }
+          });
+
             fnCreateOrder('待付款');
         }
         if (orderNo != null) {
@@ -614,6 +625,17 @@
 
     function fnCreateOrder(status) {
         if ($api.getStorage('shoppingcart')) {
+          api.alert({
+              title: 'order',
+              msg: 'createorderin',
+          }, function(ret, err){
+              if( ret ){
+                   alert( JSON.stringify( ret ) );
+              }else{
+                   alert( JSON.stringify( err ) );
+              }
+          });
+
             var wares = $api.getStorage('shoppingcart');
             var data_ = [];
             for (var i = 0, j = 0; i < wares.length; i++) {
@@ -632,13 +654,24 @@
                     Description: '兰基优品-购物'
                 })
             }, 'application/json', false, false, function(ret, err) {
+              api.alert({
+                  title: 'orderafter',
+                  msg: 'createafter',
+              }, function(ret, err){
+                  if( ret ){
+                       alert( JSON.stringify( ret ) );
+                  }else{
+                       alert( JSON.stringify( err ) );
+                  }
+              });
+
                 if (ret&&ret.type!=0) {
                     api.toast({
                         msg: '订单信息已添加，请付款',
                         duration: 2000,
                         location: 'bottom'
                     });
-                    
+
                     order_one = ret;
                     $api.rmStorage('shoppingcart');
                     //清除本地购物车表中已购商品
