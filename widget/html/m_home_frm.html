@@ -1081,15 +1081,6 @@
             if (ret && 'success' == ret.eventType) {
                 //推广
                 if (ret.content.substr(0, 5) == 'tuigu') {
-                    if (!$api.getStorage('userInfo')) {
-                        api.openWin({
-                            name: 'login',
-                            url: 'login.html',
-                            pageParam: {
-                                name: ''
-                            }
-                        });
-                    } else {
                         isAuth = $api.getStorage('userInfo').IsAuth;
                         //先验证用户是否认证然后判断扫描是否成功
                         if (!isAuth) {
@@ -1117,12 +1108,10 @@
                                     //alert( JSON.stringify( err ) );
                                 }
                             });
-
                         } else {
                             alert('该用户已是认证会员，不再参与推广！')
                         }
-                    }
-                }
+                    }                
                 //ret.content为pid，应已在jiapu表中
                 //先判断ret.content的用户是否存在jiapu表
                 //如果存在再将推荐用户存入jiapubefore表
