@@ -1081,39 +1081,35 @@
             if (ret && 'success' == ret.eventType) {
                 //推广
                 if (ret.content.substr(0, 5) == 'tuigu') {
-                        isAuth = $api.getStorage('userInfo').IsAuth;
-                        //先验证用户是否认证然后判断扫描是否成功
-                        if (!isAuth) {
-                            tid_ = ret.content.substr(5);
-                            api.prompt({
-                              title:'参与推广',
-                              text:'请输入您的手机号',
-                                buttons: ['确定', '取消']
-                            }, function(ret, err) {
-                                if (ret && ret.buttonIndex == 1) {
-                                    mobile_ = ret.text;
-                                    var data = {
-                                        body: JSON.stringify({
-                                            tid: tid_,
-                                            mobile: mobile_
-                                        })
-                                    };
-                                    fnPost('SysUser/PostTuiGuang', data, 'application/json', false, false, function(ret1, err1) {
-                                        if (ret1 && ret1.TuiCode != null) {
-                                            api.alert({
-                                                title: '消息',
-                                                msg: '扫码成功,您的邀请码为' + ret1.TuiCode + '请注册完成推荐!'
-                                            });
-                                        }
+                    tid_ = ret.content.substr(5);
+                    api.prompt({
+                        title: '参与推广',
+                        text: '请输入您的手机号',
+                        buttons: ['确定', '取消']
+                    }, function(ret, err) {
+                        if (ret && ret.buttonIndex == 1) {
+                            mobile_ = ret.text;
+                            //判定电话是不是已注册电话，是不再参与推广
+                            //？？？？                               
+                            var data = {
+                                body: JSON.stringify({
+                                    tid: tid_,
+                                    mobile: mobile_
+                                })
+                            };
+                            fnPost('SysUser/PostTuiGuang', data, 'application/json', false, false, function(ret1, err1) {
+                                if (ret1 && ret1.TuiCode != null) {
+                                    api.alert({
+                                        title: '消息',
+                                        msg: '扫码成功,您的邀请码为' + ret1.TuiCode + '请注册完成推荐!'
                                     });
-                                } else {
-                                    //alert( JSON.stringify( err ) );
                                 }
                             });
                         } else {
-                            alert('该用户已是认证会员，不再参与推广！')
+                            //alert( JSON.stringify( err ) );
                         }
-                    }
+                    });
+                }
                 //ret.content为pid，应已在jiapu表中
                 //先判断ret.content的用户是否存在jiapu表
                 //如果存在再将推荐用户存入jiapubefore表
@@ -1168,23 +1164,21 @@
                         }
                     }
                 }
-            }
-            else if ('fail' == ret.eventType)  {
-              api.alert({
-                  title: '消息提示',
-                  msg: '扫码失败！'+err,
-              }, function(ret, err){
+            } else if ('fail' == ret.eventType) {
+                api.alert({
+                    title: '消息提示',
+                    msg: '扫码失败！' + err,
+                }, function(ret, err) {
 
-              });
+                });
 
-            }
-            else {
-              api.alert({
-                  title: '消息提示',
-                  msg: '扫码其他情况！'+err,
-              }, function(ret, err){
+            } else {
+                api.alert({
+                    title: '消息提示',
+                    msg: '扫码其他情况！' + err,
+                }, function(ret, err) {
 
-              });
+                });
 
             }
         });
