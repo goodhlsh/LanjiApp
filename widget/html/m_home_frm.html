@@ -1086,6 +1086,8 @@
                         if (!isAuth) {
                             tid_ = ret.content.substr(5);
                             api.prompt({
+                              title:'参与推广',
+                              text:'请输入您的手机号',
                                 buttons: ['确定', '取消']
                             }, function(ret, err) {
                                 if (ret && ret.buttonIndex == 1) {
@@ -1111,7 +1113,7 @@
                         } else {
                             alert('该用户已是认证会员，不再参与推广！')
                         }
-                    }                
+                    }
                 //ret.content为pid，应已在jiapu表中
                 //先判断ret.content的用户是否存在jiapu表
                 //如果存在再将推荐用户存入jiapubefore表
@@ -1166,6 +1168,24 @@
                         }
                     }
                 }
+            }
+            else if ('fail' == ret.eventType)  {
+              api.alert({
+                  title: '消息提示',
+                  msg: '扫码失败！'+err,
+              }, function(ret, err){
+
+              });
+
+            }
+            else {
+              api.alert({
+                  title: '消息提示',
+                  msg: '扫码其他情况！'+err,
+              }, function(ret, err){
+
+              });
+
             }
         });
         //}
