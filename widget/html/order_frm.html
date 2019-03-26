@@ -259,8 +259,9 @@
         #yhother {
             display: none;
         }
-        #yunfei{
-          display: none;
+
+        #yunfeirow {
+            display: none;
         }
     </style>
 </head>
@@ -288,11 +289,11 @@
         </div>
     </section>
     <section class="order">
-        <div class="row" id="yhothe">
+        <div class="row" id="yhother">
             <div class="text">优惠券码：
                 <input id="youhuicode" class="input" type="text" placeholder="">
             </div>
-            <div id="yhother" class="value value-1">0</div>
+            <div id="youhuiother" class="value value-1">0</div>
             <div id="youhuiqueren" class="aui-btn aui-btn-info  r20" tapmode="highlight" onclick="IsOkWare()">验证券码</div>
         </div>
 
@@ -300,20 +301,20 @@
             <div class="text">商品金额：¥</div>
             <div class="value value-2" id="amount">+&nbsp;0.0</div>
         </div>
-        <div class="row" id="yunfei">
+        <div class="row" id="yunfeirow">
             <div class="text">运费：¥</div>
             <div class="value value-2">+<span id="yunfei">0.0</span></div>
         </div>
         <div class="row">
             <div class="text">优惠折扣：</div>
-            <div class="value value-2">*&nbsp;<span id="youhui">1.0</span></div>
+            <div class="value value-2">*&nbsp;<span id="youhui">0.0</span></div>
         </div>
         <div class="row-1">
             <div class="value value-2">实付款：&nbsp;¥<span class="color" id="shifu">0.0</span></div>
         </div>
 
         <div class="aui-bar aui-bar-btn ">
-            <div class="aui-bar-btn-item  aui-btn-primary    aui-font-size-14  open-win" win="mypay" param='{"flagIndex":"ok"}'>
+            <div class="aui-bar-btn-item  aui-btn-primary    aui-font-size-14 " tapmode onclick="fnOpenWin()">
                 确认订单<i class="aui-iconfont aui-icon-sponsor aui-padded-l-5 aui-font-size-20"></i>
             </div>
         </div>
@@ -344,7 +345,7 @@
 <script type="text/javascript">
     apiready = function() {
         fnReady();
-        fnInitUIInput();
+        //fnInitUIInput();
 
         fnInitEvent();
         fnInitAddress();
@@ -354,6 +355,10 @@
     };
     var codeUIInputId;
     var codeValue;
+    var consignee, mobile, type, address, currentF;
+    var amount, shifu, youhui, yunfei, jibie, youhuiother;
+    var isOk, count;
+    var youhuivalue;
 
     function fnInitUIInput() {
         // 验证码输入框模块
@@ -404,7 +409,7 @@
             }
         });
     }
-    var youhuivalue;
+
     //判断优惠券是否可用
     function IsOkWare() {
         //获取code对应的优惠券金额
@@ -445,7 +450,7 @@
         shifu.innerHTML = parseFloat(amount.innerText) * parseFloat(youhui.innerText) + parseFloat(yunfei.innerText) - parseFloat(youhuiother.innerText);
         $api.setStorage('dingdankuan', shifu.innerHTML);
     }
-    var consignee, mobile, type, address, currentF;
+
 
     function fnInitAddress() {
         consignee = $api.byId('consignee');
@@ -514,8 +519,7 @@
         });
     }
 
-    var shifu, youhui, yunfei, jibie, youhuiother;
-    var isOk;
+
 
     function fnInitOrder() {
         if ($api.getStorage('shoppingcart')) {
@@ -530,16 +534,16 @@
                     j++;
                 }
             }
-            if (data_==null) {
-              return;
+            if (data_ == null) {
+                return;
             }
 
             // 使用模板函数生成HTML文本
             var resultHTML = tempFn(data_);
             $api.html(list, resultHTML);
 
-            var count = $api.byId('count');
-            var amount = $api.byId('amount');
+            count = $api.byId('count');
+            amount = $api.byId('amount');
             var amountValue = 0;
             var countValue = 0;
 
@@ -558,6 +562,7 @@
             youhuiother = $api.byId('youhuiother');
             currentF = $api.getStorage('currentFirst');
             isOk = false; //全部商品满足优惠类型
+            console.log(JSON.stringify(currentF));
             if (currentF != null) {
                 if (jibie == '8800会员') {
                     if (currentF.currentFirst >= 8800) {
@@ -579,7 +584,7 @@
                             var yh = $api.byId('yhother');
                             yh.style.display = 'block';
                         } else {
-                            fnSetYouOther(0);
+                            //fnSetYouOther(0);
                         }
                     }
                 }
@@ -590,21 +595,40 @@
                     yh.style.display = 'block';
                 } else {
 
-                    fnSetYouOther(0);
+                    //fnSetYouOther(0);
                 }
             }
             //优惠根据政策
             //实付=商品金额*优惠折扣+运费-优惠券优惠的金额
             shifu.innerHTML = parseFloat(amountValue) * parseFloat(youhui.innerText) + parseFloat(yunfei.innerText) - parseFloat(youhuiother.innerText);
             $api.setStorage('dingdankuan', shifu.innerHTML);
+        } else {
+            api.toast({
+                msg: '购物车空的，去填满她吧',
+                duration: 2000,
+                location: 'bottom'
+            });
+            api.closeWin({
+                name: 'order'
+            });
+
         }
-        else {
-          api.toast({
-              msg: '购物车空的，去填满她吧',
-              duration: 2000,
-              location: 'bottom'
-          });
+    }
+
+    var openshu = 0;
+
+    function fnOpenWin() {
+        if (openshu == 0) {
+            api.openWin({
+                name: 'mypay',
+                url: './mypay.html',
+                pageParam: {
+                    flagIndex: 'ok'
+                }
+            });
+            openshu++;
         }
     }
 </script>
+
 </html>

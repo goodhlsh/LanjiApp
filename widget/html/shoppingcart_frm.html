@@ -346,7 +346,7 @@
 
     <div id="buy" class="buy">
         <div class="box aui-btn  aui-btn-primary  aui-btn-outlined open-win" win="warelist">继续选购</div>
-        <div class="box aui-btn  aui-btn-primary  aui-btn-outlined open-win" win="order" login="true">
+        <div class="box aui-btn  aui-btn-primary  aui-btn-outlined" tapmode onclick="fnOpenWinOrder()">
             去结算
         </div>
     </div>
@@ -359,10 +359,10 @@
             <div id="select_{{=value.Id}}" class="{{=value.WareState}}" onclick="fnSetSelect('{{=value.Id}}');"></div>
             <img onload="fnLoadImage(this,'{{=value.Thumbnail}}')" class="thumbnail" src="{{=value.Thumbnail}}">
             <div class="info">
-                <div class="name">{{=value.Name}}</div>
+                <div class="name">商品名称：{{=value.Name}}</div>
                 <div class="price-tag">
-                    <span class="name">￥{{=value.Price}} 元</span>
-                    <div class="price">优惠情况：<span class="unit">{{? value.YHPiCiName}}有{{??}}{{?}}</span></div>
+                    <span class="name">单价：￥{{=value.Price}} 元</span>
+                    <!--<div class="price">优惠情况：<span class="unit">{{? value.YHPiCiName}}有{{??}}{{?}}</span></div>-->
                 </div>
             </div>
         </div>
@@ -588,6 +588,21 @@
         });
     }
 
+function fnOpenWinOrder() {
+
+    api.openWin({
+        name: 'order',
+        url: './order.html',
+        pageParam: {
+
+        },
+        animation: {
+            type: "fade"
+        }
+    });
+
+
+}
     // 添加到购物车按钮的监听函数
     function fnAdd(wareId_) {
         // 阻止事件继续向上冒泡

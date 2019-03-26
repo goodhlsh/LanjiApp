@@ -135,12 +135,7 @@
                 </div>
 
             </div>
-            <div class="aui-list-item">
-              <div class="aui-list-item-inner">
-                <div class="aui-list-item-title"><i class="aui-iconfont aui-icon-tag"></i>可提现</div>
-                <div id="tixianvalue" class="aui-list-item-right">0.00元</div>
-              </div>
-            </div>
+
         </div>
     </section>
 </body>
@@ -153,37 +148,7 @@ var tixianvalue;
     apiready = function() {
       tixianvalue=$api.byId('tixianvalue');
         fnReadyOpenWin();
-        if ($api.getStorage('currentwallet')==null) {
-          fnInitYuE();
-        }
-        fnInit();
-
-    };
-
-    function fnInit() {
-
-
-    };
-
-    function fnInitYuE() {
-        var filter = {
-            where: {
-                userid: $api.getStorage('userInfo').Id
-            },
-            //order: "createAt DESC",
-            limit: 1,
-            skip: 0
-        };
-        fnGet('Syswallet/GetWallet', filter, function(ret, err) {
-            if (ret) {
-                $api.setStorage('currentwallet', ret);
-                tixianvalue.innerHTML=ret.JieYu+'元';
-            } else {
-              $api.rmStorage('currentwallet');
-              tixianvalue.innerHTML='0.00 元';
-            }
-        });
-    }
+    };  
 </script>
 
 </html>

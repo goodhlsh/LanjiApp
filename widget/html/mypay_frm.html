@@ -151,7 +151,8 @@
             if (ret) {
                 $api.setStorage('currentFirst', ret);
             } else {
-                $api.rmStorage('currentFirst');
+
+
 
             }
         });
@@ -172,11 +173,11 @@
             skip: 0
         };
         fnGet('Syswallet/GetWallet', filter, function(ret, err) {
-            if (ret) {
+            if (ret&&ret.JieYu!=null) {
                 userYuE.innerHTML = ret.JieYu;
                 $api.setStorage('currentwallet', ret);
             } else {
-                //$api.rmStorage('currentwallet');
+                userYuE.innerHTML = '0.0';
             }
         });
         //}
@@ -189,18 +190,18 @@
             msg: '是否选择余额支付？如继续点击确认',
             buttons: ['确定', '取消']
         }, function(ret, err) {
-            if (ret.buttonIndex == 1) {
-                if ($api.getStorage('dingdankuan') && $api.getStorage('dingdankuan') > 0) {
-                    if ($api.getStorage('currentwallet') && $api.getStorage('currentwallet').JieYu >= $api.getStorage('dingdankuan')) {
+            if (ret.buttonIndex == 1&& order_one != null) {
+
+                    if ($api.getStorage('currentwallet') && $api.getStorage('currentwallet').JieYu >= order_one.DingDanKuan) {
                         fnPost('Syswallet/PostWallet', {
                             body: JSON.stringify({
                                 //Id: $api.getStorage('currentwallet').Id,
                                 UserId: $api.getStorage('userInfo').Id,
-                                Balance: parseFloat($api.getStorage('dingdankuan')),
+                                Balance: order_one.DingDanKuan,
                                 JieYu: $api.getStorage('currentwallet').JieYu,
                                 Froms: '消费',
                                 ShunXu: $api.getStorage('currentwallet').ShunXu,
-                                Note: $api.getStorage('currentwallet').TrueName + '消费 ' + parseFloat($api.getStorage('dingdankuan')) + ' 元'
+                                Note: $api.getStorage('currentwallet').TrueName + '消费 ' + order_one.DingDanKuan + ' 元'
                             })
                         }, 'application/json', false, false, function(ret, err) {
                             if (ret) {
@@ -224,15 +225,7 @@
                         });
 
                     }
-                } else {
-                    api.alert({
-                        title: '消息',
-                        msg: '订单金额有问题，请购物车核实',
-                    });
-                    api.closeWin({
-                        name: 'mypay'
-                    });
-                }
+
             } else {
                 api.closeWin({
                     name: 'mypay'
@@ -412,7 +405,7 @@
                         aliPayPlus.payOrder({
                             orderInfo: ret2.data,
                         }, function(ret3, err3) {
-                            console.log(JSON.stringify(ret3));
+                            //console.log(JSON.stringify(ret3));
                             if (ret3.code == '9000') {
                                 fnShowSuccess();
                             } else if (ret3.code == '8000') {
@@ -611,7 +604,7 @@
     }
 
     function fnCreateOrder(status) {
-        if ($api.getStorage('shoppingcart') && $api.getStorage('dingdankuan')) {
+        if ($api.getStorage('shoppingcart') && $api.getStorage('dingdankuan')>0) {
             var wares = $api.getStorage('shoppingcart');
             var data_ = [];
             for (var i = 0, j = 0; i < wares.length; i++) {
@@ -639,14 +632,13 @@
 
                     order_one = ret;
                     $api.rmStorage('shoppingcart');
-                    $api.rmStorage('dingdankuan');
 
                     //清除本地购物车表中已购商品
-                    $db.delete_true('shoppingCart', $api.getStorage('userInfo').Id， 'select');
+                    $db.delete_true('shoppingCart', $api.getStorage('userInfo').Id,'select');
                 } else {
                     api.alert({
                         title: '故障报警',
-                        msg: '订单生成有误',
+                        msg: '订单生成有误!',
                         buttons: ['确定']
                     });
                 }
@@ -654,7 +646,7 @@
         } else {
             api.alert({
                 title: '故障报警',
-                msg: '订单生成有误',
+                msg: '金额有问题，订单生成有误',
                 buttons: ['确定']
             });
         }

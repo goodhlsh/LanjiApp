@@ -36,12 +36,12 @@
     }
 
     // 查询操作，查询table中全部数据，或按商品ID查询
-    u.select = function(tableName,userId,wareId_) {
+    u.select = function(tableName,userId_,wareId_) {
             u.init();
-            var sql = 'SELECT * FROM ' + tableName +' WHERE userId=\"'+userId+'\"';
+            var sql = 'SELECT * FROM ' + tableName +' WHERE userId=\"'+userId_+'\"';
 
             if (wareId_) {
-                sql = 'SELECT * FROM ' + tableName + ' WHERE wareId=\"' + wareId_ + '\" and userId=\"'+userId+'\"';
+                sql = 'SELECT * FROM ' + tableName + ' WHERE wareId=\"' + wareId_ + '\" and userId=\"'+userId_+'\"';
             }
             return db.selectSqlSync({
                 name: dbName,
@@ -60,7 +60,7 @@
     // 更新操作，更新购物车中指定ID的商品数量
     u.update_count = function(tableName, userId_, wareId_, wareCount_) {
         u.init();
-        var sql= 'UPDATE ' + tableName + ' SET wareCount=\'' + wareCount_ + '\' WHERE wareId=\"' + wareId_ + '\" and userId=\"'+userId+'\"';
+        var sql= 'UPDATE ' + tableName + ' SET wareCount=\'' + wareCount_ + '\' WHERE wareId=\"' + wareId_ + '\" and userId=\"'+userId_+'\"';
         return db.executeSqlSync({
             name: dbName,
             sql:sql
@@ -69,7 +69,7 @@
     // 更新操作，更新购物车中指定ID的商品状态
     u.update_state = function(tableName, userId_, wareId_, wareState_) {
         u.init();
-        var sql= 'UPDATE ' + tableName + ' SET wareState=\''+wareState_+'\' WHERE wareId=\"' + wareId_ + '\" and userId=\"'+userId+'\"';
+        var sql= 'UPDATE ' + tableName + ' SET wareState=\''+wareState_+'\' WHERE wareId=\"' + wareId_ + '\" and userId=\"'+userId_+'\"';
         return db.executeSqlSync({
             name: dbName,
             sql: sql
@@ -90,7 +90,7 @@
             u.init();
             return db.executeSqlSync({
                 name: dbName,
-                sql: 'DELETE FROM ' + tableName + ' WHERE wareId=\"' + wareId_ + '\" and userId=\"'+userId+'\"'
+                sql: 'DELETE FROM ' + tableName + ' WHERE wareId=\"' + wareId_ + '\" and userId=\"'+userId_+'\"'
             });
         }
         //完成购买的商品从表中删除
@@ -98,7 +98,7 @@
           u.init();
           return db.executeSqlSync({
               name: dbName,
-              sql: 'DELETE FROM ' + tableName + ' WHERE WareState=\"' + wareState_ + '\" and userId=\"'+userId+'\"'
+              sql: 'DELETE FROM ' + tableName + ' WHERE WareState=\"' + wareState_ + '\" and userId=\"'+userId_+'\"'
           });
 
         }
