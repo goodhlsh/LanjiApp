@@ -628,9 +628,9 @@
               }
           };
           fnGet('SysTuiUser/GetValue', filter, function(ret, err) {
-              if (ret==null) {
+              if (ret == null) {
                 api.toast({
-                    msg: '邀请码不正确或者输入的手机号不对！',
+                    msg: '邀请码不正确！',
                     duration: 2000,
                     location: 'bottom'
                 });

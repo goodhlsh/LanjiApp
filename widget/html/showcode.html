@@ -85,12 +85,12 @@
 <script type="text/javascript" src="../script/SHA1.js"></script>
 <script type="text/javascript" src="../script/remotedb.js"></script>
 <script type="text/javascript">
-    var tid;    
+    var tid;
     apiready = function() {
         fnReady();
 
         if ($api.getStorage('userInfo')) {
-          if ($api.getStorage('userInfo').Jibie != '普通会员') {
+          if ($api.getStorage('userInfo').Jibie!=null && $api.getStorage('userInfo').Jibie != '普通会员') {
                 tid = $api.getStorage('userInfo').Id;
             } else {
                 api.alert({

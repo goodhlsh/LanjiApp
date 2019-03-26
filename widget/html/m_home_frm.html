@@ -1060,7 +1060,7 @@
 
     /*扫描推荐begin*/
     //打开默认的二维码扫描
-    var isAuth, tid_, mobile_;
+    var isAuth, tid_, mobile_,TuiCode;
 
     function fnOpenScanner() {
         var fnscanner = api.require('FNScanner');
@@ -1089,10 +1089,17 @@
                             };
                             fnPost('SysUser/PostTuiGuang', data, 'application/json', false, false, function(ret1, err1) {
                                 if (ret1 && ret1.TuiCode != null) {
+                                    TuiCode=ret1.TuiCode;
                                     api.alert({
                                         title: '消息',
                                         msg: '扫码成功,您的邀请码为' + ret1.TuiCode + '请注册完成推荐!'
                                     });
+                                }
+                                if (ret1==null) {
+                                  api.alert({
+                                      title: '消息',
+                                      msg: '已扫码成功,您的邀请码为' + TuiCode + '请注册完成推荐!'
+                                  });
                                 }
                             });
                         } else {
