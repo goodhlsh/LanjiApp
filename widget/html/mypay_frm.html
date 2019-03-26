@@ -99,9 +99,12 @@
 <body>
     <section class="pay">
         <div class="title"><i class="aui-iconfont aui-icon-pay"></i>选择付款方式完成付款</div>
-        <div class="row row-balance-pay " onclick="yuePay()">
+        <div class="row row-balance-pay " tapmode onclick="yuePay()">
             <div class="text text-recommend">余额支付</div>
             <div class="text">（余额：¥<span id="YuE">0.0</span>）</div>
+        </div>
+        <div class="row row-alipay" tapmode onclick="aliPay()">
+            <div class="text">支付宝</div>
         </div>
         <!--<div class="row row-unpay" onclick="unPay()">
             <div class="text">银联支付</div>
@@ -109,9 +112,7 @@
         <div class="row row-wxpay" onclick="wxPay()">
             <div class="text">微信支付</div>
         </div>-->
-        <div class="row row-alipay" onclick="aliPay()">
-            <div class="text">支付宝</div>
-        </div>
+
     </section>
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
@@ -122,29 +123,17 @@
 
 <script type="text/javascript">
     apiready = function() {
+      fnReady();
+      fnInitCurrFirst();
+      fnInitWallet();
         var flag = api.pageParam.flagIndex;
         var orderNo = api.pageParam.orderId;
         if (flag == 'ok') {
-          api.alert({
-              title: 'createorder',
-              msg: 'createorder',
-          }, function(ret, err){
-              if( ret ){
-                   alert( JSON.stringify( ret ) );
-              }else{
-                   alert( JSON.stringify( err ) );
-              }
-          });
-
             fnCreateOrder('待付款');
         }
         if (orderNo != null) {
             fnGetOrder(orderNo);
         }
-
-        fnReady();
-        fnInitCurrFirst();
-        fnInitWallet();
     };
 
     var order_one;
@@ -162,7 +151,7 @@
             if (ret) {
                 $api.setStorage('currentFirst', ret);
             } else {
-              $api.rmStorage('currentFirst');
+                $api.rmStorage('currentFirst');
 
             }
         });
@@ -187,8 +176,7 @@
                 userYuE.innerHTML = ret.JieYu;
                 $api.setStorage('currentwallet', ret);
             } else {
-              $api.rmStorage('currentwallet');
-
+                //$api.rmStorage('currentwallet');
             }
         });
         //}
@@ -467,13 +455,12 @@
                     }
                 });
 
-            }
-            else{
-              api.toast({
-                  msg: '订单生成有误',
-                  duration: 2000,
-                  location: 'bottom'
-              });
+            } else {
+                api.toast({
+                    msg: '订单生成有误',
+                    duration: 2000,
+                    location: 'bottom'
+                });
 
             }
 
@@ -569,16 +556,16 @@
     function fnSaveFirst(currentF, money) {
         var data_ = {
             body: JSON.stringify({
-                UserId : $api.getStorage('userInfo').Id,
-                OrderId : api.pageParam.orderId,
-                JinE : money,
-                CurrentFirst : currentF.CurrentFirst,
-                Note : '',
-                ShunXu : currentF.ShunXu
+                UserId: $api.getStorage('userInfo').Id,
+                OrderId: api.pageParam.orderId,
+                JinE: money,
+                CurrentFirst: currentF.CurrentFirst,
+                Note: '',
+                ShunXu: currentF.ShunXu
             })
         };
         fnPost('SysFirst/PostFirst', data_, 'application/json', false, false, function(ret, err) {
-            if (ret&&ret.type!=0) {
+            if (ret && ret.type != 0) {
                 api.toast({
                     msg: '交易信息已添加',
                     duration: 2000,
@@ -599,14 +586,14 @@
     function fnSaveErci(money) {
         var data_ = {
             body: JSON.stringify({
-                UserId : $api.getStorage('userInfo').Id,
-                OrderId:api.pageParam.orderId,
-                JinE : money,
-                Note : ''
+                UserId: $api.getStorage('userInfo').Id,
+                OrderId: api.pageParam.orderId,
+                JinE: money,
+                Note: ''
             })
         };
         fnPost('SysErCi/PostCreate', data_, 'application/json', false, false, function(ret, err) {
-            if (ret&&ret.type!=0) {
+            if (ret && ret.type != 0) {
                 api.toast({
                     msg: '交易信息已添加',
                     duration: 2000,
@@ -624,18 +611,7 @@
     }
 
     function fnCreateOrder(status) {
-        if ($api.getStorage('shoppingcart')) {
-          api.alert({
-              title: 'order',
-              msg: 'createorderin',
-          }, function(ret, err){
-              if( ret ){
-                   alert( JSON.stringify( ret ) );
-              }else{
-                   alert( JSON.stringify( err ) );
-              }
-          });
-
+        if ($api.getStorage('shoppingcart') && $api.getStorage('dingdankuan')) {
             var wares = $api.getStorage('shoppingcart');
             var data_ = [];
             for (var i = 0, j = 0; i < wares.length; i++) {
@@ -654,18 +630,7 @@
                     Description: '兰基优品-购物'
                 })
             }, 'application/json', false, false, function(ret, err) {
-              api.alert({
-                  title: 'orderafter',
-                  msg: 'createafter',
-              }, function(ret, err){
-                  if( ret ){
-                       alert( JSON.stringify( ret ) );
-                  }else{
-                       alert( JSON.stringify( err ) );
-                  }
-              });
-
-                if (ret&&ret.type!=0) {
+                if (ret && ret.type != 0) {
                     api.toast({
                         msg: '订单信息已添加，请付款',
                         duration: 2000,
@@ -674,8 +639,10 @@
 
                     order_one = ret;
                     $api.rmStorage('shoppingcart');
+                    $api.rmStorage('dingdankuan');
+
                     //清除本地购物车表中已购商品
-                    $db.delete_true('shoppingCart', $api.getStorage('userInfo').Id，'select');
+                    $db.delete_true('shoppingCart', $api.getStorage('userInfo').Id， 'select');
                 } else {
                     api.alert({
                         title: '故障报警',
@@ -683,6 +650,12 @@
                         buttons: ['确定']
                     });
                 }
+            });
+        } else {
+            api.alert({
+                title: '故障报警',
+                msg: '订单生成有误',
+                buttons: ['确定']
             });
         }
     }
@@ -706,7 +679,7 @@
                 Status: status
             })
         }, 'application/json', false, false, function(ret, err) {
-            if (ret&&ret.type!=0) {
+            if (ret && ret.type != 0) {
                 api.toast({
                     msg: '订单已生成，准备发货',
                     duration: 2000,
