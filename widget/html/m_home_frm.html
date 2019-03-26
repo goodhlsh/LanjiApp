@@ -1164,22 +1164,6 @@
                         }
                     }
                 }
-            } else if ('fail' == ret.eventType) {
-                api.alert({
-                    title: '消息提示',
-                    msg: '扫码失败！' + err,
-                }, function(ret, err) {
-
-                });
-
-            } else {
-                api.alert({
-                    title: ret.content,
-                    msg: '扫码其他情况！' + ret.eventType,
-                }, function(ret, err) {
-
-                });
-
             }
         });
         //}
