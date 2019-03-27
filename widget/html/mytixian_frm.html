@@ -223,7 +223,7 @@
             },
             autoFocus: false,
             maxRows: 1,
-            placeholder: '请输入姓名',
+            placeholder: '请输入该支付宝账户实名认证过的姓名，可不填',
             keyboardType: 'default',
             fixedOn: api.frameName
         }, function(ret, err) {
@@ -343,7 +343,7 @@ var payshu=0;
             buttons: ['确定', '取消']
         }, function(ret, err) {
             if (ret) {
-
+                //支付宝转账提现
                 if (type_ == '0') {
                     fnCreateOrder('提现', moneycoutValue, '0');
                 }
@@ -361,9 +361,9 @@ var payshu=0;
 
       }
     }
-
+var maxYuE;
     function fnCreateOrder(status, jinE, type_) {
-        if (jinE > 0) {
+        if (jinE > 0&&jinE<=maxYuE) {
             fnPost('Spl_Orders/PostOrder', {
                 body: JSON.stringify({
                     AddressId: '',
@@ -402,7 +402,7 @@ var payshu=0;
                         PayeeAccount:zaccoutValue,
                         PayeeRealName:realnameValue,
                         Amount:moneycoutValue,
-                        Remark:'用户提现'
+                        Remark:realnameValue+'用户提现'
                     })
                 }, 'application/json', false, false, function(ret1, err1) {
                     if (ret1.ret) {
@@ -412,7 +412,7 @@ var payshu=0;
                     } else {
                         api.hideProgress();
                     }
-                    console.log(JSON.stringify(ret1));
+                  //  console.log(JSON.stringify(ret1));
                 });
 
             }
