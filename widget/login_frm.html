@@ -99,8 +99,8 @@
 
             <div class="aui-list-item">
                 <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
-                    <div class="aui-btn  aui-btn-primary  aui-btn-outlined " tapmode="highlight" onclick="fnLogin();">登录</div>
-                    <div class="aui-btn  aui-btn-primary  aui-btn-outlined  aui-margin-l-10" tapmode="highlight" onclick="fnCancel();">取消</div>
+                    <div class="aui-btn aui-btn-primary  aui-btn-outlined " tapmode="highlight" onclick="fnLogin();">登录</div>
+                    <div class="aui-btn aui-btn-primary  aui-btn-outlined  aui-margin-l-10" tapmode="highlight" onclick="fnCancel();">取消</div>
                 </div>
             </div>
         </div>
@@ -262,12 +262,12 @@
             userName: usernameValue,
             password: passwordValue
         }, function(ret, err) {
-            if (ret.Id != null) {
+            if (ret&&ret.Id) {
                 $api.setStorage('userInfo', ret);
+                //获取余额
                 fnInitYuE(ret.Id);
-                api.sendEvent({
-                    name: 'setuserinfo'
-                });
+                //获取currentfirst
+                fnInitCurrFirst();
                 api.toast({
                     msg: ret.UserName + '登录成功！',
                     duration: 2000,
@@ -278,14 +278,33 @@
                 });
 
             } else {
-                api.alert({
-                    title: '消息',
-                    msg: '登录失败：' + ret.message
-                });
+              api.toast({
+                  msg: '登录失败！',
+                  duration: 2000,
+                  location: 'bottom'
+              });
             }
         });
     }
+    function fnInitCurrFirst() {
+        var filter = {
+            where: {
+                userid: $api.getStorage('userInfo').Id
+            },
+            //order: "createAt DESC",
+            limit: 1,
+            skip: 0
+        };
+        fnGet('SysFirst/GetCurrentFirst', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('currentFirst', ret);
+            } else {
 
+
+
+            }
+        });
+    }
     function fnInitYuE(Id_) {
         var filter = {
             where: {

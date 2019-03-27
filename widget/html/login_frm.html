@@ -76,9 +76,9 @@
             </div>
         </div>
     </div>
-    <div class="btnthird">
+    <!-- <div class="btnthird">
         <div class="aui-btn" tapmode="highlight" onclick="fnThirdLogin();"><span class="aui-iconfont aui-icon-wechat"></span></div>
-    </div>
+    </div>-->
 
 
 
@@ -230,12 +230,13 @@
             userName: usernameValue,
             password: passwordValue
         }, function(ret, err) {
-            if (ret.Id != null) {
+            if (ret&&ret.Id) {
                 $api.setStorage('userInfo', ret);
+                //获取余额
                 fnInitYuE(ret.Id);
-                api.sendEvent({
-                    name: 'setuserinfo'
-                });
+                //获取currentfirst
+                fnInitCurrFirst();
+
                 api.toast({
                     msg: ret.UserName + '登录成功！',
                     duration: 2000,
@@ -245,15 +246,33 @@
                     name: 'login'
                 });
             } else {
-              //$api.rmStorage('userInfo');
-                api.alert({
-                    title: '消息',
-                    msg: '登录失败：' + ret.message
+                api.toast({
+                    msg: '登录失败！',
+                    duration: 2000,
+                    location: 'bottom'
                 });
             }
         });
     }
+    function fnInitCurrFirst() {
+        var filter = {
+            where: {
+                userid: $api.getStorage('userInfo').Id
+            },
+            //order: "createAt DESC",
+            limit: 1,
+            skip: 0
+        };
+        fnGet('SysFirst/GetCurrentFirst', filter, function(ret, err) {
+            if (ret) {
+                $api.setStorage('currentFirst', ret);
+            } else {
 
+
+
+            }
+        });
+    }
     function fnInitYuE(Id_) {
         var filter = {
             where: {

@@ -68,8 +68,8 @@
         </div>
         <div class="row">
             <div class="title">在线QQ</div>
-            <div class="value" onclick="fnQQLine()">
-                <img border="0" src="http://wpa.qq.com/pa?p=2:1293214863:51" style="height:30px;width:100%;"/>
+            <div class="value" tapmode onclick="fnMeiQia()">
+                在线客服
               </div>
         </div>
     </section>
@@ -83,20 +83,29 @@
         fnInit();
     };
 
-    var tel,email,website,gzhh;
+    var tel,email;
 
     function fnInit(){
       tel=$api.byId('tel');
       email=$api.byId('email');
-      website=$api.byId('website');
-      gzhh=$api.byId('gzhh');
+
       //读取后台配置信息
       //fnGet()
+    }
+    function fnMeiQia() {
+      api.openWin({
+          name: 'meiqia',
+          url: './meiqia.html',
+          pageParam: {
+              name: 'test'
+          }
+      });
+
     }
     function fnQQLine() {
       api.openWin({
           name: 'QQLine',
-          url: 'http://wpa.qq.com/msgrd?v=3&uin=1293214863&',
+          url: 'http://wpa.qq.com/msgrd?v=3&uin=1293214863&site=qq&menu=yes',
           pageParam: {
               name: ''
           }

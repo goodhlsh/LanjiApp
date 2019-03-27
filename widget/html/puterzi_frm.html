@@ -162,6 +162,13 @@
             // 获取更多的用户
             fnGetUserList(true);
         });
+        // 监听确认完儿子后的事件
+        api.addEventListener({
+            name: 'putziafter'
+        }, function(ret, err) {
+            // 获取更多的用户
+            fnGetUserList(true);
+        });
     }
 
     // 实现下拉刷新功能
@@ -181,7 +188,7 @@
     function fnSetSon(id_, uid_, fJE_) {
         api.confirm({
             title: '特别提醒！！！',
-            msg: '被确认会员的等级若高于自己，确认会员将不会收到平台分红，同时确认后将不能更改会员间关系，是否继续？',
+            msg: '被确认会员的等级若高于你的等级，你将不会收到平台分红，同时确认后将不能更改会员间关系，是否继续？',
             buttons: ['确定', '取消']
         }, function(ret, err) {
             if (ret) {

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/aui.css" />
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            background: #f0f0f0;
+        }
+
+        section {
+            position: relative;
+            height: auto;
+
+
+            overflow: hidden;
+            background-color: #fff;
+        }
+
+        .row {
+            position: relative;
+            top: -1px;
+            box-sizing: borderbox;
+            height: 49px;
+            border-top: 1px solid #eee;
+        }
+
+        .title {
+            position: relative;
+            width: 100%;
+            height: 48px;
+            box-sizing: border-box;
+            padding-left: 16px;
+            padding-right: 48px;
+            font-size: 16px;
+            text-align: left;
+            line-height: 48px;
+        }
+
+        .value {
+            position: absolute;
+            top: 0;
+            right: 10px;
+            height: 48px;
+            font-size: 14px;
+            text-align: right;
+            line-height: 48px;
+            color: #888;
+        }
+    </style>
+</head>
+
+<body>
+    <section class="aui-content-padded">
+
+    </section>
+
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/SHA1.js"></script>
+<script type="text/javascript" src="../script/remotedb.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        fnInit();
+        initMeiQia();
+    };
+
+
+
+    function fnInit(){
+
+    }
+    var mq;
+
+        function initMeiQia() {
+                //创建美洽
+                mq = api.require('meiQia');
+                //配置初始化美洽需要的appkey
+                var param = {
+                        appkey: "762eeb3a3eec85a8b60367cdb07975ff"
+                        //这里需要填写自己在美洽申请的appkey
+                };
+                //初始化美洽
+                mq.initMeiQia(param, function(ret, err) {
+                        if (ret) {
+                                //初始化成功
+                                console.log(JSON.stringify(ret));
+                                mq.show();
+                                setTitleColor();
+                        } else {
+                                //初始化失败
+                                alert(JSON.stringify(err));
+                        }
+                })
+        }
+
+        function setTitleColor() {
+                var mq = api.require('meiQia');
+                //设置title以及按钮颜色
+                var titleColor = {
+                    color: "#000000"
+                };
+                mq.setTitleColor(titleColor);
+                setNavRightButton();
+            }
+            function setNavRightButton() {
+                           console.log(123);
+                           var buttonInfo = {
+                                   title: "小二",
+                                   image: "http://132.232.190.152:1693/lanjiapp.png"
+                           };
+                           mq = api.require('meiQia');
+                           mq.setNavRightButton(buttonInfo, buttonTapCallback);
+
+                           function buttonTapCallback() {
+                                   alert("button tapped");
+                           }
+
+                   }
+</script>
+
+</html>

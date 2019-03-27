@@ -90,7 +90,7 @@
         id = api.pageParam.id;
         userid = api.pageParam.userid;
         fJE = api.pageParam.fJE;
-        
+
         fnInit();
         zuname = $api.byId('jbSelectgroup');
         zlr = $api.byId('jbSelectLR');
@@ -153,7 +153,7 @@
                     if (ret1&&ret1.ret == 0) {
                         api.execScript({
                             frameName: 'puterzi_frm',
-                            script: 'fnGetUserList(\'' + false + '\');'
+                            script: 'fnGetUserList(' + false + ');'//刷新确认列表
                         });
 
                         api.toast({
