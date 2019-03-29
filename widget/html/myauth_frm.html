@@ -428,7 +428,7 @@
         if (isAuth) {
             return;
         }
-        alert("请如实填写信息和提交照片，一旦发现作假，会查封该用户，影响其使用的后果由用户承担！");
+        alert("请如实填写信息和提交照片，一旦发现作假，会禁用该用户，影响其使用的后果由用户承担！");
 
         var userid = $api.getStorage('userInfo') == null ? null : $api.getStorage('userInfo').Id;
         if (realnameValue == null || $api.getStorage('shfzh') == null || $api.getStorage('shfzhbei') == null || telValue == null) {
@@ -466,7 +466,7 @@
                     }, function(ret, err) {
 
                     });
-                    $api.setStorage('userInfo', ret);
+                    fnInitUserInfo();
                     api.closeWin();
                 }
             });

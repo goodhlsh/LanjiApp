@@ -235,7 +235,7 @@
                 //获取余额
                 fnInitYuE(ret.Id);
                 //获取currentfirst
-                fnInitCurrFirst();
+                fnInitCurrFirst(ret.Id);
 
                 api.toast({
                     msg: ret.UserName + '登录成功！',
@@ -254,10 +254,10 @@
             }
         });
     }
-    function fnInitCurrFirst() {
+    function fnInitCurrFirst(uid) {
         var filter = {
             where: {
-                userid: $api.getStorage('userInfo').Id
+                userid: uid
             },
             //order: "createAt DESC",
             limit: 1,

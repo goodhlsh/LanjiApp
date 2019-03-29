@@ -93,13 +93,31 @@
       //fnGet()
     }
     function fnMeiQia() {
-      api.openWin({
+      api.openFrame({
+          name: 'meiqia',
+          url: './meiqia_frm.html',
+          rect: {
+              x: 0,
+              y: 0,
+              w: api.winWidth,
+              h: api.winHeight
+          },
+          pageParam: {
+              name: 'test'
+          },
+          bounces: true,
+          bgColor: 'rgba(0,0,0,0)',
+          vScrollBarEnabled: false,
+          hScrollBarEnabled: false
+      });
+
+      /*api.openWin({
           name: 'meiqia',
           url: './meiqia.html',
           pageParam: {
               name: 'test'
           }
-      });
+      });*/
 
     }
     function fnQQLine() {

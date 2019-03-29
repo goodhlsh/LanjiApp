@@ -151,9 +151,12 @@
                 };
                 fnPost('SysUser/PutJiaPu', data, 'application/json', false, false, function(ret1, err1) {
                     if (ret1&&ret1.ret == 0) {
-                        api.execScript({
+                      /*  api.execScript({
                             frameName: 'puterzi_frm',
                             script: 'fnGetUserList(' + false + ');'//刷新确认列表
+                        });*/
+                        api.sendEvent({
+                            name: 'putziafter'
                         });
 
                         api.toast({
