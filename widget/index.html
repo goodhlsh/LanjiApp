@@ -81,8 +81,9 @@
         fnReadyOpenWin();
         fnInitListener();
         fnInit();
-        var homeid = $api.byId('tabbar0');
-        fnChange(homeid, 0);
+        fnOpenMainFrame();
+        //var homeid = $api.byId('tabbar0');
+        //fnChange(homeid, 0);
         initDatabase();
         initPushGeTui();
 
@@ -131,6 +132,27 @@
         footerHeight = $api.offset(footer).h;
     }
 
+    //openmainframe
+    function fnOpenMainFrame() {
+      api.openFrame({
+          name: 'm_home_frm',
+          url: './html/m_home_frm.html',
+          rect: {
+            x: 0,
+            y: 1,
+            w: 'auto',
+            h: api.frameHeight - footerHeight
+          },
+          pageParam: {
+              name: ''
+          },
+          bounces: false,
+          bgColor: '#f0f0f0',
+          vScrollBarEnabled: false,
+          hScrollBarEnabled: false
+
+      });
+    }
     //初始化首页
     var frames = ['m_home_frm'];
     var currindex = 0;
@@ -154,6 +176,7 @@
             pageParam: {
                 name: ''
             },
+
             bounces: false,
             bgColor: '#f0f0f0',
             vScrollBarEnabled: false,

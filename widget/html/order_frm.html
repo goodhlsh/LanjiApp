@@ -260,9 +260,7 @@
             display: none;
         }
 
-        #yunfeirow {
-            display: none;
-        }
+
     </style>
 </head>
 
@@ -272,11 +270,11 @@
         <div class="info">
             <div class="top">
                 <div class="consignee">收货人：<span id="consignee"></span></div>
-                <div class="mobile" id="mobile">1</div>
+                <div class="mobile" id="mobile"></div>
             </div>
             <div class="bottom">
-                <div class="type" id="type">【公司】</div>
-                <div class="text" id="address"></div>
+                <div class="type" id="type"></div>
+                <div class="text" id="address">没有登记过的地址</div>
             </div>
         </div>
         <div class="arrow open-win" win="myaddress" login="true"><i class="aui-iconfont aui-icon-right"></i></div>
@@ -301,13 +299,13 @@
             <div class="text">商品金额：¥</div>
             <div class="value value-2" id="amount">+&nbsp;0.0</div>
         </div>
-        <div class="row" id="yunfeirow">
+        <div class="row">
             <div class="text">运费：¥</div>
-            <div class="value value-2">+<span id="yunfei">0.0</span></div>
+            <div class="value value-2">+<span id="yunfei">10.0</span></div>
         </div>
         <div class="row">
             <div class="text">优惠折扣：</div>
-            <div class="value value-2">*&nbsp;<span id="youhui">0.0</span></div>
+            <div class="value value-2">*&nbsp;<span id="youhui">1.0</span></div>
         </div>
         <div class="row-1">
             <div class="value value-2">实付款：&nbsp;¥<span class="color" id="shifu">0.0</span></div>
@@ -383,7 +381,7 @@
             },
             autoFocus: false,
             maxRows: 1,
-            placeholder: '请输入验证码',
+            placeholder: '请输入优惠券码',
             keyboardType: 'default',
             fixedOn: api.frameName
         }, function(ret, err) {
@@ -445,10 +443,6 @@
 
     function fnSetYouOther(val) {
         $api.html(youhuiother, val);
-        //优惠根据政策
-        //实付=商品金额*优惠折扣+运费-优惠券优惠的金额
-        shifu.innerHTML = parseFloat(amount.innerText) * parseFloat(youhui.innerText) + parseFloat(yunfei.innerText) - parseFloat(youhuiother.innerText);
-        $api.setStorage('dingdankuan', shifu.innerHTML);
     }
 
 
@@ -483,6 +477,7 @@
                         type.innerHTML = "【其他地址】";
                 }
                 address.innerHTML = ret.Province + ret.City + ret.Street + '-' + ret.House;
+                $api.html(yunfei,ret.yunfei);//运费
                 $api.setStorage('AddressId', ret.Id);
             }
         });
@@ -514,6 +509,7 @@
                         type.innerHTML = "【其他地址】";
                 }
                 address.innerHTML = ret.Province + ret.City + ret.Street + '-' + ret.House;
+                $api.html(yunfei,ret.yunfei);//运费
                 $api.setStorage('AddressId', ret.Id);
             }
         });
@@ -562,19 +558,33 @@
             youhuiother = $api.byId('youhuiother');
             currentF = $api.getStorage('currentFirst');
             isOk = false; //全部商品满足优惠类型
-            console.log(JSON.stringify(currentF));
+          //  console.log(JSON.stringify($api.getStorage('currentFirst')));
             if (currentF != null) {
                 if (jibie == '8800会员') {
                     if (currentF.currentFirst >= 8800) {
                         $api.html(youhui, '0.5');
                     } else {
                         $api.html(youhui, '1.0');
+                        //判断首单
+                        if (currentF.currentFirst == 0 && currentF.updatetime == null) {
+                            if (isOk) {
+                                var yh = $api.byId('yhother');
+                                yh.style.display = 'block';
+                            }
+                        }
                     }
                 } else if (jibie == '1314会员') {
                     if (currentF.currentFirst >= 1314) {
                         $api.html(youhui, '0.8');
                     } else {
                         $api.html(youhui, '1.0');
+                        //判断首单
+                        if (currentF.currentFirst == 0 && currentF.updatetime == null) {
+                            if (isOk) {
+                                var yh = $api.byId('yhother');
+                                yh.style.display = 'block';
+                            }
+                        }
                     }
                 } else {
                     $api.html(youhui, '1.0');
@@ -583,8 +593,6 @@
                         if (isOk) {
                             var yh = $api.byId('yhother');
                             yh.style.display = 'block';
-                        } else {
-                            //fnSetYouOther(0);
                         }
                     }
                 }
@@ -593,9 +601,6 @@
                 if (isOk) {
                     var yh = $api.byId('yhother');
                     yh.style.display = 'block';
-                } else {
-
-                    //fnSetYouOther(0);
                 }
             }
             //优惠根据政策
@@ -604,7 +609,7 @@
             $api.setStorage('dingdankuan', shifu.innerHTML);
         } else {
             api.toast({
-                msg: '购物车空的，去填满她吧',
+                msg: '购物车空的，去添满吧',
                 duration: 2000,
                 location: 'bottom'
             });

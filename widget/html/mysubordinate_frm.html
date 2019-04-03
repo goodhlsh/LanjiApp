@@ -125,7 +125,7 @@
             fnGetChildren($api.getStorage('userInfo').Id);
         }
     };
-    
+
     function fnShowList() {
         api.openFrame({
             name: 'sonlist_frm',
@@ -137,10 +137,9 @@
                 h: api.winHeight
             },
             pageParam: {},
-            bounces: true,
+            bounces: false,
             bgColor: 'rgba(0, 0, 0, 0.6)',
-            vScrollBarEnabled: true,
-            hScrollBarEnabled: true
+            reload:true
         });
 
     }
@@ -162,7 +161,7 @@
                 });
             } else {
                 api.toast({
-                    msg: '加载数据失败',
+                    msg: '加载数据超时',
                     duration: 2000,
                     location: 'bottom'
                 });

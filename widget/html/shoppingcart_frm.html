@@ -112,8 +112,8 @@
 
         .ware .control {
             position: absolute;
-            width: 80px;
-            height: 23px;
+            width: 100px;
+            height: 36px;
             top: 53px;
             right: 8px;
         }
@@ -122,34 +122,45 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 23px;
-            height: 23px;
+            width: 22px;
+            height: 20px;
             z-index: 2;
-            line-height: 23px;
-            font-size: 14px;
+            line-height: 20px;
+            font-size: 30px;
+              display: inline-block;
+            border-radius: 10px;
+            box-shadow: 0 1px 1px 1px #eee;
+            color: #fff;
+            background-color: #e3007f;
         }
 
         .ware .control .count {
             position: relative;
             top: 0;
-            margin-right: 12px;
+            margin-right: 18px;
             width: auto;
-            height: 23px;
+            height: 20px;
             text-align: center;
-            line-height: 23px;
+            line-height: 20px;
             color: #444;
-            font-size: 12px;
+            font-size: 18px;
         }
 
         .ware .control .add {
             position: absolute;
             top: 0;
             right: 0;
-            width: 23px;
-            height: 23px;
-            line-height: 23px;
-            font-size: 14px;
+            width: 22px;
+            height: 20px;
+            line-height: 20px;
+            font-size: 30px;
             z-index: 2;
+            display: inline-block;
+
+            border-radius: 10px;
+            box-shadow: 0 1px 1px 1px #eee;
+            color: #fff;
+            background-color: #e3007f;
         }
 
         .empty {
@@ -367,7 +378,7 @@
             </div>
         </div>
         <div class="control" id="control_{{=value.Id}}">
-            <span class="minus" tapmode onclick="fnMinus('{{=value.Id}}');">-</span>
+            <span class="minus" tapmode onclick="fnMinus('{{=value.Id}}');">—</span>
             <div id="count_{{=value.Id}}" class="count">{{=value.WareCount}}</div>
             <span class="add" tapmode onclick="fnAdd('{{=value.Id}}');">+</span>
 
