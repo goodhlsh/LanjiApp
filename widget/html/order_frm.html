@@ -300,8 +300,8 @@
             <div class="value value-2" id="amount">+&nbsp;0.0</div>
         </div>
         <div class="row">
-            <div class="text">运费：¥</div>
-            <div class="value value-2">+<span id="yunfei">10.0</span></div>
+            <div class="text">运费：<span onclick="fnOpenYF()"><i class="aui-iconfont aui-icon-question"></i></span> ¥</div>
+            <div class="value value-2">+<span id="yunfei">15.0</span></div>
         </div>
         <div class="row">
             <div class="text">优惠折扣：</div>
@@ -477,7 +477,7 @@
                         type.innerHTML = "【其他地址】";
                 }
                 address.innerHTML = ret.Province + ret.City + ret.Street + '-' + ret.House;
-                $api.html(yunfei,ret.yunfei);//运费
+              //  $api.html(yunfei,ret.yunfei);//运费
                 $api.setStorage('AddressId', ret.Id);
             }
         });
@@ -509,13 +509,11 @@
                         type.innerHTML = "【其他地址】";
                 }
                 address.innerHTML = ret.Province + ret.City + ret.Street + '-' + ret.House;
-                $api.html(yunfei,ret.yunfei);//运费
+              //  $api.html(yunfei,ret.yunfei);//运费
                 $api.setStorage('AddressId', ret.Id);
             }
         });
     }
-
-
 
     function fnInitOrder() {
         if ($api.getStorage('shoppingcart')) {
@@ -633,6 +631,23 @@
             });
             openshu++;
         }
+    }
+    function fnOpenYF() {
+      api.openFrame({
+          name: 'youfeishuoming_frm',
+          url: './youfeishuoming_frm.html',
+          rect: {
+              x: 0,
+              y: 0,
+              w: 320,
+              h: 480
+          },
+          pageParam: {
+              name: ''
+          },
+          bounces: true,
+          bgColor: 'rgba(0,0,0,0)'
+      });
     }
 </script>
 
