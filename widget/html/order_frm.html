@@ -300,7 +300,7 @@
             <div class="value value-2" id="amount">+&nbsp;0.0</div>
         </div>
         <div class="row">
-            <div class="text">运费：<span onclick="fnOpenYF()"><i class="aui-iconfont aui-icon-question"></i></span> ¥</div>
+            <div class="text">运费：¥ </div>
             <div class="value value-2">+<span id="yunfei">15.0</span></div>
         </div>
         <div class="row">
@@ -633,6 +633,7 @@
         }
     }
     function fnOpenYF() {
+      console.log('hello yfyffyfyfyf');
       api.openFrame({
           name: 'youfeishuoming_frm',
           url: './youfeishuoming_frm.html',
