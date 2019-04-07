@@ -60,19 +60,19 @@
     <section class="aui-content-padded">
         <div class="row">
             <div class="title">公司电话</div>
-            <div id="tel" class="value">没有登记</div>
+            <div id="tel" class="value"></div>
         </div>
         <div class="row">
             <div class="title">Email</div>
-            <div id="email" class="value">没有登记</div>
+            <div id="email" class="value"></div>
         </div>
         <div class="row">
             <div class="title">网址</div>
-            <div id="website" class="value">没有登记</div>
+            <div id="website" class="value"></div>
         </div>
         <div class="row">
             <div class="title">公众号</div>
-            <div id="gzhh" class="value">没有登记</div>
+            <div id="gzhh" class="value"></div>
         </div>
     </section>
 
@@ -93,7 +93,21 @@
       website=$api.byId('website');
       gzhh=$api.byId('gzhh');
       //读取后台配置信息
-      //fnGet()
+      fnInitGSXX();
+    }
+    function fnInitGSXX() {
+        fnGet('SysConfig/GetAllConfig', {
+            where: {},
+            skip: 0,
+            limit: 1
+        }, function(ret, err) {
+            if (ret) {
+                $api.html(tel,  ret.tel);
+                $api.html(email,  ret.email );
+                $api.html(website,  ret.website );
+                $api.html(gzhh,  ret.gzhh );
+            }
+        });
     }
 </script>
 

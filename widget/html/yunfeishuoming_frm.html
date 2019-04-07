@@ -22,7 +22,7 @@
 <body>
     <div class="aui-content aui-margin-b-15">
         <ul class="aui-list aui-list-in">
-            <li class="aui-list-item open-win" win="about_xieyi">
+            <li class="aui-list-item">
                 <div class="aui-list-item-inner">
                     <div class="aui-list-item-title">会员折扣说明</div>
                     <div class="aui-list-item-right">
@@ -30,17 +30,17 @@
                     </div>
                 </div>
             </li>
-            <li class="aui-list-item  open-win" win="about_tiaokuan">
+            <li class="aui-list-item">
                 <div class="aui-list-item-inner">
                     <div class="aui-list-item-title">1. 8800会员优惠折扣为0.4。</div>
                 </div>
             </li>
-            <li class="aui-list-item  open-win" win="about_tiaokuan">
+            <li class="aui-list-item">
                 <div class="aui-list-item-inner">
                     <div class="aui-list-item-title">2. 1314会员优惠折扣为0.6。</div>
                 </div>
             </li>
-            <li class="aui-list-item  open-win" win="about_tiaokuan">
+            <li class="aui-list-item ">
                 <div class="aui-list-item-inner">
                     <div class="aui-list-item-title">3. 398会员及普通会员没有优惠折扣。</div>
                 </div>
@@ -48,7 +48,7 @@
         </ul>
         <div class="splite"></div>
         <ul class="aui-list aui-list-in">
-            <li class="aui-list-item open-win" win="about_xieyi">
+            <li class="aui-list-item">
                 <div class="aui-list-item-inner">
                     <div class="aui-list-item-title">快递费收取说明</div>
                     <div class="aui-list-item-right">
@@ -56,9 +56,19 @@
                     </div>
                 </div>
             </li>
-            <li class="aui-list-item  open-win" win="about_tiaokuan">
+            <li class="aui-list-item">
                 <div class="aui-list-item-inner">
-                    <div class="aui-list-item-title">1. 购买商品金额小于100元的除新疆、西藏等地区外收取快递费15元，超过100元免收。</div>
+                    <div class="aui-list-item-title" id="yfBZ">1. 购买商品金额超过398元免收运费。</div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title" id="yfYB">2. 除西藏、新疆、青海和内蒙古等地区收运费15元/kg。</div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title" id="yfTS">3. 西藏、新疆、青海和内蒙古等地区收运费30元/kg。</div>
                 </div>
             </li>
         </ul>
@@ -69,7 +79,27 @@
 <script type="text/javascript">
     apiready = function() {
         fnReady();
+        fnInitYunfeiBZ();
     };
+    var yunfeiMBZ, yunfeiYB, yunfeiTSH;
+    //获取订单配置_字典
+    function fnInitYunfeiBZ() {
+        yunfeiYB = $api.byId('yfYB');
+        yunfeiTSH = $api.byId('yfTS');
+        yunfeiMBZ = $api.byId('yfBZ');
+        fnGet('SysConfig/GetAllConfig', {
+            where: {},
+            skip: 0,
+            limit: 1
+        }, function(ret, err) {
+            if (ret) {
+                $api.html(yunfeiMBZ, '1. 购买商品金额超过' + ret.yunfeiMBZ + '元免收运费。');
+                $api.html(yunfeiTSH, '3. 西藏、新疆、青海和内蒙古等地区收运费' + ret.yunfeiTSH + '元/kg。');
+                $api.html(yunfeiYB, '2. 除西藏、新疆、青海和内蒙古等地区收运费' + ret.yunfeiYB + '元/kg。');
+            }
+        });
+
+    }
 </script>
 
 </html>

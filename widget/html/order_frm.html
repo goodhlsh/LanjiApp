@@ -259,8 +259,6 @@
         #yhother {
             display: none;
         }
-
-
     </style>
 </head>
 
@@ -344,8 +342,12 @@
     apiready = function() {
         fnReady();
         //fnInitUIInput();
-
+        amountValue=0;
+        yunfeiMBZ = 398;
+        yunfeiTSH = 30;
+        yunfeiYB = 15;
         fnInitEvent();
+        fnInitYunfeiBZ();
         fnInitAddress();
         //从本地存储中获取商品信息
         fnInitOrder();
@@ -477,7 +479,12 @@
                         type.innerHTML = "【其他地址】";
                 }
                 address.innerHTML = ret.Province + ret.City + ret.Street + '-' + ret.House;
-              //  $api.html(yunfei,ret.yunfei);//运费
+                //  $api.html(yunfei,ret.yunfei);//运费
+                if (ret.Province.indexof('西藏') || ret.Province.indexof('新疆') || ret.Province.indexof('内蒙古') || ret.Province.indexof('青海')) {
+                    $api.html(yunfei, yunfeiTSH); //运费30元
+                } else {
+                    $api.html(yunfei, yunfeiYB); //普通运费15元
+                }
                 $api.setStorage('AddressId', ret.Id);
             }
         });
@@ -509,12 +516,41 @@
                         type.innerHTML = "【其他地址】";
                 }
                 address.innerHTML = ret.Province + ret.City + ret.Street + '-' + ret.House;
-              //  $api.html(yunfei,ret.yunfei);//运费
+                //  $api.html(yunfei,ret.yunfei);//运费
+                if (parseFloat(amountValue) >= yunfeiMBZ) {
+                    $api.html(yunfei, '0');
+                } else {
+                    if (ret.Province.indexof('西藏') || ret.Province.indexof('新疆') || ret.Province.indexof('内蒙古') || ret.Province.indexof('青海')) {
+                        $api.html(yunfei, yunfeiTSH); //运费30元
+                    } else {
+                        $api.html(yunfei, yunfeiYB); //普通运费15元
+                    }
+                }
                 $api.setStorage('AddressId', ret.Id);
             }
         });
     }
+    var yunfeiMBZ, yunfeiYB, yunfeiTSH;
+    //获取订单配置_字典
+    function fnInitYunfeiBZ() {
+        fnGet('SysConfig/GetAllConfig', {
+            where: {},
+            skip: 0,
+            limit: 1
+        }, function(ret, err) {
+            if (ret) {
+                yunfeiMBZ = ret.yunfeiMBZ;
+                yunfeiTSH = ret.yunfeiTSH;
+                yunfeiYB = ret.yunfeiYB;
+            } else {
+                yunfeiMBZ = 398;
+                yunfeiTSH = 30;
+                yunfeiYB = 15;
+            }
+        });
 
+    }
+var amountValue;
     function fnInitOrder() {
         if ($api.getStorage('shoppingcart')) {
             var list = $api.byId('list');
@@ -538,7 +574,7 @@
 
             count = $api.byId('count');
             amount = $api.byId('amount');
-            var amountValue = 0;
+            amountValue = 0;
             var countValue = 0;
 
             for (var i = 0; i < data_.length; i++) {
@@ -556,7 +592,7 @@
             youhuiother = $api.byId('youhuiother');
             currentF = $api.getStorage('currentFirst');
             isOk = false; //全部商品满足优惠类型
-          //  console.log(JSON.stringify($api.getStorage('currentFirst')));
+            //  console.log(JSON.stringify($api.getStorage('currentFirst')));
             if (currentF != null) {
                 if (jibie == '8800会员') {
                     if (currentF.currentFirst >= 8800) {
@@ -601,6 +637,10 @@
                     yh.style.display = 'block';
                 }
             }
+            //运费获取标准
+            if (parseFloat(amountValue) >= yunfeiMBZ) {
+                $api.html(yunfei, '0');
+            }
             //优惠根据政策
             //实付=商品金额*优惠折扣+运费-优惠券优惠的金额
             shifu.innerHTML = parseFloat(amountValue) * parseFloat(youhui.innerText) + parseFloat(yunfei.innerText) - parseFloat(youhuiother.innerText);
@@ -631,24 +671,6 @@
             });
             openshu++;
         }
-    }
-    function fnOpenYF() {
-      console.log('hello yfyffyfyfyf');
-      api.openFrame({
-          name: 'youfeishuoming_frm',
-          url: './youfeishuoming_frm.html',
-          rect: {
-              x: 0,
-              y: 0,
-              w: 320,
-              h: 480
-          },
-          pageParam: {
-              name: ''
-          },
-          bounces: true,
-          bgColor: 'rgba(0,0,0,0)'
-      });
     }
 </script>
 
