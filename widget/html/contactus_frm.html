@@ -17,8 +17,6 @@
         section {
             position: relative;
             height: auto;
-
-
             overflow: hidden;
             background-color: #fff;
         }
@@ -85,16 +83,17 @@
         fnInit();
     };
 
-    var tel,email,website,gzhh;
+    var tel, email, website, gzhh;
 
-    function fnInit(){
-      tel=$api.byId('tel');
-      email=$api.byId('email');
-      website=$api.byId('website');
-      gzhh=$api.byId('gzhh');
-      //读取后台配置信息
-      fnInitGSXX();
+    function fnInit() {
+        tel = $api.byId('tel');
+        email = $api.byId('email');
+        website = $api.byId('website');
+        gzhh = $api.byId('gzhh');
+        //读取后台配置信息
+        fnInitGSXX();
     }
+
     function fnInitGSXX() {
         fnGet('SysConfig/GetAllConfig', {
             where: {},
@@ -102,10 +101,10 @@
             limit: 1
         }, function(ret, err) {
             if (ret) {
-                $api.html(tel,  ret.tel);
-                $api.html(email,  ret.webmail );
-                $api.html(website,  ret.weburl );
-                $api.html(gzhh,  ret.gzhh );
+                $api.html(tel, ret.tel);
+                $api.html(email, ret.webmail);
+                $api.html(website, ret.weburl);
+                $api.html(gzhh, ret.gzhh);
             }
         });
     }
